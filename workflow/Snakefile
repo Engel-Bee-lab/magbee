@@ -1,0 +1,41 @@
+import yaml
+import os
+import glob
+
+"""Parse config"""
+configfile: os.path.join(workflow.basedir, "..", "config", "config.yaml")
+
+"""Rules"""
+include: os.path.join("rules", "1.preflight.smk")
+
+
+"""Mark target rules"""
+target_rules = []
+def targetRule(fn):
+    assert fn.__name__.startswith('__')
+    target_rules.append(fn.__name__[2:])
+    return fn
+
+@targetRule
+rule all:
+    input:
+        targets['qc'],
+        targets['assemble'],
+        targets['annotate']
+
+@targetRule
+rule qc:
+    input:
+        targets['qc']
+
+
+@targetRule
+rule assemble:
+    input:
+        targets['assemble']
+
+@targetRule
+rule annotate:
+    input:
+        targets['annotate']
+

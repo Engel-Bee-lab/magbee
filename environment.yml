@@ -1,0 +1,13 @@
+name: MAGBuild
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python>=3.12.12
+  - snakemake>=9.13.7
+  - pyyaml>=6.0
+  - click>=8.2.1
+  - metasnek>=0.0.8
+  - snaketool-utils>=0.0.5
+  - attrmap>=0.0.7
+  - biopython>=1.86

@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=69", "setuptools_scm", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "MAGbuild"
+dynamic = ["version"]
+description = "Build MAGs from WGS metagenomes"
+readme = { file = "README.md", content-type = "text/markdown" }
+authors = [
+    { name = "Bhavya Papudeshi", email = "bnalaga1@unil.ch" }
+]
+
+license = { text = "MIT" }
+classifiers = [
+    "Environment :: Console",
+    "Environment :: MacOS X",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Bio-Informatics"
+]
+requires-python = ">=3.9"
+dependencies = [
+    "snaketool-utils>=0.0.5",
+    "snakemake>=8.28.0",
+    "pyyaml>=6.0",
+    "Click>=8.1.3",
+    "metasnek>=0.0.8",
+    "attrmap>=0.0.7",
+    "biopython>=1.8.1",
+    "pandas",
+    "matplotlib",
+    "snakemake-executor-plugin-slurm>=0.5.1"
+]
+
+[project.scripts]
+MAGBuild = "MAGBuild.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["MAGBuild*"]
+
+# Configure setuptools_scm (reads version from your Git tags)
+[tool.setuptools_scm]
+write_to = "MAGBuild/_version.py"
+fallback_version = "0.1.0"
