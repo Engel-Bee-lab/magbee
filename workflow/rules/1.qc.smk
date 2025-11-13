@@ -1,0 +1,34 @@
+"""
+Rules for quality control and quality assurance - Illumina paired end reads 
+"""
+#quality control rules here
+rule fastp:
+    input:
+        r1 = os.path.join(input_dir, PATTERN_R1),
+        r2 = os.path.join(input_dir, PATTERN_R2)
+    output:
+        r1 = os.path.join(dir_fastp,"{sample}_R1.fastq.gz"),
+        r2 = os.path.join(dir_fastp,"{sample}_R2.fastq.gz"),
+        stats = os.path.join(dir_fastp,"{sample}.stats.json"),
+        html = os.path.join(dir_fastp,"{sample}.stats.html")
+    conda:
+        os.path.join(dir_env, "fastp.yaml")
+    resources:
+        mem =config['resources']['smalljob']['mem'],
+        time = config['resources']['smalljob']['time']
+    threads: 
+        config['resources']['smalljob']['cpu']
+    shell:
+        """
+        # Default params in this command 
+        #   --qualified_quality_phred = 15 
+        #   --unqualified_percent_limit 40 
+        #   --n_base_limit 5 
+        #   --length_required 30
+        
+        fastp -i {input.r1} -I {input.r2} -o {output.r1} -O {output.r2} -j {output.stats} -h {output.html} --thread {threads} --detect_adapter_for_pe
+        
+        touch {output.r1}
+        touch {output.r2}
+        """
+    

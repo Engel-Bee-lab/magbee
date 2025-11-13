@@ -8,12 +8,11 @@ resources:
     mem: 64000
     time: 480
 
-params:
-  #gene-predict: 'prodigal-gv' #to test alternate codons, uncomment this
-
 args:
-  #output: "sphae.out"
-
-  #For now I will use environmental variables like below to define the database paths
-  #Once I have a stable build, might be worth considering how to download them automatically
-  #vv_db: $VVDB
+  input: 
+  extn: 
+  host_seq: 
+  output: 
+  sequencing: 
+  configfile: 
+  temp_dir: 

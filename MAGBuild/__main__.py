@@ -10,11 +10,13 @@ import click
 from shutil import copyfile
 from snaketool_utils.cli_utils import OrderedCommands, run_snakemake, copy_config, echo_click
 
+"""Get the filepath to a Snaketool system file (relative to __main__.py)"""
+PACKAGE_DIR = os.path.dirname(os.path.realpath(__file__))
+PROJECT_ROOT = os.path.dirname(PACKAGE_DIR)  # one level up
 
 def snake_base(rel_path):
-    """Get the filepath to a Snaketool system file (relative to __main__.py)"""
-    return os.path.join(os.path.dirname(os.path.realpath(__file__)), rel_path)
-
+    """Get the filepath to a project file relative to the repo root."""
+    return os.path.join(PROJECT_ROOT, rel_path)
 
 def get_version():
     try:
@@ -46,9 +48,11 @@ def common_options(func):
     Define common command line args here, and include them with the @common_options decorator below.
     """
     options = [
-        click.option('--input', '_input', help='Directory of reads', type=click.Path(), required=False, default='test/illumina-subset', show_default=True),
+        click.option('--input', '_input', help='Directory of reads', type=click.Path(), required=False, default='testReads/paired', show_default=True),
+        click.option('--extn', 'extn',  help='Reads extension; fastq, fq, fastq.gz', type=click.Path(), required=False, default='fastq', show_default=True),
+        click.option('--host_seq', 'host_seq', help='Path to host genome index for host read removal', type=click.Path(), required=True, show_default=True),
         click.option('--output', 'output', help='Output directory', type=click.Path(),
-                     default='sphae.out', show_default=True),
+                     default='output', show_default=True),
         click.option("--configfile", default="config.yaml", show_default=False, callback=default_to_output,
                      help="Custom config file [default: config.yaml]"),
         click.option('--threads', help='Number of threads to use', default=1, show_default=True),
@@ -59,7 +63,13 @@ def common_options(func):
                      default=['--rerun-incomplete', '--printshellcmds', '--nolock', '--show-failed-logs'],
                      help="Customise Snakemake runtime args", show_default=True),
         click.option("--log", default="sphae.log", callback=default_to_output, hidden=True,),
-        click.option("--system-config", default=snake_base(os.path.join("config", "config.yaml")),hidden=True,),
+        click.option('--use-conda', default=True, help='Use conda for Snakemake rules',
+                     show_default=True),
+        click.option('--use-mamba', default=True, help='Use mamba for Snakemake rules',
+                     show_default=False),
+        click.option('--conda-prefix', default=snake_base(os.path.join('workflow', 'conda')),
+                     help='Custom conda env directory', type=click.Path(), show_default=True),
+        click.option("--system-config", default=snake_base(os.path.join("..","config", "config.yaml")),hidden=True,),
         click.argument("snake_args", nargs=-1),
     ]
     for option in reversed(options):
@@ -73,32 +83,23 @@ def cli():
     """Assembling pure culture phages from both Illumina and Nanopore sequencing technology
     \b
     For more options, run:
-    MAGBuild command --help"""
+    MAGBuild --help"""
     pass
 
 
 help_msg_run = """
 \b
 RUN EXAMPLES 
-I dont know, when I do, I will update this :)
+MAGBuild run --input <input directory with reads> --extn fq --host_seq <path to host genomes> --sequencing paired --output <output directory> -k
 """
+@click.command(epilog=help_msg_run, 
+    context_settings=dict(help_option_names=["-h", "--help"], ignore_unknown_options=True)
+    )
 
-
-@click.option('--output', 'output', help='Output directory', type=click.Path(), default='sphae.out', show_default=True)
-@click.option("--configfile", default="config.yaml", show_default=False, callback=default_to_output,help="Custom config file [default: (outputDir)/config.yaml]",)
-@click.option('--threads', help='Number of threads to use', default=1, show_default=True)
-@click.option('--profile', help='Snakemake profile', default=None, show_default=False)
-@click.option('--temp-dir', 'temp_dir', help='Temp directory', required=False)
-@click.option('--snake-default', multiple=True,default=['--rerun-incomplete', '--printshellcmds', '--nolock', '--show-failed-logs'], help="Customise Snakemake runtime args", show_default=True)
-@click.option("--log", default="sphae.log", callback=default_to_output, hidden=True,)
-@click.option("--system-config", default=snake_base(os.path.join("config", "config.yaml")),hidden=True,)
-@click.argument("snake_args", nargs=-1)
-
-
-@click.command(epilog=help_msg_run, context_settings=dict(help_option_names=["-h", "--help"], ignore_unknown_options=True))
-@common_options
 @click.option('--sequencing', 'sequencing', help="sequencing method", default='paired', show_default=True, type=click.Choice(['paired', 'longread']))
-def run(_input, output, sequencing, no_medaka, temp_dir, configfile, **kwargs):
+
+@common_options
+def run(_input, extn, host_seq, output, sequencing, temp_dir, configfile, **kwargs):
     """Run MAGBuild"""
     copy_config(configfile, system_config=snake_base(os.path.join('config', 'config.yaml')))
 
@@ -106,6 +107,8 @@ def run(_input, output, sequencing, no_medaka, temp_dir, configfile, **kwargs):
         "args": {
             "input": _input, 
             "output": output, 
+            "extn": extn,
+            "host_seq": host_seq,
             "sequencing": sequencing,
             "configfile": configfile,
             "temp_dir": temp_dir,

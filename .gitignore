@@ -1,3 +1,14 @@
+#Workflow specific ignores
+/workflow/.snakemake/
+/workflow/.conda/
+/workflow/.mamba/
+/workflow/.venv/
+/workflow/conda/
+output
+*.error
+*.out
+*.log
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

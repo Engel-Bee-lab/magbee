@@ -6,8 +6,10 @@ import glob
 configfile: os.path.join(workflow.basedir, "..", "config", "config.yaml")
 
 """Rules"""
-include: os.path.join("rules", "1.preflight.smk")
-
+include: os.path.join("rules", "0.preflight.smk")
+include: os.path.join("rules", "1.qc.smk")
+include: os.path.join("rules", "2.host_contamination.smk")
+include: os.path.join("rules", "3.co-assembly.smk")
 
 """Mark target rules"""
 target_rules = []
@@ -16,26 +18,33 @@ def targetRule(fn):
     target_rules.append(fn.__name__[2:])
     return fn
 
+"""
+Defining the targets dictionary
+"""
+targets ={'qc':[], 'assemble':[]}
+
+targets['qc'] = []
+if config['args']['sequencing'] == 'paired':
+    for sample in samples_names:
+        targets['qc'].append(expand(os.path.join(dir_fastp,"{sample}.stats.html"), sample=sample)),
+        targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_R1.hostcleaned.fastq.gz"), sample=sample))
+
+if config['args']['sequencing'] == 'paired':
+    targets['assemble'].append(os.path.join(dir_assembly,"coassembly.megahit.contigs.fa"))
+    targets['assemble'].append(os.path.join(dir_assembly,"quast_report.txt"))
+
 @targetRule
 rule all:
     input:
         targets['qc'],
-        targets['assemble'],
-        targets['annotate']
+        targets['assemble']
 
 @targetRule
 rule qc:
     input:
         targets['qc']
 
-
 @targetRule
-rule assemble:
+rule assembly:
     input:
         targets['assemble']
-
-@targetRule
-rule annotate:
-    input:
-        targets['annotate']
-

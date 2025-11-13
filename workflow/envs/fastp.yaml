@@ -1,0 +1,6 @@
+name: fastp
+channels:
+    - bioconda
+dependencies:
+    - fastp>=1.0.1
+    - seqkit>=2.6.1

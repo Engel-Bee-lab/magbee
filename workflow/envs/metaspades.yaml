@@ -1,0 +1,5 @@
+name: megahit
+channels:
+    - bioconda
+dependencies:
+    - spades>=4.2.0
