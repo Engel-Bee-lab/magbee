@@ -6,8 +6,11 @@
 #SBATCH -N 1
 #SBATCH --cpus-per-task 2
 #SBATCH --partition=cpu
-#SBATCH --time=01:00:00
+#SBATCH --mem=50G
+#SBATCH --time=2:00:00
 
 eval "$(mamba shell hook --shell bash)"
 mamba activate mag
-MAGBuild run --input testReads/paired --extn fastq.gz --sequencing paired --host_seq /users/bnalaga1/scratch/reference_db 
+MAGBuild run --input testReads/paired --extn fq.gz --sequencing paired --host_seq /users/bnalaga1/scratch/reference_db -k
+
+

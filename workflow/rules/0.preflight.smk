@@ -7,6 +7,7 @@
 import os 
 import glob
 import yaml
+import re
 from metasnek import fastq_finder
 
 """
@@ -42,7 +43,9 @@ dir_script = os.path.join(workflow.basedir,"scripts")
 #Saving most of the files to PROCESSING, sine they are intermediate files
 dir_fastp = os.path.join(dir_out, 'PROCESSING' ,'1_fastp')
 dir_hostcleaned = os.path.join(dir_out, 'PROCESSING' ,'2_host_cleaned')
-dir_assembly = os.path.join(dir_out, 'PROCESSING' ,'3_coassembly')
+#dir_assembly = os.path.join(dir_out, 'PROCESSING' ,'3_coassembly')
+dir_assembly = os.path.join(dir_out, 'PROCESSING' ,'3_individual_assembly')
+dir_binning = os.path.join(dir_out, 'PROCESSING' ,'4_binning')
 
 """
 CHECK INPUT FILES
@@ -53,15 +56,24 @@ input_dir = config['args']['input']
 extn=config['args']['extn']
 
 if config['args']['sequencing'] == 'paired':
-    patten= os.path.join(input_dir, f'*_1*.{extn}')
-    file_paths = glob.glob(patten)
-    samples_names = [os.path.splitext(os.path.basename(file_path))[0].rsplit('_1', 1)[0] for file_path in file_paths]
+    # match only read1 files where the final pair suffix appears immediately before the extension
+    pattern = os.path.join(input_dir, f'*_1.{extn}')
+    # also accept common _R1 naming
+    pattern_r1 = os.path.join(input_dir, f'*_R1.{extn}')
+    file_paths = sorted(set(glob.glob(pattern) + glob.glob(pattern_r1)))
+    # Strip common FASTQ extensions and remove only the final pair suffix (_1/_2 or _R1/_R2)
+    sample_names = [
+        re.sub(r'(?i)(?:_R?[12])$', '', re.sub(r"\.(?:fq|fastq)(?:\.gz)?$", '', os.path.basename(fp)))
+        for fp in file_paths
+    ]
+    # preserve order but remove duplicates if any
+    sample_names = list(dict.fromkeys(sample_names))
 elif config['args']['sequencing'] == 'longread':
     pattern = os.path.join(input_dir, f"*.{extn}")
-    file_paths = glob.glob(pattern)
-    samples_names = (os.path.splitext(os.path.basename(file_path)) if '.' in os.path.basename(file_path) else (os.path.basename(file_path), ''))
+    file_paths = sorted(glob.glob(pattern))
+    sample_names = [re.sub(r"\.(?:fq|fastq)(?:\.gz)?$", '', os.path.basename(fp)) for fp in file_paths]
 
-print(f"Samples are {samples_names}")
+print(f"Samples are {sample_names}")
 
 FQEXTN = extn[0]
 PATTERN_R1 = '{sample}_1.' + extn

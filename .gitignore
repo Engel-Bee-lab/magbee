@@ -4,6 +4,7 @@
 /workflow/.mamba/
 /workflow/.venv/
 /workflow/conda/
+/testReads
 output
 *.error
 *.out
