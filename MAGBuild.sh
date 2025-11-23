@@ -11,6 +11,6 @@
 
 eval "$(mamba shell hook --shell bash)"
 mamba activate mag
-MAGBuild run --input testReads/paired --extn fq.gz --sequencing paired --host_seq /users/bnalaga1/scratch/reference_db -k
+MAGBuild run --input testReads/paired --extn fq.gz --sequencing paired --host_seq /users/bnalaga1/scratch/reference_db --profile slurm
 
 

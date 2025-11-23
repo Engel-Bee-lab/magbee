@@ -1,0 +1,8 @@
+name: drep
+channels:
+    - bioconda
+dependencies:
+    - drep>=3.6.2
+    - fastani>=1.33
+    - mummer4>=4.0.0rc1
+    - centrifuge>=1.0.4.2

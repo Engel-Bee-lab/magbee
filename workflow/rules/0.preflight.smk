@@ -47,6 +47,7 @@ dir_hostcleaned = os.path.join(dir_out, 'PROCESSING' ,'2_host_cleaned')
 dir_assembly = os.path.join(dir_out, 'PROCESSING' ,'3_individual_assembly')
 dir_binning = os.path.join(dir_out, 'PROCESSING' ,'4_binning')
 
+
 """
 CHECK INPUT FILES
 """

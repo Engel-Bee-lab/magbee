@@ -39,5 +39,5 @@ rule quast_individual:
         config['resources']['smalljob']['cpu']
     shell:
         """
-        quast {input.assembly} -o {params.outdir} --threads {threads} 
+        quast {input.assembly} -o {params.outdir} --threads {threads}
         """
