@@ -43,6 +43,7 @@ dir_script = os.path.join(workflow.basedir,"scripts")
 #Saving most of the files to PROCESSING, sine they are intermediate files
 dir_fastp = os.path.join(dir_out, 'PROCESSING' ,'1_fastp')
 dir_hostcleaned = os.path.join(dir_out, 'PROCESSING' ,'2_host_cleaned')
+dir_reports = os.path.join(dir_out, 'REPORTS')
 #dir_assembly = os.path.join(dir_out, 'PROCESSING' ,'3_coassembly')
 dir_assembly = os.path.join(dir_out, 'PROCESSING' ,'3_individual_assembly')
 dir_binning = os.path.join(dir_out, 'PROCESSING' ,'4_binning')

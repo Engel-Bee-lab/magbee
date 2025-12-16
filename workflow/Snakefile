@@ -9,6 +9,7 @@ configfile: os.path.join(workflow.basedir, "..", "config", "config.yaml")
 include: os.path.join("rules", "0.preflight.smk")
 include: os.path.join("rules", "1.qc.smk")
 include: os.path.join("rules", "2.host_contamination.smk")
+include: os.path.join("rules", "Final_QC.smk")
 #include: os.path.join("rules", "3.co-assembly.smk")
 include: os.path.join("rules", "3.individual_assembly.smk")
 include: os.path.join("rules", "4.mapping.smk")
@@ -37,7 +38,8 @@ if config['args']['sequencing'] == 'paired':
         targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_R2.hostcleaned.fastq.gz"), sample=sample)),
         targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_R1.mapped.fastq.gz"), sample=sample)),
         targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_R2.mapped.fastq.gz"), sample=sample)),
-        targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_host_contamination_report.txt"), sample=sample)),
+        targets['qc'].append(expand(os.path.join(dir_reports,"QC","{sample}_host_qc_report.txt"), sample=sample)),
+        targets['qc'].append(os.path.join(dir_reports, "final_host_qc_summary.txt"))
 
 if config['args']['sequencing'] == 'paired':
     ## For coassembly targets

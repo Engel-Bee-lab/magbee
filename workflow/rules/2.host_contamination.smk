@@ -109,21 +109,3 @@ rule host_mapped_reads:
             touch {output.mr2}
         fi
         """
-
-rule generate_stats:
-    input:
-        stats=os.path.join(dir_hostcleaned,"{sample}_bamstats.txt")
-    output:
-        report=os.path.join(dir_hostcleaned,"{sample}_host_contamination_report.txt")
-    localrule: True
-    shell:
-        """
-        total_reads=$(cat {input.stats} | grep 'in total' | awk '{{print $1}}')
-        mapped_reads=$(cat {input.stats} | grep 'mapped (' | awk '{{print $1}}' | head -n 1 )
-        percent_mapped=$(cat {input.stats} | grep 'mapped (' | awk '{{print $5}}' | tr -d '()%' | head -n 1)
-        
-        echo "Sample: {wildcards.sample}" > {output.report}
-        echo "Total Reads: $total_reads" >> {output.report}
-        echo "Mapped Reads: $mapped_reads" >> {output.report}
-        echo "Percentage of Mapped Reads: $percent_mapped%" >> {output.report}
-        """
