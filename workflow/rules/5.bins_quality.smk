@@ -5,12 +5,13 @@ from glob import glob
 
 rule bins_checkm2:
     input:
-        drep_dir = os.path.join(dir_binning, "drep_metabat2_bins", "done.txt")
+        bins_dir = os.path.join(dir_binning, "all_metabat2_bins", "done.txt")
     output:
-        checkm2_dir = os.path.join(dir_binning, "drep_metabat2_bins", "checkm2_report.txt")
+        checkm2_dir = os.path.join(dir_binning, "checkm2_output", "quality_report.tsv")
     params:
-        bins=os.path.join(dir_binning, "{sample}_metabat2_bins"),
-        outdir=os.path.join(dir_binning, "{sample}_metabat2_bins", "checkm2_output")
+        bins=os.path.join(dir_binning, "all_metabat2_bins"),
+        outdir=os.path.join(dir_binning, "checkm2_output"),
+        database = config["databases"]["checkm_db"]
     conda:
         os.path.join(dir_env, "checkm2.yaml")
     resources:
@@ -21,6 +22,39 @@ rule bins_checkm2:
     shell:
         """
         mkdir -p {params.outdir}
-        checkm2 assess -x fa -o 2 -t {threads} {params.bins} {params.outdir}
+        export CHECKM2_DB_PATH={params.database}
+        checkm2 predict -i {params.bins} -o {params.outdir} --database_path {params.database}/uniref100.KO.1.dmnd \
+            -x fa --force --threads {threads}
         cp {params.outdir}/checkm2_assessment.tsv {output.checkm2_dir}
         """
+
+rule gtdbtk_bins:
+    input:
+        bins_done = os.path.join(dir_binning, "all_metabat2_bins", "done.txt"),
+    output:
+        gtdbtk_dir = os.path.join(dir_binning, "gtdbtk_output", "done.txt")
+    params:
+        bins = os.path.join(dir_binning, "all_metabat2_bins"),
+        outdir = os.path.join(dir_binning, "gtdbtk_output"),
+        database = config["databases"]["gtdbtk_db"]
+    conda:
+        os.path.join(dir_env, "gtdbtk.yaml")
+    resources:
+        mem  = config['resources']['bigjob']['mem'],
+        time = config['resources']['bigjob']['time']
+    threads:
+        config['resources']['bigjob']['cpu']
+    shell:
+        """
+        set -euo pipefail
+
+        mkdir -p {params.outdir}
+        export GTDBTK_DATA_PATH={params.database}
+        gtdbtk identify --genome_dir {params.bins} --cpus {threads} --out_dir {params.outdir} -x fa
+        gtdbtk align --identify_dir {params.outdir} --out_dir {params.outdir} --cpus {threads} 
+        gtdbtk classify --genome_dir {params.bins} --out_dir {params.outdir} --cpus {threads} -x fa -f --align_dir {params.outdir}
+        touch {output.gtdbtk_dir}
+        """
+
+
+

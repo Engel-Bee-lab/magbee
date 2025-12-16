@@ -1,8 +1,12 @@
 resources:
   smalljob:
-    cpu: 8
+    cpu: 2
     mem: 16000
-    time: 480
+    time: 240
+  assemblyjob:
+    cpu: 64
+    mem: 256000
+    time: 2880
   bigjob:
     cpu: 32
     mem: 64000
@@ -16,3 +20,7 @@ args:
   sequencing: 
   configfile: 
   temp_dir: 
+
+databases:
+  checkm_db: /users/bnalaga1/scratch/reference_db/CheckM2_database
+  gtdbtk_db: /users/bnalaga1/scratch/reference_db/release226/

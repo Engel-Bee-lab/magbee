@@ -13,7 +13,7 @@ include: os.path.join("rules", "2.host_contamination.smk")
 include: os.path.join("rules", "3.individual_assembly.smk")
 include: os.path.join("rules", "4.mapping.smk")
 include: os.path.join("rules", "4.metabat2.smk")
-#include: os.path.join("rules", "5.bins_quality.smk")
+include: os.path.join("rules", "5.bins_quality.smk")
 
 """Mark target rules"""
 target_rules = []
@@ -30,11 +30,14 @@ targets ={'qc':[], 'assemble':[], 'binning':[]}
 targets['qc'] = []
 if config['args']['sequencing'] == 'paired':
     for sample in sample_names:
-        targets['qc'].append(expand(os.path.join(dir_fastp,"{sample}.stats.html"), sample=sample))
+        targets['qc'].append(expand(os.path.join(dir_fastp,"{sample}.stats.html"), sample=sample)),
+        targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_temp.bam"), sample=sample)),
+        targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_bamstats.txt"), sample=sample)),
         targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_R1.hostcleaned.fastq.gz"), sample=sample)),
         targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_R2.hostcleaned.fastq.gz"), sample=sample)),
         targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_R1.mapped.fastq.gz"), sample=sample)),
         targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_R2.mapped.fastq.gz"), sample=sample)),
+        targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_host_contamination_report.txt"), sample=sample)),
 
 if config['args']['sequencing'] == 'paired':
     ## For coassembly targets
@@ -50,8 +53,9 @@ if config['args']['sequencing'] == 'paired':
     for sample in sample_names:
         targets['binning'].append(os.path.join(dir_binning, "{sample}_index.mmi").format(sample=sample))
         targets['binning'].append(os.path.join(dir_binning, "{sample}_bam", "done.txt").format(sample=sample))
-        targets['binning'].append(os.path.join(dir_binning, "{sample}_metabat2_bins", "done.txt").format(sample=sample))
-        targets['binning'].append(os.path.join(dir_binning, "drep_metabat2_bins", "done.txt"))
+        targets['binning'].append(os.path.join(dir_binning, "all_metabat2_bins", "done.txt"))
+        targets['binning'].append(os.path.join(dir_binning, "checkm2_output", "quality_report.tsv"))
+        #targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt"))
 
 @targetRule
 rule all:

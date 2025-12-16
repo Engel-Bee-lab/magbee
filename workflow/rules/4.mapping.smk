@@ -20,7 +20,11 @@ rule make_index_of_individual_assembly:
         config['resources']['smalljob']['cpu']
     shell:
         """
-        minimap2 {input.assembly} -d {output.index}
+        if [ -d {output.index} ]; then
+            echo "Index already exists. Skipping..."
+        else 
+            minimap2 {input.assembly} -d {output.index}
+        fi
         """
 
 rule map_reads_to_individual_assembly:
@@ -44,10 +48,14 @@ rule map_reads_to_individual_assembly:
         config['resources']['smalljob']['cpu']
     shell:
         """
-        mkdir -p {params.samples}
-        for f in {params.s}; do
-            minimap2 -ax sr -t {threads} {input.index} {params.reads}/"$f"_R1.hostcleaned.fastq.gz {params.reads}/"$f"_R2.hostcleaned.fastq.gz | samtools view -bS - | samtools sort -o {params.samples}/{params.ids}Ref_"$f"Reads.bam
-            samtools index {params.samples}/{params.ids}Ref_"$f"Reads.bam
-        done
-        touch {output.txt}
+        if [ -d {output.txt} ]; then
+            echo "Mapping already done. Skipping..."
+        else
+            mkdir -p {params.samples}
+            for f in {params.s}; do
+                minimap2 -ax sr -t {threads} {input.index} {params.reads}/"$f"_R1.hostcleaned.fastq.gz {params.reads}/"$f"_R2.hostcleaned.fastq.gz | samtools view -bS - | samtools sort -o {params.samples}/{params.ids}Ref_"$f"Reads.bam
+                samtools index {params.samples}/{params.ids}Ref_"$f"Reads.bam
+            done
+            touch {output.txt}
+        fi
         """

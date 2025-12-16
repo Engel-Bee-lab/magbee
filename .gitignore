@@ -6,6 +6,7 @@
 /workflow/conda/
 /testReads
 output
+/dev_test_run
 *.error
 *.out
 *.log

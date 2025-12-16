@@ -13,14 +13,25 @@ rule megahit_individual_assembly:
     conda:
         os.path.join(dir_env, "megahit.yaml")
     resources:
-        mem =config['resources']['bigjob']['mem'],
-        time = config['resources']['bigjob']['time']
+        mem =config['resources']['assemblyjob']['mem'],
+        time = config['resources']['assemblyjob']['time']
     threads: 
-        config['resources']['bigjob']['cpu']
+        config['resources']['assemblyjob']['cpu']
     shell:
         """
-        megahit -1 {input.r1} -2 {input.r2} -o {params.megahit}
-        cp {params.megahit}/final.contigs.fa {output.assembly}
+        if [ -d {params.megahit} ]; then
+            echo "Megahit already run."
+            if [ ! -f {params.megahit}/final.contigs.fa ]; then
+                echo "But final contigs file not found, rerunning megahit."
+                megahit -1 {input.r1} -2 {input.r2} -o {params.megahit} -t {threads} -m {resources.mem} -f
+            else
+                echo "Final contigs file found."
+                cp {params.megahit}/final.contigs.fa {output.assembly}
+            fi
+        else
+            megahit -1 {input.r1} -2 {input.r2} -o {params.megahit} -t {threads} -m {resources.mem}
+            cp {params.megahit}/final.contigs.fa {output.assembly}
+        fi
         """
 
 rule quast_individual:
