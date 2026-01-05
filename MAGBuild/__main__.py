@@ -99,7 +99,7 @@ MAGBuild run --input <input directory with reads> --extn fq --host_seq <path to 
 @click.option('--sequencing', 'sequencing', help="sequencing method", default='paired', show_default=True, type=click.Choice(['paired', 'longread']))
 
 @common_options
-def run(_input, extn, host_seq, output, sequencing, temp_dir, configfile, **kwargs):
+def run(_input, extn, host_seq, output, sequencing, temp_dir, configfile, conda_frontend, **kwargs):
     """Run MAGBuild"""
     copy_config(configfile, system_config=snake_base(os.path.join('config', 'config.yaml')))
 
@@ -114,6 +114,11 @@ def run(_input, extn, host_seq, output, sequencing, temp_dir, configfile, **kwar
             "temp_dir": temp_dir,
         }
     }
+
+    snake_default = list(kwargs.get('snake_default', []))
+    if conda_frontend and not any('--conda-frontend' in str(arg) for arg in snake_default):
+        snake_default.extend(['--conda-frontend', conda_frontend])
+    kwargs['snake_default'] = tuple(snake_default)
 
     # run!
     run_snakemake(

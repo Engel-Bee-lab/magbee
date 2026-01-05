@@ -7,7 +7,7 @@ rule final_binning_stats:
         gtdbtk_dir = os.path.join(dir_binning, "gtdbtk_output", "done.txt"),
         drep_dir = os.path.join(dir_binning, "drep_metabat2_bins", "done.txt")
     output:
-        final_checkm2_stats = os.path.join(dir_reports, "checkm2_quality_reports.tsv")
+        final_checkm2_stats = os.path.join(dir_reports, "checkm2_quality_reports.tsv"),
         final_gtdbtk_stats = os.path.join(dir_reports, "gtdbtk_bac120_summary.tsv"),
     params:
         checkm2=os.path.join(dir_binning, "checkm2_output", "quality_report.tsv"),
