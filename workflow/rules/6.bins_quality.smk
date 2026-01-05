@@ -1,5 +1,5 @@
 """
-Rules to evaluate bins quality running Checkm2 
+Rules to evaluate bins quality running Checkm2 and GTDBtk to assign taxonomy.
 """
 from glob import glob
 

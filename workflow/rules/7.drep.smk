@@ -1,4 +1,7 @@
 
+"""
+DRep dereplication of metabat2 bins 
+"""
 rule drep_metabat2_bins:
     input:
         bins_done = os.path.join(dir_binning, "all_metabat2_bins", "done.txt")
@@ -21,8 +24,5 @@ rule drep_metabat2_bins:
         mkdir -p {params.outdir}
         # run dRep on the copied genomes
         dRep dereplicate {params.outdir} -g {params.bins_dir}/*.fa -comp 0 -con 1000 --clusterAlg average -p {threads}
-
         touch {output.drep_dir}
         """
-
-        

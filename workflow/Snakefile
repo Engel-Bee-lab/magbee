@@ -13,8 +13,11 @@ include: os.path.join("rules", "Final_QC.smk")
 #include: os.path.join("rules", "3.co-assembly.smk")
 include: os.path.join("rules", "3.individual_assembly.smk")
 include: os.path.join("rules", "4.mapping.smk")
-include: os.path.join("rules", "4.metabat2.smk")
-include: os.path.join("rules", "5.bins_quality.smk")
+include: os.path.join("rules", "5.metabat2.smk")
+include: os.path.join("rules", "6.bins_quality.smk")
+include: os.path.join("rules", "7.drep.smk")
+include: os.path.join("rules", "Final_binning.smk")
+
 
 """Mark target rules"""
 target_rules = []
@@ -57,7 +60,10 @@ if config['args']['sequencing'] == 'paired':
         targets['binning'].append(os.path.join(dir_binning, "{sample}_bam", "done.txt").format(sample=sample))
         targets['binning'].append(os.path.join(dir_binning, "all_metabat2_bins", "done.txt"))
         targets['binning'].append(os.path.join(dir_binning, "checkm2_output", "quality_report.tsv"))
-        #targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt"))
+        targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt"))
+        # Final reports, will merge this to one file later
+        targets['binning'].append(os.path.join(dir_reports, "checkm2_quality_reports.tsv"))
+        targets['binning'].append(os.path.join(dir_reports, "gtdbtk_classification_reports.tsv"))
 
 @targetRule
 rule all:
