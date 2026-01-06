@@ -63,7 +63,7 @@ if config['args']['sequencing'] == 'paired':
         targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt"))
         # Final reports, will merge this to one file later
         targets['binning'].append(os.path.join(dir_reports, "checkm2_quality_reports.tsv"))
-        targets['binning'].append(os.path.join(dir_reports, "gtdbtk_classification_reports.tsv"))
+        targets['binning'].append(os.path.join(dir_reports, "gtdbtk_bac120_summary.tsv"))
 
 @targetRule
 rule all:
