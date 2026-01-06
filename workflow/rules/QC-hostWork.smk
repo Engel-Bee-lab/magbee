@@ -3,7 +3,7 @@ Extra steps with the host reads
     - map to the the reference mitogenome
 """
 
-rule host_mapping:
+rule host_mito_mapping:
     input:
         mr1 = os.path.join(dir_hostcleaned,"{sample}_R1.mapped.fastq.gz"),
         mr2 = os.path.join(dir_hostcleaned,"{sample}_R2.mapped.fastq.gz"),
@@ -12,8 +12,8 @@ rule host_mapping:
         mr1_mt = os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mt_R1.mapped.fastq.gz"),
         mr2_mt = os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mt_R2.mapped.fastq.gz"),
     params:
-        mapped_bam=os.path.join(dir_hostcleaned,"{sample}_mapped.bam"),
-        stats=os.path.join(dir_hostcleaned,"{sample}_bamstats.txt")
+        mapped_bam=os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mapped.bam"),
+        stats=os.path.join(dir_hostcleaned, "mitogenome", "{sample}_bamstats.txt")
     conda:
         os.path.join(dir_env, "minimap2.yaml")
     resources:

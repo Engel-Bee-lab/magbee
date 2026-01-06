@@ -42,7 +42,7 @@ if config['args']['sequencing'] == 'paired':
         targets['qc'].append(expand(os.path.join(dir_reports,"QC","{sample}_host_qc_report.txt"), sample=sample)),
         targets['qc'].append(os.path.join(dir_reports, "final_host_qc_summary.txt"))
 
-f config['args']['sequencing'] == 'paired':
+if config['args']['sequencing'] == 'paired':
     for sample in sample_names:
         targets['host'].append(expand(os.path.join(dir_hostcleaned,"{sample}_R1.mapped.fastq.gz"), sample=sample)),
         targets['host'].append(expand(os.path.join(dir_hostcleaned,"{sample}_R2.mapped.fastq.gz"), sample=sample)),
@@ -66,7 +66,6 @@ if config['args']['sequencing'] == 'paired':
         targets['binning'].append(os.path.join(dir_binning, "all_metabat2_bins", "done.txt"))
         targets['binning'].append(os.path.join(dir_binning, "checkm2_output", "quality_report.tsv"))
         targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt"))
-        # Final reports, will merge this to one file later
         targets['binning'].append(os.path.join(dir_reports, "checkm2_quality_reports.tsv"))
         targets['binning'].append(os.path.join(dir_reports, "gtdbtk_bac120_summary.tsv"))
 
@@ -84,7 +83,7 @@ rule qc:
         targets['qc']
 
 @targetRule
-rule host_extra:
+rule host:
     input:
         targets['host']
     
