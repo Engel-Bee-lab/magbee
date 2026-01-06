@@ -9,6 +9,7 @@ configfile: os.path.join(workflow.basedir, "..", "config", "config.yaml")
 include: os.path.join("rules", "0.preflight.smk")
 include: os.path.join("rules", "1.qc.smk")
 include: os.path.join("rules", "2.host_contamination.smk")
+include: os.path.join("rules", "QC-hostWork.smk")
 include: os.path.join("rules", "Final_QC.smk")
 #include: os.path.join("rules", "3.co-assembly.smk")
 include: os.path.join("rules", "3.individual_assembly.smk")
@@ -29,9 +30,8 @@ def targetRule(fn):
 """
 Defining the targets dictionary
 """
-targets ={'qc':[], 'assemble':[], 'binning':[]}
+targets ={'qc':[], 'host':[], 'assemble':[], 'binning':[]}
 
-targets['qc'] = []
 if config['args']['sequencing'] == 'paired':
     for sample in sample_names:
         targets['qc'].append(expand(os.path.join(dir_fastp,"{sample}.stats.html"), sample=sample)),
@@ -39,10 +39,15 @@ if config['args']['sequencing'] == 'paired':
         targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_bamstats.txt"), sample=sample)),
         targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_R1.hostcleaned.fastq.gz"), sample=sample)),
         targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_R2.hostcleaned.fastq.gz"), sample=sample)),
-        targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_R1.mapped.fastq.gz"), sample=sample)),
-        targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_R2.mapped.fastq.gz"), sample=sample)),
         targets['qc'].append(expand(os.path.join(dir_reports,"QC","{sample}_host_qc_report.txt"), sample=sample)),
         targets['qc'].append(os.path.join(dir_reports, "final_host_qc_summary.txt"))
+
+f config['args']['sequencing'] == 'paired':
+    for sample in sample_names:
+        targets['host'].append(expand(os.path.join(dir_hostcleaned,"{sample}_R1.mapped.fastq.gz"), sample=sample)),
+        targets['host'].append(expand(os.path.join(dir_hostcleaned,"{sample}_R2.mapped.fastq.gz"), sample=sample)),
+        targets['host'].append(expand(os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mt_R1.mapped.fastq.gz"), sample=sample)),
+        targets['host'].append(expand(os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mt_R2.mapped.fastq.gz"), sample=sample))
 
 if config['args']['sequencing'] == 'paired':
     ## For coassembly targets
@@ -69,6 +74,7 @@ if config['args']['sequencing'] == 'paired':
 rule all:
     input:
         targets['qc'],
+        targets['host'],
         targets['assemble'],
         targets['binning']
 
@@ -77,6 +83,11 @@ rule qc:
     input:
         targets['qc']
 
+@targetRule
+rule host_extra:
+    input:
+        targets['host']
+    
 @targetRule
 rule assembly:
     input:

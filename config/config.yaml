@@ -24,3 +24,6 @@ args:
 databases:
   checkm_db: /users/bnalaga1/scratch/reference_db/CheckM2_database
   gtdbtk_db: /users/bnalaga1/scratch/reference_db/release226/
+
+extra_db:
+  mitogenome: /users/bnalaga1/scratch/reference_db/CM009947_ref_mt.fasta

@@ -1,3 +1,0 @@
-"""
-Assembling the host reads
-"""
