@@ -163,7 +163,6 @@ rule snp_alignment:
         else
             SAMPLE_FULL=$(bcftools query -l {input.merged_vcf} | grep "{wildcards.sample}")
             bcftools consensus -s "$SAMPLE_FULL" -f {input.host} {input.merged_vcf} > {output.consensus_fasta}
-        """
         fi
         """
 
