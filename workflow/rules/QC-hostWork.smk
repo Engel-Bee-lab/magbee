@@ -157,7 +157,7 @@ rule snp_alignment:
     shell:
         """
         set -euo pipefail
-        if [ -f {output.aln_fasta} ]; then
+        if [ -f {output.consensus_fasta} ]; then
             echo "SNP alignment fasta already exists. Skipping..."
             exit 0
         else
