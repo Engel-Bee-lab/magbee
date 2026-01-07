@@ -143,7 +143,6 @@ rule merge_vcf:
 
 rule snp_alignment:
     input:
-        vcf = os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.filtered.norm.vcf.gz"),
         merged_vcf = os.path.join(dir_hostcleaned, "mitogenome", "merged_mitogenome_snps.filtered.norm.vcf.gz"),
         host= config['extra_db']['mitogenome']
     output:
