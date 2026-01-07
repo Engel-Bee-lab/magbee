@@ -143,15 +143,15 @@ rule merge_vcf:
 
 rule snp_alignment:
     input:
+        vcf=os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.filtered.norm.vcf.gz"),
         merged_vcf = os.path.join(dir_hostcleaned, "mitogenome", "merged_mitogenome_snps.filtered.norm.vcf.gz"),
         host= config['extra_db']['mitogenome']
     output:
-        aln_fasta = os.path.join(dir_hostcleaned, "mitogenome", "aligned_fasta_done.txt")
-    params:
-        prefix = os.path.join(dir_hostcleaned, "mitogenome"),
-        sample = "{sample}",
+        aln_fasta = os.path.join(dir_hostcleaned, "mitogenome", "{sample}_consenus.fasta")
     conda:
         os.path.join(dir_env, "bcftools.yaml")
+    params:
+        sample="{sample}"
     shell:
         """
         set -euo pipefail
@@ -160,7 +160,7 @@ rule snp_alignment:
             exit 0
         else
             bcftools query -l {input.merged_vcf} | while read {params.sample}; do
-                bcftools consensus -s {params.sample} -f {input.host} {input.merged_vcf} > {params.prefix}/{params.sample}_consensus.fasta
+                bcftools consensus -s {params.sample} -f {input.host} {input.merged_vcf} > {output.aln_fasta}
             done
             touch {output.aln_fasta}
         fi
