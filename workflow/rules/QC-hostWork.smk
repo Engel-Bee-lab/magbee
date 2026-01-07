@@ -119,7 +119,7 @@ rule normalise_vcfs:
 
 rule merge_vcf:
     input:
-        expand(os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.filtered.norm.vcf.gz"), sample=samples)
+        expand(os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.filtered.norm.vcf.gz"), sample=sample_names)
     output:
         merged_vcf = os.path.join(dir_hostcleaned, "mitogenome", "merged_mitogenome_snps.filtered.norm.vcf.gz")
     params:
@@ -168,7 +168,7 @@ rule snp_alignment:
 
 rule build_alignment_fasta:
     input:
-        expand(os.path.join(dir_hostcleaned, "mitogenome", "{sample}_consensus.fasta"), sample=samples)
+        expand(os.path.join(dir_hostcleaned, "mitogenome", "{sample}_consensus.fasta"), sample=samples_names)
     output:
         final_fasta = os.path.join(dir_hostcleaned, "mitogenome", "final_mitogenome_alignment.fasta")
     params:
