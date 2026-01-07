@@ -168,7 +168,8 @@ rule snp_alignment:
 
 rule build_alignment_fasta:
     input:
-        expand(os.path.join(dir_hostcleaned, "mitogenome", "{sample}_consensus.fasta"), sample=sample_names)
+        aln_fasta = os.path.join(dir_hostcleaned, "mitogenome", "aligned_fasta_done.txt"),
+        fasta=expand(os.path.join(dir_hostcleaned, "mitogenome", "{sample}_consensus.fasta"), sample=sample_names)
     output:
         final_fasta = os.path.join(dir_hostcleaned, "mitogenome", "final_mitogenome_alignment.fasta")
     params:
