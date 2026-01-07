@@ -161,9 +161,7 @@ rule snp_alignment:
             echo "SNP alignment fasta already exists. Skipping..."
             exit 0
         else
-            bcftools query -l {input.merged_vcf} | while read {params.sample}; do
-                bcftools consensus -s {params.sample} -f {input.host} {input.merged_vcf} > {output.consensus_fasta}
-            done
+            bcftools consensus -s {params.sample} -f {input.host} {input.merged_vcf} > {output.consensus_fasta}
         fi
         """
 
