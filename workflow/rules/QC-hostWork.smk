@@ -176,7 +176,7 @@ rule build_alignment_fasta:
     params:
         folder=os.path.join(dir_hostcleaned, "mitogenome")
     conda:
-        os.path.join(dir_env, "general.yaml")
+        os.path.join(dir_env, "bcftools.yaml")
     shell:
         """
         set -euo pipefail
