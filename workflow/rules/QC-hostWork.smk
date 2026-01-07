@@ -162,9 +162,8 @@ rule snp_alignment:
             exit 0
         else
             bcftools query -l {input.merged_vcf} | while read {params.sample}; do
-                bcftools consensus -s {params.sample} -f {input.host} {input.merged_vcf} > {output.aln_fasta}
+                bcftools consensus -s {params.sample} -f {input.host} {input.merged_vcf} > {output.consensus_fasta}
             done
-            touch {output.aln_fasta}
         fi
         """
 
