@@ -2,6 +2,7 @@
 Extra steps with the host reads 
     - map to the the reference mitogenome
 """
+from glob import glob
 
 rule host_mito_mapping:
     input:
@@ -88,5 +89,117 @@ rule host_mito_snps:
             bcftools stats {output.filterred_vcf} > {params.stats}
             samtools depth {params.sort_bam} > {params.depth}
         fi
+        """
 
+rule normalise_vcfs:
+    input:
+        filterred_vcf = os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.filtered.vcf.gz")
+    output:
+        norm_vcf = os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.filtered.norm.vcf.gz")
+    params:
+        host= config['extra_db']['mitogenome'],
+        temp=os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.filtered.temp.vcf.gz")
+    conda:
+        os.path.join(dir_env, "bcftools.yaml")
+    shell:
+        """
+        set -euo pipefail
+        if [ -f {output.norm_vcf} ]; then
+            echo "Normalized VCF already exists. Skipping..."
+            exit 0
+        else
+            bcftools norm -f {params.host} -m -any {input.filterred_vcf} -Oz -o {params.norm_vcf} 
+            bcftools index {params.norm_vcf}
+
+            #then keep only SNPs
+            bcftools view -v snps {params.norm_vcf} -Oz -o {output.norm_vcf}
+            bcftools index {output.norm_vcf}
+        fi
+        """
+
+rule merge_vcf:
+    input:
+        expand(os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.filtered.norm.vcf.gz"), sample=samples)
+    output:
+        merged_vcf = os.path.join(dir_hostcleaned, "mitogenome", "merged_mitogenome_snps.filtered.norm.vcf.gz")
+    params:
+        temp=os.path.join(dir_hostcleaned, "mitogenome", "merged_mitogenome_snps.temp.vcf.gz"),
+        folder=os.path.join(dir_hostcleaned, "mitogenome")
+    conda:
+        os.path.join(dir_env, "bcftools.yaml")
+    shell:
+        """
+        set -euo pipefail
+        if [ -f {output.merged_vcf} ]; then
+            echo "Merged VCF already exists. Skipping..."
+            exit 0
+        else
+            bcftools merge -Oz -o {params.temp} {params.folder}/*_mitogenome_snps.filtered.norm.vcf.gz
+
+            mv {params.temp} {output.merged_vcf}
+            bcftools index {output.merged_vcf}
+        fi
+        """
+
+rule snp_alignment:
+    input:
+        merged_vcf = os.path.join(dir_hostcleaned, "mitogenome", "merged_mitogenome_snps.filtered.norm.vcf.gz"),
+        host= config['extra_db']['mitogenome']
+    output:
+        aln_fasta = os.path.join(dir_hostcleaned, "mitogenome", "aligned_fasta_done.txt")
+    params:
+        prefix = os.path.join(dir_hostcleaned, "mitogenome"),
+        sample = "{sample}",
+    conda:
+        os.path.join(dir_env, "bcftools.yaml")
+    shell:
+        """
+        set -euo pipefail
+        if [ -f {output.aln_fasta} ]; then
+            echo "SNP alignment fasta already exists. Skipping..."
+            exit 0
+        else
+            bcftools query -l {input.merged_vcf} | while read {params.sample}; do
+                bcftools consensus -s {params.sample} -f {input.host} {input.merged_vcf} > {params.prefix}/{params.sample}_consensus.fasta
+            done
+            touch {output.aln_fasta}
+        fi
+        """
+
+rule build_alignment_fasta:
+    input:
+        expand(os.path.join(dir_hostcleaned, "mitogenome", "{sample}_consensus.fasta"), sample=samples)
+    output:
+        final_fasta = os.path.join(dir_hostcleaned, "mitogenome", "final_mitogenome_alignment.fasta")
+    params:
+        folder=os.path.join(dir_hostcleaned, "mitogenome")
+    conda:
+        os.path.join(dir_env, "general.yaml")
+    shell:
+        """
+        set -euo pipefail
+        if [ -f {output.final_fasta} ]; then
+            echo "Final alignment fasta already exists. Skipping..."
+            exit 0
+        else
+            snp-sites -o {output.final_fasta} {params.folder}/*_consensus.fasta
+        fi
+        """
+
+rule phylo_tree:
+    input:
+        final_fasta = os.path.join(dir_hostcleaned, "mitogenome", "final_mitogenome_alignment.fasta")
+    output:
+        tree = os.path.join(dir_reports, "mitogenome", "mitogenome_phylo_tree.nwk")
+    conda:
+        os.path.join(dir_env, "bcftools.yaml")
+    shell:
+        """
+        set -euo pipefail
+        if [ -f {output.tree} ]; then
+            echo "Phylogenetic tree already exists. Skipping..."
+            exit 0
+        else
+            iqtree -s {input.final_fasta} -m GTR+G -bb 3000 -nt AUTO
+        fi
         """

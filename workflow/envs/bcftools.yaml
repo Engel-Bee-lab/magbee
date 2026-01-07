@@ -4,3 +4,5 @@ channels:
 dependencies:
     - bcftools>=1.23
     - samtools>=1.22.1
+    - snp-sites>=2.5.1
+    - iqtree>=3.0.1

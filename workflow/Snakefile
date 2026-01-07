@@ -50,6 +50,10 @@ if config['args']['sequencing'] == 'paired':
         targets['host'].append(expand(os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mt_R2.mapped.fastq.gz"), sample=sample)),
         targets['host'].append(expand(os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.vcf.gz"), sample=sample)),
         targets['host'].append(expand(os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.filtered.vcf.gz"), sample=sample))
+        targets['host'].append(expand(os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.filtered.norm.vcf.gz"), sample=sample))
+        targets['host'].append(os.path.join(dir_hostcleaned, "mitogenome", "final_mitogenome_alignment.fasta"))
+        targets['host'].append(os.path.join(dir_reports, "mitogenome", "mitogenome_phylo_tree.nwk"))
+
 
 if config['args']['sequencing'] == 'paired':
     ## For coassembly targets
