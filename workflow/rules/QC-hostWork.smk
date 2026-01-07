@@ -143,11 +143,13 @@ rule merge_vcf:
 
 rule snp_alignment:
     input:
-        vcf=os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.filtered.norm.vcf.gz"),
+        vcf = os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.filtered.norm.vcf.gz"),
         merged_vcf = os.path.join(dir_hostcleaned, "mitogenome", "merged_mitogenome_snps.filtered.norm.vcf.gz"),
         host= config['extra_db']['mitogenome']
     output:
-        aln_fasta = os.path.join(dir_hostcleaned, "mitogenome", "{sample}_consenus.fasta")
+        consensus_fasta = os.path.join(dir_hostcleaned, "mitogenome", "{sample}_consensus.fasta")
+    params:
+        sample = "{sample}",
     conda:
         os.path.join(dir_env, "bcftools.yaml")
     params:
@@ -168,7 +170,6 @@ rule snp_alignment:
 
 rule build_alignment_fasta:
     input:
-        aln_fasta = os.path.join(dir_hostcleaned, "mitogenome", "aligned_fasta_done.txt"),
         fasta=expand(os.path.join(dir_hostcleaned, "mitogenome", "{sample}_consensus.fasta"), sample=sample_names)
     output:
         final_fasta = os.path.join(dir_hostcleaned, "mitogenome", "final_mitogenome_alignment.fasta")

@@ -52,7 +52,7 @@ if config['args']['sequencing'] == 'paired':
         targets['host'].append(expand(os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.filtered.vcf.gz"), sample=sample))
         targets['host'].append(expand(os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.filtered.norm.vcf.gz"), sample=sample))
         targets['host'].append(os.path.join(dir_hostcleaned, "mitogenome", "merged_mitogenome_snps.filtered.norm.vcf.gz"))
-        targets['host'].append(os.path.join(dir_hostcleaned, "mitogenome", "aligned_fasta_done.txt"))
+        targets['host'].append(expand(os.path.join(dir_hostcleaned, "mitogenome", "{sample}_consensus.fasta"), sample=sample))
         targets['host'].append(os.path.join(dir_hostcleaned, "mitogenome", "final_mitogenome_alignment.fasta"))
         targets['host'].append(os.path.join(dir_reports, "mitogenome", "mitogenome_phylo_tree.nwk"))
 
