@@ -49,7 +49,7 @@ rule host_mito_snps:
         bam = os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mapped.bam"),
         host= config['extra_db']['mitogenome']
     output:
-        vcf = os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.vcf.gz")
+        vcf = os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.vcf.gz"),
         filterred_vcf = os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.filtered.vcf.gz")
     params:
         sort_bam=os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mapped.sorted.bam"),
@@ -72,12 +72,12 @@ rule host_mito_snps:
         else
 
             #prep the bam
-            samtootls sort -o {params.sort_bam} {input.bam}
+            samtools sort -o {params.sort_bam} {input.bam}
             samtools index {params.sort_bam}
 
             #call variants
             bcftools mpileup -f {input.host} -Q 20 -q 20 {params.sort_bam} | \
-                bcftools call -mv -Ov -o {output.vcf}
+                bcftools call --ploidy 1 -mv -Ov -o {output.vcf}
             bcftools index {output.vcf}
 
             #filter the SNPs, QUAL>30 means 0.1% error rate, DP>10 means at least 10 reads support
