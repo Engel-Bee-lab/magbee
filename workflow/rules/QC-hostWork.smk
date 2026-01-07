@@ -98,7 +98,7 @@ rule normalise_vcfs:
         norm_vcf = os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.filtered.norm.vcf.gz")
     params:
         host= config['extra_db']['mitogenome'],
-        temp=os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.filtered.temp.vcf.gz")
+        temp=os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.filtered.temp.vcf.gz"), 
     conda:
         os.path.join(dir_env, "bcftools.yaml")
     shell:
@@ -108,11 +108,11 @@ rule normalise_vcfs:
             echo "Normalized VCF already exists. Skipping..."
             exit 0
         else
-            bcftools norm -f {params.host} -m -any {input.filterred_vcf} -Oz -o {params.norm_vcf} 
-            bcftools index {params.norm_vcf}
+            bcftools norm -f {params.host} -m -any {input.filterred_vcf} -Oz -o {params.temp} 
+            bcftools index {params.temp}
 
             #then keep only SNPs
-            bcftools view -v snps {params.norm_vcf} -Oz -o {output.norm_vcf}
+            bcftools view -v snps {params.temp} -Oz -o {output.norm_vcf}
             bcftools index {output.norm_vcf}
         fi
         """
