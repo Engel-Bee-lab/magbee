@@ -163,6 +163,9 @@ rule snp_alignment:
         else
             SAMPLE_FULL=$(bcftools query -l {input.merged_vcf} | grep "{wildcards.sample}")
             bcftools consensus -s "$SAMPLE_FULL" -f {input.host} {input.merged_vcf} > {output.consensus_fasta}
+
+            # Add sample name to fasta header
+            sed -i "s/>/>${{wildcards.sample}}_/g" {output.consensus_fasta}
         fi
         """
 
@@ -182,7 +185,8 @@ rule build_alignment_fasta:
             echo "Final alignment fasta already exists. Skipping..."
             exit 0
         else
-            snp-sites -o {output.final_fasta} {params.folder}/*_consensus.fasta
+            cat {params.folder}/*_consensus.fasta > all_samples.fasta
+            snp-sites -o {output.final_fasta} all_samples.fasta
         fi
         """
 
