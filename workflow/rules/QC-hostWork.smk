@@ -117,6 +117,33 @@ rule normalise_vcfs:
         fi
         """
 
+rule generate_allele_frequency:
+    input:
+        norm_vcf = os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.filtered.norm.vcf.gz")
+    output:
+        af_table = os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.allele_frequency.txt")
+    params:
+        prefix = "{sample}",
+    conda:
+        os.path.join(dir_env, "bcftools.yaml")
+    shell:
+        """
+        set -euo pipefail
+        if [ -f {output.af_table} ]; then
+            echo "Allele frequency table already exists. Skipping..."
+            exit 0
+        else
+            bcftools query -f '%POS\t[%AD]\n' "$vcf" |   awk -v s={params.prefix} '{
+                split($2,a,",");
+                if (length(a) == 2) {
+                total = a[1] + a[2];
+                if (total > 0)
+                    print s "\t" $1 "\t" a[2]/total
+                }
+            } > {output.af_table}
+        fi
+        """
+
 rule merge_vcf:
     input:
         expand(os.path.join(dir_hostcleaned, "mitogenome", "{sample}_mitogenome_snps.filtered.norm.vcf.gz"), sample=sample_names)
