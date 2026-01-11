@@ -173,11 +173,11 @@ rule build_alignment_fasta:
     input:
         fasta=expand(os.path.join(dir_hostcleaned, "mitogenome", "{sample}_consensus.fasta"), sample=sample_names)
     output:
-        final_fasta = os.path.join(dir_hostcleaned, "mitogenome", "final_mitogenome_alignment.fasta")
+        final_fasta = os.path.join(dir_hostcleaned, "mitogenome", "final_mitogenome.aln")
     params:
         folder=os.path.join(dir_hostcleaned, "mitogenome")
     conda:
-        os.path.join(dir_env, "bcftools.yaml")
+        os.path.join(dir_env, "mafft.yaml")
     shell:
         """
         set -euo pipefail
@@ -186,13 +186,14 @@ rule build_alignment_fasta:
             exit 0
         else
             cat {params.folder}/*_consensus.fasta > all_samples.fasta
-            snp-sites -o {output.final_fasta} all_samples.fasta
+            #snp-sites -o {output.final_fasta} all_samples.fasta
+            mafft --auto all_samples_WRef.fasta > {output.final_fasta}
         fi
         """
 
 rule phylo_tree:
     input:
-        final_fasta = os.path.join(dir_hostcleaned, "mitogenome", "final_mitogenome_alignment.fasta")
+        final_fasta = os.path.join(dir_hostcleaned, "mitogenome", "final_mitogenome.aln")
     output:
         tree = os.path.join(dir_reports, "mitogenome", "mitogenome_phylo_tree.nwk")
     conda:
