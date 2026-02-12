@@ -13,10 +13,10 @@ rule megahit_individual_assembly:
     conda:
         os.path.join(dir_env, "megahit.yaml")
     resources:
-        mem =config['resources']['assemblyjob']['mem'],
-        time = config['resources']['assemblyjob']['time']
+        mem_mb =config['resources']['assemblyjob']['mem_mb'],
+        runtime = config['resources']['assemblyjob']['runtime']
     threads: 
-        config['resources']['assemblyjob']['cpu']
+        config['resources']['assemblyjob']['threads']
     shell:
         """
         if [ -d {params.megahit} ]; then
@@ -44,10 +44,10 @@ rule quast_individual:
     conda:
         os.path.join(dir_env, "megahit.yaml")
     resources:
-        mem =config['resources']['smalljob']['mem'],
-        time = config['resources']['smalljob']['time']
+        mem_mb =config['resources']['smalljob']['mem_mb'],
+        runtime = config['resources']['smalljob']['runtime']
     threads: 
-        config['resources']['smalljob']['cpu']
+        config['resources']['smalljob']['threads']
     shell:
         """
         quast {input.assembly} -o {params.outdir} --threads {threads}

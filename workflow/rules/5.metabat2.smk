@@ -15,10 +15,10 @@ rule metabat2_binning_individual_sample:
     conda:
         os.path.join(dir_env, "metabat2.yaml")
     resources:
-        mem =config['resources']['bigjob']['mem'],
-        time = config['resources']['bigjob']['time']
+        mem_mb =config['resources']['bigjob']['mem_mb'],
+        runtime = config['resources']['bigjob']['runtime']
     threads: 
-        config['resources']['bigjob']['cpu']
+        config['resources']['bigjob']['threads']
     shell:
         """
         mkdir -p {params.outdir}

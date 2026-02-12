@@ -59,28 +59,39 @@ extn=config['args']['extn']
 
 if config['args']['sequencing'] == 'paired':
     # match only read1 files where the final pair suffix appears immediately before the extension
-    pattern = os.path.join(input_dir, f'*_1.{extn}')
-    # also accept common _R1 naming
-    pattern_r1 = os.path.join(input_dir, f'*_R1.{extn}')
-    file_paths = sorted(set(glob.glob(pattern) + glob.glob(pattern_r1)))
-    # Strip common FASTQ extensions and remove only the final pair suffix (_1/_2 or _R1/_R2)
-    sample_names = [
-        re.sub(r'(?i)(?:_R?[12])$', '', re.sub(r"\.(?:fq|fastq)(?:\.gz)?$", '', os.path.basename(fp)))
-        for fp in file_paths
-    ]
-    # preserve order but remove duplicates if any
-    sample_names = list(dict.fromkeys(sample_names))
-elif config['args']['sequencing'] == 'longread':
-    pattern = os.path.join(input_dir, f"*.{extn}")
-    file_paths = sorted(glob.glob(pattern))
-    sample_names = [re.sub(r"\.(?:fq|fastq)(?:\.gz)?$", '', os.path.basename(fp)) for fp in file_paths]
+    pattern = os.path.join(input_dir, f'*_[R]?[1].{extn}')
+    file_paths = sorted(set(glob.glob(pattern) + glob.glob(pattern)))
+    r1_files = sorted(set(glob.glob(pattern)))
+    
+    pair_regex = re.compile(
+        rf'^(?P<sample>.+?)_(?P<read_extn>R?[12])\.{re.escape(extn)}$',
+        re.IGNORECASE
+    )
+    
+    paired_reads = {}
 
-print(f"Samples are {sample_names}")
+    for fp in r1_files:
+        fname = os.path.basename(fp)
+        match = pair_regex.match(fname)
+        if match:
+            sample = match.group('sample')
+            read_extn = match.group('read_extn')
+            paired_reads.setdefault(sample, {})[read_extn] = fp
 
-FQEXTN = extn[0]
-PATTERN_R1 = '{sample}_1.' + extn
-PATTERN_R2 = '{sample}_2.' + extn
-PATTERN_LONG= '{sample}' + extn
+    for sample, reads in paired_reads.items():
+        r1 = reads.get('1') or reads.get('R1')
+        r2 = reads.get('2') or reads.get('R2')
+
+        if not r1 or not r2:
+            raise ValueError(f"Missing pair for sample {sample}")
+
+        print(f"{sample}: R1={r1}, R2={r2}")
+    
+    #getting the number of samples 
+    sample_names = list(paired_reads.keys())
+    N_SAMPLES = len(sample_names)
+    THRESHOLD = config['args'].get('mapping_threshold', 100)
+
 
 """ONSTART/END/ERROR
 Tasks to perform at various stages the start and end of a run.
@@ -103,6 +114,7 @@ onstart:
 onsuccess:
     """Print a success message"""
     sys.stderr.write('\n\n Workflow ran successfully!\n\n')
+
 onerror:
     """Print an error message"""
     sys.stderr.write('\n\n Workflow run failed\n\n')

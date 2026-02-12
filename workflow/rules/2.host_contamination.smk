@@ -12,10 +12,10 @@ rule host_mapping:
     conda:
         os.path.join(dir_env, "minimap2.yaml")
     resources:
-        mem =config['resources']['smalljob']['mem'],
-        time = config['resources']['smalljob']['time']
+        mem_mb =config['resources']['smalljob']['mem_mb'],
+        runtime = config['resources']['smalljob']['runtime']
     threads: 
-        config['resources']['smalljob']['cpu']
+        config['resources']['smalljob']['threads']
     shell:
         """
         set -euo pipefail
@@ -45,10 +45,10 @@ rule unmapped_reads:
     conda:
         os.path.join(dir_env, "minimap2.yaml")
     resources:
-        mem =config['resources']['smalljob']['mem'],
-        time = config['resources']['smalljob']['time']
+        mem_mb =config['resources']['smalljob']['mem_mb'],
+        runtime = config['resources']['smalljob']['runtime']
     threads: 
-        config['resources']['smalljob']['cpu']
+        config['resources']['smalljob']['threads']
     shell:
         """
         set -euo pipefail
@@ -86,10 +86,10 @@ rule host_mapped_reads:
     conda:
         os.path.join(dir_env, "minimap2.yaml")
     resources:
-        mem =config['resources']['smalljob']['mem'],
-        time = config['resources']['smalljob']['time']
+        mem_mb =config['resources']['smalljob']['mem_mb'],
+        runtime = config['resources']['smalljob']['runtime']
     threads: 
-        config['resources']['smalljob']['cpu']
+        config['resources']['smalljob']['threads']
     shell:
         """
         set -euo pipefail

@@ -1,4 +1,4 @@
-name: fastp
+name: minimap
 channels:
     - bioconda
 dependencies:

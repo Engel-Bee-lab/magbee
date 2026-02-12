@@ -14,10 +14,10 @@ rule make_index_of_individual_assembly:
     conda:
         os.path.join(dir_env, "minimap2.yaml")
     resources:
-        mem =config['resources']['smalljob']['mem'],
-        time = config['resources']['smalljob']['time']
+        mem_mb =config['resources']['smalljob']['mem_mb'],
+        runtime = config['resources']['smalljob']['runtime']
     threads: 
-        config['resources']['smalljob']['cpu']
+        config['resources']['smalljob']['threads']
     shell:
         """
         if [ -d {output.index} ]; then
@@ -42,10 +42,10 @@ rule map_reads_to_individual_assembly:
     conda:
         os.path.join(dir_env, "minimap2.yaml")
     resources:
-        mem =config['resources']['smalljob']['mem'],
-        time = config['resources']['smalljob']['time']
+        mem_mb =config['resources']['smalljob']['mem_mb'],
+        runtime = config['resources']['smalljob']['runtime']
     threads: 
-        config['resources']['smalljob']['cpu']
+        config['resources']['smalljob']['threads']
     shell:
         """
         if [ -d {output.txt} ]; then

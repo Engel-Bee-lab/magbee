@@ -14,10 +14,10 @@ rule fastp:
     conda:
         os.path.join(dir_env, "fastp.yaml")
     resources:
-        mem =config['resources']['smalljob']['mem'],
-        time = config['resources']['smalljob']['time']
+        mem_mb =config['resources']['smalljob']['mem_mb'],
+        runtime = config['resources']['smalljob']['runtime']
     threads: 
-        config['resources']['smalljob']['cpu']
+        config['resources']['smalljob']['threads']
     shell:
         """
         # Default params in this command 

@@ -15,10 +15,10 @@ rule bins_checkm2:
     conda:
         os.path.join(dir_env, "checkm2.yaml")
     resources:
-        mem =config['resources']['smalljob']['mem'],
-        time = config['resources']['smalljob']['time']
+        mem_mb =config['resources']['smalljob']['mem_mb'],
+        runtime = config['resources']['smalljob']['runtime']
     threads: 
-        config['resources']['smalljob']['cpu']
+        config['resources']['smalljob']['threads']
     shell:
         """
         mkdir -p {params.outdir}
@@ -40,10 +40,10 @@ rule gtdbtk_bins:
     conda:
         os.path.join(dir_env, "gtdbtk.yaml")
     resources:
-        mem  = config['resources']['bigjob']['mem'],
-        time = config['resources']['bigjob']['time']
+        mem_mb  = config['resources']['bigjob']['mem_mb'],
+        runtime = config['resources']['bigjob']['runtime']
     threads:
-        config['resources']['bigjob']['cpu']
+        config['resources']['bigjob']['threads']
     shell:
         """
         set -euo pipefail

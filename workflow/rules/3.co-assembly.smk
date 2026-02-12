@@ -11,10 +11,10 @@ rule megahit_coassembly:
     conda:
         os.path.join(dir_env, "megahit.yaml")
     resources:
-        mem =config['resources']['bigjob']['mem'],
-        time = config['resources']['bigjob']['time']
+        mem_mb =config['resources']['bigjob']['mem_mb'],
+        runtime = config['resources']['bigjob']['runtime']
     threads: 
-        config['resources']['bigjob']['cpu']
+        config['resources']['bigjob']['threads']
     shell:
         """
         cat {input.r1} > {dir_assembly}/coassembly_R1.fastq.gz
@@ -32,10 +32,10 @@ rule quast:
     conda:
         os.path.join(dir_env, "megahit.yaml")
     resources:
-        mem =config['resources']['smalljob']['mem'],
-        time = config['resources']['smalljob']['time']
+        mem_mb =config['resources']['smalljob']['mem_mb'],
+        runtime = config['resources']['smalljob']['runtime']
     threads: 
-        config['resources']['smalljob']['cpu']
+        config['resources']['smalljob']['threads']
     shell:
         """
         quast {input.assembly} -o {dir_assembly}/quast_output --threads {threads} > {output.report}

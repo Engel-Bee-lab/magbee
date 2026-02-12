@@ -1,16 +1,20 @@
 resources:
   smalljob:
-    cpu: 2
-    mem: 16000
-    time: 240
+    threads: 2
+    mem_mb: 16000
+    runtime: 240
   assemblyjob:
-    cpu: 64
-    mem: 256000
-    time: 2880
+    threads: 64
+    mem_mb: 256000
+    runtime: 2880
   bigjob:
-    cpu: 32
-    mem: 64000
-    time: 480
+    threads: 32
+    mem_mb: 64000
+    runtime: 480
+  longjob:
+    threads: 16
+    mem_mb: 32000
+    runtime: 1440
 
 args:
   input: 
@@ -22,8 +26,5 @@ args:
   temp_dir: 
 
 databases:
-  checkm_db: /users/bnalaga1/scratch/reference_db/CheckM2_database
-  gtdbtk_db: /users/bnalaga1/scratch/reference_db/release226/
-
-extra_db:
-  mitogenome: /users/bnalaga1/scratch/reference_db/CM009947_ref_mt.fasta
+  checkm_db: /work/FAC/FBM/DMF/pengel/general_data/common_databases/checkm2/CheckM2_database
+  gtdbtk_db: /work/FAC/FBM/DMF/pengel/general_data/common_databases/gtdb/release226

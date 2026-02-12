@@ -1,5 +1,5 @@
-name: bcftools
+name: simka
 channels:
     - bioconda
 dependencies:
-    - mafft>=7.525
+    - simka>=1.5.3
