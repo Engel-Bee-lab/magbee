@@ -11,12 +11,12 @@ include: os.path.join("rules", "1.qc.smk")
 include: os.path.join("rules", "2.host_contamination.smk")
 include: os.path.join("rules", "Final_QC.smk")
 #include: os.path.join("rules", "3.co-assembly.smk")
-include: os.path.join("rules", "3.individual_assembly.smk")
-include: os.path.join("rules", "4.mapping.smk")
-include: os.path.join("rules", "5.metabat2.smk")
-include: os.path.join("rules", "6.bins_quality.smk")
-include: os.path.join("rules", "7.drep.smk")
-include: os.path.join("rules", "Final_binning.smk")
+#include: os.path.join("rules", "3.individual_assembly.smk")
+#include: os.path.join("rules", "4.mapping.smk")
+#include: os.path.join("rules", "5.metabat2.smk")
+#include: os.path.join("rules", "6.bins_quality.smk")
+#include: os.path.join("rules", "7.drep.smk")
+#include: os.path.join("rules", "Final_binning.smk")
 
 #############################################
 # AFTER sample detection logic for maping 
