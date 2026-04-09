@@ -39,7 +39,7 @@ dependencies = [
 ]
 
 [project.scripts]
-MAGBee = "magbee.__main__:main"
+magbee = "magbee.__main__:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
