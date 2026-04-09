@@ -1,4 +1,4 @@
-name: MAGBee
+name: magbee
 channels:
   - conda-forge
   - bioconda
