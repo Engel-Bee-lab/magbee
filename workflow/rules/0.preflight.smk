@@ -77,7 +77,11 @@ if config['args']['sequencing'] == 'paired':
 
     def extract_sample_name(filename, pattern, ext):
         name = os.path.basename(filename)
-        return name.replace(pattern, "").replace(f".{ext}", "")
+        
+        # remove ONLY trailing pattern before extension
+        sample = re.sub(rf"{re.escape(pattern)}\.{re.escape(ext)}$", "", name)
+        
+        return sample
 
     for f in r1_files:
         sample = extract_sample_name(f, pattern_r1, extn)
