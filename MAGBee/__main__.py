@@ -20,14 +20,14 @@ def snake_base(rel_path):
 
 def get_version():
     try:
-        from MAGBee._version import version
+        from magbee._version import version
     except Exception:
         version = "0.1.0"
     return version
 
 
 def print_citation():
-    with open(snake_base("../MAGBee.CITATION"), "r") as f:
+    with open(snake_base("../magbee.CITATION"), "r") as f:
         for line in f:
             echo_click(line)
 
