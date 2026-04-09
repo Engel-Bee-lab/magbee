@@ -89,7 +89,14 @@ if config['args']['sequencing'] == 'paired':
 
     # Step 3: Validate pairs
     paired_samples = {}
-    
+
+    for sample, reads in sample_inputs.items():
+        print (samoke, reads)
+        if "r1" in reads and "r2" in reads:
+            paired_samples[sample] = reads
+        else:
+            raise ValueError(f"Missing pair for sample {sample}")
+
     config["sample_names"] = paired_samples
     sample_names = list(paired_samples.keys())
     N_SAMPLES = len(sample_names)
