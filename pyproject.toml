@@ -3,7 +3,7 @@ requires = ["setuptools>=69", "setuptools_scm", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "MAGbuild"
+name = "MAGBee"
 dynamic = ["version"]
 description = "Build MAGs from WGS metagenomes"
 readme = { file = "README.md", content-type = "text/markdown" }
@@ -39,13 +39,13 @@ dependencies = [
 ]
 
 [project.scripts]
-MAGBuild = "MAGBuild.__main__:main"
+MAGBee = "MAGBee.__main__:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["MAGBuild*"]
+include = ["MAGBee*"]
 
 # Configure setuptools_scm (reads version from your Git tags)
 [tool.setuptools_scm]
-write_to = "MAGBuild/_version.py"
+write_to = "MAGBee/_version.py"
 fallback_version = "0.1.0"

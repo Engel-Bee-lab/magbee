@@ -1,5 +1,5 @@
 """
-Entrypoint for MAGBuild
+Entrypoint for MAGBee
 
 Check out the wiki for a detailed look at customising this file:
 https://github.com/beardymcjohnface/Snaketool/wiki/Customising-your-Snaketool
@@ -20,14 +20,14 @@ def snake_base(rel_path):
 
 def get_version():
     try:
-        from MAGBuild._version import version
+        from MAGBee._version import version
     except Exception:
         version = "0.1.0"
     return version
 
 
 def print_citation():
-    with open(snake_base("../MAGBuild.CITATION"), "r") as f:
+    with open(snake_base("../MAGBee.CITATION"), "r") as f:
         for line in f:
             echo_click(line)
 
@@ -83,14 +83,14 @@ def cli():
     """Assembling pure culture phages from both Illumina and Nanopore sequencing technology
     \b
     For more options, run:
-    MAGBuild --help"""
+    magbee --help"""
     pass
 
 
 help_msg_run = """
 \b
 RUN EXAMPLES 
-MAGBuild run --input <input directory with reads> --extn fq --host_seq <path to host genomes> --sequencing paired --output <output directory> -k
+magbee run --input <input directory with reads> --extn fq --host_seq <path to host genomes> --sequencing paired --output <output directory> -k
 """
 @click.command(epilog=help_msg_run, 
     context_settings=dict(help_option_names=["-h", "--help"], ignore_unknown_options=True)
@@ -100,7 +100,7 @@ MAGBuild run --input <input directory with reads> --extn fq --host_seq <path to 
 
 @common_options
 def run(_input, extn, host_seq, output, sequencing, temp_dir, configfile, conda_frontend, **kwargs):
-    """Run MAGBuild"""
+    """Run magbee"""
     copy_config(configfile, system_config=snake_base(os.path.join('config', 'config.yaml')))
 
     merge_config = {

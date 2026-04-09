@@ -1,2 +1,4 @@
-# MAGBuild
-Workflow to build MAGs from WGS data
+# MAGBee
+
+Workflow to build MAGs from WGS metagenomes
+
