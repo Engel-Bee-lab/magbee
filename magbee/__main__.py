@@ -101,7 +101,7 @@ magbee run --input <input directory with reads> --extn fq --host_seq <path to ho
 @click.option('--sequencing', 'sequencing', help="sequencing method", default='paired', show_default=True, type=click.Choice(['paired', 'longread']))
 
 @common_options
-def run(_input, extn, host_seq, output, sequencing, temp_dir, configfile, conda_frontend, **kwargs):
+def run(_input, extn, r1, r2, host_seq, output, sequencing, temp_dir, configfile, conda_frontend, **kwargs):
     """Run magbee"""
     copy_config(configfile, system_config=snake_base(os.path.join('config', 'config.yaml')))
 

@@ -12,9 +12,9 @@
 #eval "$(mamba shell hook --shell bash)"
 #mamba activate mag
 
-magbee run --input //users/bnalaga1/scratch/AF_bee_reads --extn fq.gz --sequencing paired  \
+magbee run --input /users/bnalaga1/scratch/AF_bee_reads --extn fq.gz --sequencing paired  \
     --host_seq /users/bnalaga1/scratch/reference_db/Apis_mellifera_genome/GCA_003254395.2_Amel_HAv3.1_genomic.fna \
-    --conda-frontend mamba --output /users/bnalaga1/scratch/african_bee_project \
+    --conda-frontend mamba --output /users/bnalaga1/scratch/AF_magbee \
     --profile slurm -k host 
 
 #magbee run --input testReads/paired --extn fq.gz --sequencing paired \
