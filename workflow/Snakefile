@@ -28,12 +28,12 @@ THRESHOLD = config['args'].get('mapping_threshold', 100)
 
 print(f"Detected {N_SAMPLES} samples")
 
-if N_SAMPLES <= THRESHOLD:
-    print("Using all-vs-all mapping strategy")
-    include: os.path.join("rules", "mapping_all_2_all.smk")
-else:
-    print("Using simka mapping strategy")
-    include: os.path.join("rules", "mapping_simka.smk")
+#if N_SAMPLES <= THRESHOLD:
+#    print("Using all-vs-all mapping strategy")
+#    include: os.path.join("rules", "mapping_all_2_all.smk")
+#else:
+#    print("Using simka mapping strategy")
+#    include: os.path.join("rules", "mapping_simka.smk")
 
 """Mark target rules"""
 target_rules = []
