@@ -91,7 +91,7 @@ if config['args']['sequencing'] == 'paired':
     paired_samples = {}
 
     for sample, reads in sample_inputs.items():
-        print ("r1", "r2")
+        print (r1, r2)
         if "r1" in reads and "r2" in reads:
             paired_samples[sample] = reads
         else:
