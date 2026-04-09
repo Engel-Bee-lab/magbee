@@ -93,11 +93,11 @@ if config['args']['sequencing'] == 'paired':
         return sample
             
     for f in r1_files:
-        sample = extract_sample_name(f, pattern_r1, extn)
+        sample = extract_sample_name(f, extn, pattern_r1, pattern_r2)
         sample_inputs.setdefault(sample, {})["r1"] = f
 
     for f in r2_files:
-        sample = extract_sample_name(f, pattern_r2, extn)
+        sample = extract_sample_name(f, extn, pattern_r1, pattern_r2)
         sample_inputs.setdefault(sample, {})["r2"] = f
 
     # Step 3: Validate pairs
