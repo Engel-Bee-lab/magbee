@@ -75,14 +75,20 @@ if config['args']['sequencing'] == 'paired':
     # Step 2: Build mapping
     sample_inputs = {}
 
-    def extract_sample_name(filename, pattern, ext):
+    def extract_sample_name(filename, ext):
         name = os.path.basename(filename)
         
-        # remove ONLY trailing pattern before extension
-        sample = re.sub(rf"{re.escape(pattern)}\.{re.escape(ext)}$", "", name)
+        # remove extension
+        name = name[:-(len(ext) + 1)]  # remove ".fq.gz"
         
-        return sample
-
+        # split off the last "_1" or "_2"
+        parts = name.rsplit("_", 1)
+        
+        if parts[-1] in ["1", "2"]:
+            return parts[0]
+        else:
+            raise ValueError(f"File does not end with _1/_2 pattern: {filename}")
+            
     for f in r1_files:
         sample = extract_sample_name(f, pattern_r1, extn)
         sample_inputs.setdefault(sample, {})["r1"] = f
