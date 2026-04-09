@@ -22,9 +22,8 @@ include: os.path.join("rules", "Final_QC.smk")
 # AFTER sample detection logic for maping 
 #############################################
 
-sample_names = list(paired_reads.keys())
+sample_names = list(paired_samples.keys())
 N_SAMPLES = len(sample_names)
-
 THRESHOLD = config['args'].get('mapping_threshold', 100)
 
 print(f"Detected {N_SAMPLES} samples")
@@ -35,8 +34,6 @@ if N_SAMPLES <= THRESHOLD:
 else:
     print("Using simka mapping strategy")
     include: os.path.join("rules", "mapping_simka.smk")
-
-
 
 """Mark target rules"""
 target_rules = []
