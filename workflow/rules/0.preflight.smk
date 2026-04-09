@@ -60,7 +60,7 @@ input_dir = config['args']['input']
 #replace R1 to 1 for SRA reads
 extn=config['args']['extn']
 
-if sequencing == 'paired':
+if config['args']['sequencing'] == 'paired':
 
     pattern_r1 = config['args']['pattern_r1']
     pattern_r2 = config['args']['pattern_r2']
