@@ -1,11 +1,18 @@
 """
 Rules for quality control and quality assurance - Illumina paired end reads 
 """
+
+sample_names = [s for s in config["sample_names"].keys() if s != "*"]
+
+# Constrain wildcards to actual sample names
+wildcard_constraints:
+    sample="|".join(sample_names)
+
 #quality control rules here
 rule fastp:
     input:
-        r1 = os.path.join(input_dir, PATTERN_R1),
-        r2 = os.path.join(input_dir, PATTERN_R2)
+        r1 = lambda wc: config["sample_names"][wc.sample]["r1"],
+        r2 = lambda wc: config["sample_names"][wc.sample]["r2"]
     output:
         r1 = os.path.join(dir_fastp,"{sample}_R1.fastq.gz"),
         r2 = os.path.join(dir_fastp,"{sample}_R2.fastq.gz"),

@@ -4,10 +4,12 @@
 #can be compressed or decompressed
 #For now there can be no sub folders, the files have to be saved in the same folder
 
-import os 
+import os
 import glob
 import yaml
 import re
+import sys
+import shutil
 from metasnek import fastq_finder
 
 """
@@ -53,44 +55,54 @@ dir_binning = os.path.join(dir_out, 'PROCESSING' ,'4_binning')
 CHECK INPUT FILES
 """
 input_dir = config['args']['input']
+
 # List of file paths matching the pattern
 #replace R1 to 1 for SRA reads
 extn=config['args']['extn']
 
-if config['args']['sequencing'] == 'paired':
-    # match only read1 files where the final pair suffix appears immediately before the extension
-    pattern = os.path.join(input_dir, f'*_[R]?[1].{extn}')
-    file_paths = sorted(set(glob.glob(pattern) + glob.glob(pattern)))
-    r1_files = sorted(set(glob.glob(pattern)))
-    
-    pair_regex = re.compile(
-        rf'^(?P<sample>.+?)_(?P<read_extn>R?[12])\.{re.escape(extn)}$',
-        re.IGNORECASE
-    )
-    
-    paired_reads = {}
+if sequencing == 'paired':
 
-    for fp in r1_files:
-        fname = os.path.basename(fp)
-        match = pair_regex.match(fname)
-        if match:
-            sample = match.group('sample')
-            read_extn = match.group('read_extn')
-            paired_reads.setdefault(sample, {})[read_extn] = fp
+    pattern_r1 = config['args']['pattern_r1']
+    pattern_r2 = config['args']['pattern_r2']
 
-    for sample, reads in paired_reads.items():
-        r1 = reads.get('1') or reads.get('R1')
-        r2 = reads.get('2') or reads.get('R2')
+    # Step 1: Find files
+    r1_files = glob.glob(os.path.join(input_dir, f"*{pattern_r1}*.{extn}"))
+    r2_files = glob.glob(os.path.join(input_dir, f"*{pattern_r2}*.{extn}"))
 
-        if not r1 or not r2:
+    if not r1_files or not r2_files:
+        raise ValueError("No R1 or R2 files found.")
+
+    # Step 2: Build mapping
+    sample_inputs = {}
+
+    def extract_sample_name(filename, pattern, ext):
+        name = os.path.basename(filename)
+        return name.replace(pattern, "").replace(f".{ext}", "")
+
+    for f in r1_files:
+        sample = extract_sample_name(f, pattern_r1, extn)
+        sample_inputs.setdefault(sample, {})["r1"] = f
+
+    for f in r2_files:
+        sample = extract_sample_name(f, pattern_r2, extn)
+        sample_inputs.setdefault(sample, {})["r2"] = f
+
+    # Step 3: Validate pairs
+    paired_samples = {}
+
+    for sample, reads in sample_inputs.items():
+        if "r1" in reads and "r2" in reads:
+            paired_samples[sample] = reads
+        else:
             raise ValueError(f"Missing pair for sample {sample}")
 
-        print(f"{sample}: R1={r1}, R2={r2}")
-    
-    #getting the number of samples 
-    sample_names = list(paired_reads.keys())
+    config["sample_names"] = paired_samples
+    sample_names = list(paired_samples.keys())
     N_SAMPLES = len(sample_names)
     THRESHOLD = config['args'].get('mapping_threshold', 100)
+
+    print(f"Detected {N_SAMPLES} paired-end samples")
+    print(f"Sample inputs: {paired_samples}")
 
 
 """ONSTART/END/ERROR

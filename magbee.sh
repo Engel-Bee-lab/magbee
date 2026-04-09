@@ -12,8 +12,8 @@
 #eval "$(mamba shell hook --shell bash)"
 #mamba activate mag
 
-magbee run --input /scratch/bnalaga1/african_bee_rawdata --extn fq.gz --sequencing paired  \
-    --host_seq /scratch/bnalaga1/reference_db/GCF_003254395.2_Amel_HAv3.1_genomic.fna \
+magbee run --input //users/bnalaga1/scratch/AF_bee_reads --extn fq.gz --sequencing paired  \
+    --host_seq /users/bnalaga1/scratch/reference_db/Apis_mellifera_genome/GCA_003254395.2_Amel_HAv3.1_genomic.fna \
     --conda-frontend mamba --output /users/bnalaga1/scratch/african_bee_project \
     --profile slurm -k host 
 
