@@ -3,6 +3,8 @@ Mapping rules
 For now mapping reads to the individual assemblies
 simka rule for picking the 50 assemblies
 """
+from glob import glob
+sample_names = [s for s in config["sample_names"].keys() if s != "*"]
 
 rule list_simka:
     input:
