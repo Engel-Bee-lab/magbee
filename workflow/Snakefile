@@ -64,24 +64,24 @@ if config['args']['sequencing'] == 'paired':
 
     ## For individual assembly targets
     for sample in sample_names:
-        targets['assemble'].append(os.path.join(dir_assembly,"{sample}.megahit.contigs.fa").format(sample=sample))
-        targets['assemble'].append(os.path.join(dir_assembly, "{sample}_quast_output", "report.txt").format(sample=sample))
+        targets['assemble'].append(os.path.join(dir_assembly,"{sample}.megahit.contigs.fa").format(sample=sample)),
+        targets['assemble'].append(os.path.join(dir_assembly, "{sample}_quast_output", "report.txt").format(sample=sample)),
 
 if config['args']['sequencing'] == 'paired':
     for sample in sample_names:
         if N_SAMPLES <= THRESHOLD:
-            targets['binning'].append(os.path.join(dir_binning, "simka_input_list.txt"))
-            targets['binning'].append(os.path.join(dir_binning, "mat_abundance_jaccard.csv.gz"))
+            targets['binning'].append(os.path.join(dir_binning, "simka_input_list.txt")),
+            targets['binning'].append(os.path.join(dir_binning, "mat_abundance_jaccard.csv.gz")),
             targets['binning'].append(os.path.join(dir_binning, "{sample}_cluster_50", "simka_cluster_50.txt"), sample=sample)
         else:
-            targets['binning'].append(os.path.join(dir_binning, "{sample}_index.mmi").format(sample=sample))
+            targets['binning'].append(os.path.join(dir_binning, "{sample}_index.mmi").format(sample=sample)),
             targets['binning'].append(os.path.join(dir_binning, "{sample}_bam", "done.txt").format(sample=sample))
         
-        targets['binning'].append(os.path.join(dir_binning, "all_metabat2_bins", "done.txt"))
-        targets['binning'].append(os.path.join(dir_binning, "checkm2_output", "quality_report.tsv"))
-        targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt"))
-        targets['binning'].append(os.path.join(dir_reports, "checkm2_quality_reports.tsv"))
-        targets['binning'].append(os.path.join(dir_reports, "gtdbtk_bac120_summary.tsv"))
+        targets['binning'].append(os.path.join(dir_binning, "all_metabat2_bins", "done.txt")),
+        targets['binning'].append(os.path.join(dir_binning, "checkm2_output", "quality_report.tsv")),
+        targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt")),
+        targets['binning'].append(os.path.join(dir_reports, "checkm2_quality_reports.tsv")),
+        targets['binning'].append(os.path.join(dir_reports, "gtdbtk_bac120_summary.tsv")),
 
 @targetRule
 rule all:
