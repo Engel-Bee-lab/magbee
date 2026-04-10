@@ -14,7 +14,7 @@ resources:
   longjob:
     threads: 16
     mem_mb: 32000
-    runtime: 1440z
+    runtime: 1440
 
 args:
   input: 
