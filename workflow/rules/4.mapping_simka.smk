@@ -8,8 +8,8 @@ sample_names = [s for s in config["sample_names"].keys() if s != "*"]
 
 rule list_simka:
     input:
-        r1 = expand(os.path.join(dir_hostcleaned,"{sample}_R1.hostcleaned.fastq.gz"), sample=samples_names),
-        r2 = expand(os.path.join(dir_hostcleaned,"{sample}_R2.hostcleaned.fastq.gz"), sample=samples_names)
+        r1 = expand(os.path.join(dir_hostcleaned,"{sample}_R1.hostcleaned.fastq.gz"), sample=sample_names),
+        r2 = expand(os.path.join(dir_hostcleaned,"{sample}_R2.hostcleaned.fastq.gz"), sample=sample_names)
     output:
         simka_list = os.path.join(dir_binning, "simka_input_list.txt")
     shell:
