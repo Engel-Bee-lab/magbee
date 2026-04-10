@@ -51,7 +51,7 @@ rule simka_clusters:
     output:
         simka_clusters_txt = os.path.join(dir_binning, "{sample}_cluster_50", "simka_cluster_50.txt")
     params:
-        script = os.path.join(dir_scripts, "simka_similar_samples_script.sh"), 
+        script = os.path.join(dir_script, "simka_similar_samples_script.sh"), 
         sample = "{sample}",
         simka_clusters = os.path.join(dir_binning, "{sample}_cluster_50")
     conda:
