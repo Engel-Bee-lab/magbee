@@ -23,13 +23,13 @@ rule megahit_individual_assembly:
             echo "Megahit already run."
             if [ ! -f {params.megahit}/final.contigs.fa ]; then
                 echo "But final contigs file not found, rerunning megahit."
-                megahit -1 {input.r1} -2 {input.r2} -o {params.megahit} -t {threads} -m {resources.mem} -f
+                megahit -1 {input.r1} -2 {input.r2} -o {params.megahit} -t {threads} -m {resources.mem_mb} -f
             else
                 echo "Final contigs file found."
                 cp {params.megahit}/final.contigs.fa {output.assembly}
             fi
         else
-            megahit -1 {input.r1} -2 {input.r2} -o {params.megahit} -t {threads} -m {resources.mem}
+            megahit -1 {input.r1} -2 {input.r2} -o {params.megahit} -t {threads} -m {resources.mem_mb}
             cp {params.megahit}/final.contigs.fa {output.assembly}
         fi
         """
