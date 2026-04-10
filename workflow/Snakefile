@@ -13,10 +13,10 @@ include: os.path.join("rules", "Final_QC.smk")
 #include: os.path.join("rules", "3.co-assembly.smk")
 include: os.path.join("rules", "3.individual_assembly.smk")
 if N_SAMPLES <= THRESHOLD:
-    print("Using all-vs-all mapping strategy")
+    print("Using all-vs-all mapping strategy"),
     include: os.path.join("rules", "4.mapping_all_2_all.smk")
 else:
-    print("Using simka mapping strategy")
+    print("Using simka mapping strategy"),
     include: os.path.join("rules", "4.mapping_simka.smk")
 
 #include: os.path.join("rules", "5.metabat2.smk")
