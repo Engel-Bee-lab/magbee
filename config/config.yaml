@@ -4,11 +4,11 @@ resources:
     mem_mb: 16000
     runtime: 240
   assemblyjob:
-    threads: 64
-    mem_mb: 256000
+    threads: 16
+    mem_mb: 300000
     runtime: 2880
   bigjob:
-    threads: 16
+    threads: 32
     mem_mb: 64000
     runtime: 480
   longjob:
