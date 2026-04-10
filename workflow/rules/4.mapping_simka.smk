@@ -23,39 +23,49 @@ rule list_simka:
 
         """
     
-    rule simka_kmerclust:
-        input:
-            simka_list = os.path.join(dir_binning, "simka_input_list.txt")
-        output:
-            simka_kmerclust = os.path.join(dir_binning, "mat_abundance_jaccard.csv.gz")
-        params:
-            dir_out = os.path.join(dir_binning, "simka_temp_output")
-        conda:
-            os.path.join(dir_env, "simka.yaml")
-        resources:
-            mem_mb =config['resources']['longjob']['mem_mb'],
-            runtime = config['resources']['longjob']['runtime']
-        threads: 
-            config['resources']['longjob']['threads']
-        shell:
-            """
-            simka -in {input.simka_list}  -max-reads 0 -abundance-min 2 -max-count 100 -max-merge 16 -max-memory {resources.mem_mb} -nb-cores {threads} -out-tmp {params.dir_out}
-            mv {params.dir_out}/mat_abundance_jaccard.csv.gz {output.simka_kmerclust}
-            """
+rule simka_kmerclust:
+    input:
+        simka_list = os.path.join(dir_binning, "simka_input_list.txt")
+    output:
+        simka_kmerclust = os.path.join(dir_binning, "mat_abundance_jaccard.csv.gz")
+    params:
+        dir_out = os.path.join(dir_binning, "simka_temp_output")
+    conda:
+        os.path.join(dir_env, "simka.yaml")
+    resources:
+        mem_mb =config['resources']['longjob']['mem_mb'],
+        runtime = config['resources']['longjob']['runtime']
+    threads: 
+        config['resources']['longjob']['threads']
+    shell:
+        """
+        simka -in {input.simka_list}  -max-reads 0 -abundance-min 2 -max-count 100 -max-merge 16 -max-memory {resources.mem_mb} -nb-cores {threads} -out-tmp {params.dir_out}
+        mv {params.dir_out}/mat_abundance_jaccard.csv.gz {output.simka_kmerclust}
+        """
 
-    rule simka_clusters:
-        input:
-            simka_kmerclust = os.path.join(dir_binning, "mat_abundance_jaccard.csv.gz")
-        output:
-            simka_clusters = os.path.join(dir_binning, "{sampple}_simka_clusters.txt")
-        conda:
-            os.path.join(dir_env, "simka.yaml")
-        resources:
-            mem_mb =config['resources']['smalljob']['mem_mb'],
-            runtime = config['resources']['smalljob']['runtime']
-        threads: 
-            config['resources']['smalljob']['threads']
-        shell:
-            """
-            simka_
-            """
+rule simka_clusters:
+    input:
+        simka_kmerclust = os.path.join(dir_binning, "mat_abundance_jaccard.csv.gz")
+    output:
+        simka_clusters_txt = os.path.join(dir_binning, "{sample}_cluster_50", "simka_cluster_50.txt")
+    params:
+        script = os.path.join(dir_scripts, "simka_similar_samples_script.sh") 
+        sample = "{sample}",
+        simka_clusters = os.path.join(dir_binning, "{sample}_cluster_50")
+    conda:
+        os.path.join(dir_env, "simka.yaml")
+    resources:
+        mem_mb =config['resources']['smalljob']['mem_mb'],
+        runtime = config['resources']['smalljob']['runtime']
+    threads: 
+        config['resources']['smalljob']['threads']
+    shell:
+        """
+        bash {params.script} -s {params.sample} -d {input.simka_kmerclust} -n 49 -o {params.simka_clusters}
+        touch {output.simka_clusters_txt}
+        """
+
+"""
+Backmapping:
+Map reads from selected samples to each assembly.
+"""

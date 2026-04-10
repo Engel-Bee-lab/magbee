@@ -11,8 +11,14 @@ include: os.path.join("rules", "1.qc.smk")
 include: os.path.join("rules", "2.host_contamination.smk")
 include: os.path.join("rules", "Final_QC.smk")
 #include: os.path.join("rules", "3.co-assembly.smk")
-#include: os.path.join("rules", "3.individual_assembly.smk")
-#include: os.path.join("rules", "4.mapping.smk")
+include: os.path.join("rules", "3.individual_assembly.smk")
+if N_SAMPLES <= THRESHOLD:
+    print("Using all-vs-all mapping strategy")
+    include: os.path.join("rules", "mapping_all_2_all.smk")
+else:
+    print("Using simka mapping strategy")
+    include: os.path.join("rules", "mapping_simka.smk")
+
 #include: os.path.join("rules", "5.metabat2.smk")
 #include: os.path.join("rules", "6.bins_quality.smk")
 #include: os.path.join("rules", "7.drep.smk")
@@ -24,16 +30,9 @@ include: os.path.join("rules", "Final_QC.smk")
 
 sample_names = list(paired_samples.keys())
 N_SAMPLES = len(sample_names)
-THRESHOLD = config['args'].get('mapping_threshold', 100)
+THRESHOLD = config['args'].get('mapping_threshold', 50)
 
 print(f"Detected {N_SAMPLES} samples")
-
-#if N_SAMPLES <= THRESHOLD:
-#    print("Using all-vs-all mapping strategy")
-#    include: os.path.join("rules", "mapping_all_2_all.smk")
-#else:
-#    print("Using simka mapping strategy")
-#    include: os.path.join("rules", "mapping_simka.smk")
 
 """Mark target rules"""
 target_rules = []
@@ -70,8 +69,14 @@ if config['args']['sequencing'] == 'paired':
 
 if config['args']['sequencing'] == 'paired':
     for sample in sample_names:
-        targets['binning'].append(os.path.join(dir_binning, "{sample}_index.mmi").format(sample=sample))
-        targets['binning'].append(os.path.join(dir_binning, "{sample}_bam", "done.txt").format(sample=sample))
+        if N_SAMPLES <= THRESHOLD:
+            targets['binning'].append(os.path.join(dir_binning, "simka_input_list.txt"))
+            targets['binning'].append(os.path.join(dir_binning, "mat_abundance_jaccard.csv.gz"))
+            targets['binning'].append(os.path.join(dir_binning, "{sample}_cluster_50", "simka_cluster_50.txt"), sample=sample)
+        else:
+            targets['binning'].append(os.path.join(dir_binning, "{sample}_index.mmi").format(sample=sample))
+            targets['binning'].append(os.path.join(dir_binning, "{sample}_bam", "done.txt").format(sample=sample))
+        
         targets['binning'].append(os.path.join(dir_binning, "all_metabat2_bins", "done.txt"))
         targets['binning'].append(os.path.join(dir_binning, "checkm2_output", "quality_report.tsv"))
         targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt"))

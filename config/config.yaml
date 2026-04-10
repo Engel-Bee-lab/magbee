@@ -23,7 +23,8 @@ args:
   output: 
   sequencing: 
   configfile: 
-  temp_dir: 
+  temp_dir:
+  mapping_threshold: 50 
 
 databases:
   checkm_db: /work/FAC/FBM/DMF/pengel/general_data/common_databases/checkm2/CheckM2_database
