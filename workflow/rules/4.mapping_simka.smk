@@ -17,17 +17,11 @@ rule list_simka:
         r2 = expand(os.path.join(dir_hostcleaned,"{sample}_R2.hostcleaned.fastq.gz"), sample=sample_names)
     output:
         simka_list = os.path.join(dir_binning, "simka_input_list.txt")
-    shell:
-        """
-        # Create the input list for simka
-        r1_files=({input.r1})
-        r2_files=({input.r2})
-
-        for i in "${!r1_files[@]}"; do
-            sample=$(basename "${r1_files[$i]}" | sed 's/_R1.hostcleaned.fastq.gz//')
-            echo "${sample}:  ${r1_files[$i]} ; ${r2_files[$i]}" >> {output.simka_list}
-        done
-        """
+    run:
+        with open(output.simka_list, "w") as out_handle:
+            for r1_file, r2_file in zip(input.r1, input.r2):
+                sample = os.path.basename(r1_file).replace("_R1.hostcleaned.fastq.gz", "")
+                out_handle.write(f"{sample}:  {r1_file} ; {r2_file}\n")
     
 rule simka_kmerclust:
     input:
