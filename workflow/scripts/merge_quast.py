@@ -52,7 +52,7 @@ for file in input_files:
 
 df = pd.DataFrame(all_data)
 
-df = df.apply(lambda col: pd.to_numeric(col, errors="ignore"))
+df = df.apply(lambda col: pd.to_numeric(col, errors="coerce"))
 
 cols = ["Sample"] + [c for c in df.columns if c != "Sample"]
 df = df[cols]
