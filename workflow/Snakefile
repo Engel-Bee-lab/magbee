@@ -80,11 +80,11 @@ if config['args']['sequencing'] == 'paired':
             targets['binning'].append(os.path.join(dir_binning, "{sample}_index.mmi").format(sample=sample)),
             targets['binning'].append(os.path.join(dir_binning, "{sample}_bam", "done.txt").format(sample=sample))
         
-        targets['binning'].append(os.path.join(dir_binning, "all_metabat2_bins", "done.txt")),
-        targets['binning'].append(os.path.join(dir_binning, "checkm2_output", "quality_report.tsv")),
-        targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt")),
-        targets['binning'].append(os.path.join(dir_reports, "checkm2_quality_reports.tsv")),
-        targets['binning'].append(os.path.join(dir_reports, "gtdbtk_bac120_summary.tsv")),
+        #targets['binning'].append(os.path.join(dir_binning, "all_metabat2_bins", "done.txt")),
+        #targets['binning'].append(os.path.join(dir_binning, "checkm2_output", "quality_report.tsv")),
+        #targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt")),
+        #targets['binning'].append(os.path.join(dir_reports, "checkm2_quality_reports.tsv")),
+        #targets['binning'].append(os.path.join(dir_reports, "gtdbtk_bac120_summary.tsv")),
 
 @targetRule
 rule all:
