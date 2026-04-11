@@ -1,9 +1,30 @@
 import pandas as pd
 import os
+import argparse
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Merge QUAST stats files")
+    parser.add_argument(
+        "-i", "--input", nargs="+", help="List of QUAST stats files"
+    )
+    parser.add_argument(
+        "-o", "--output", help="Output merged CSV file"
+    )
+    return parser.parse_args()
+
+
+# Detect if running inside Snakemake
+if "snakemake" in globals():
+    input_files = snakemake.input.stats
+    output_file = snakemake.output.merged
+else:
+    args = parse_args()
+    input_files = args.input
+    output_file = args.output
 
 all_data = []
 
-for file in snakemake.input.stats:
+for file in input_files:
     sample_data = {}
     
     sample_name = os.path.basename(os.path.dirname(file))
@@ -36,4 +57,4 @@ df = df.apply(lambda col: pd.to_numeric(col, errors="ignore"))
 cols = ["Sample"] + [c for c in df.columns if c != "Sample"]
 df = df[cols]
 
-df.to_csv(snakemake.output.merged, index=False)
+df.to_csv(output_file, index=False)

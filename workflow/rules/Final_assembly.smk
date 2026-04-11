@@ -25,5 +25,5 @@ rule merge_stats:
         script=os.path.join(dir_script, "merge_quast.py")
     shell:
         """
-        python {params.script}
+        python {params.script} -i {input.stats} -o {output.merged}
         """
