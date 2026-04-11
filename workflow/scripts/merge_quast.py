@@ -27,6 +27,7 @@ all_data = []
 for file in input_files:
     sample_data = {}
     
+    # Get sample name from parent directory
     sample_name = os.path.basename(os.path.dirname(file))
     sample_data["Sample"] = sample_name
     
@@ -37,24 +38,30 @@ for file in input_files:
             if not line or line.startswith("All statistics"):
                 continue
             
-            parts = line.split()
-            
-            if parts[0] == "Assembly":
-                sample_data["Assembly"] = parts[1]
+            # More robust split (handles spaces in keys)
+            if " " in line:
+                key, value = line.rsplit(maxsplit=1)
+            else:
                 continue
             
-            key = " ".join(parts[:-1])
-            value = parts[-1]
-            
-            sample_data[key] = value
+            if key == "Assembly":
+                sample_data["Assembly"] = value
+            else:
+                sample_data[key] = value
     
     all_data.append(sample_data)
 
+# Create DataFrame
 df = pd.DataFrame(all_data)
 
-df = df.apply(lambda col: pd.to_numeric(col, errors="coerce"))
+# Convert only numeric columns
+for col in df.columns:
+    if col not in ["Sample", "Assembly"]:
+        df[col] = pd.to_numeric(df[col], errors="coerce")
 
+# Reorder columns (Sample first)
 cols = ["Sample"] + [c for c in df.columns if c != "Sample"]
 df = df[cols]
 
+# Write output
 df.to_csv(output_file, index=False)
