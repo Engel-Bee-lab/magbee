@@ -78,7 +78,7 @@ if config['args']['sequencing'] == 'paired':
         else:
             targets['binning'].append(os.path.join(dir_binning, "simka_input_list.txt"))
             targets['binning'].append(os.path.join(dir_binning, "mat_abundance_jaccard.csv.gz"))
-            targets['binning'].append(os.path.join(dir_binning, f"{sample}_cluster_50", "simka_cluster_50.txt"), sample=sample)
+            targets['binning'].append(os.path.join(dir_binning, "{sample}_cluster_50", "simka_cluster_50.txt"), sample=sample)
         
         #targets['binning'].append(os.path.join(dir_binning, "all_metabat2_bins", "done.txt")),
         #targets['binning'].append(os.path.join(dir_binning, "checkm2_output", "quality_report.tsv")),
