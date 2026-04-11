@@ -72,12 +72,14 @@ if config['args']['sequencing'] == 'paired':
     
 if config['args']['sequencing'] == 'paired':
     for sample in sample_names:
+        print("N_SAMPLES =", N_SAMPLES)
+        print("THRESHOLD =", THRESHOLD)
         if N_SAMPLES <= THRESHOLD:
-            targets['binning'].append(os.path.join(dir_binning, "simka_input_list.txt")),
-            targets['binning'].append(os.path.join(dir_binning, "mat_abundance_jaccard.csv.gz")),
+            targets['binning'].append(os.path.join(dir_binning, "simka_input_list.txt"))
+            targets['binning'].append(os.path.join(dir_binning, "mat_abundance_jaccard.csv.gz"))
             targets['binning'].append(os.path.join(dir_binning, "{sample}_cluster_50", "simka_cluster_50.txt"), sample=sample)
         else:
-            targets['binning'].append(os.path.join(dir_binning, "{sample}_index.mmi").format(sample=sample)),
+            targets['binning'].append(os.path.join(dir_binning, "{sample}_index.mmi").format(sample=sample))
             targets['binning'].append(os.path.join(dir_binning, "{sample}_bam", "done.txt").format(sample=sample))
         
         #targets['binning'].append(os.path.join(dir_binning, "all_metabat2_bins", "done.txt")),
