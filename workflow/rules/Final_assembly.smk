@@ -1,12 +1,13 @@
 """
 Rules to include assembly QUAST output to the reports
 """
+from glob import glob
 
 rule assembly_reports:
     input:
         quast_report = os.path.join(dir_assembly, "{sample}_quast_output", "report.txt")
     output:
-        report = os.path.join(dir_reports, "assembly", "{sample}_host_assembly_report.txt")
+        report = os.path.join(dir_reports, "assembly", "{sample}_assembly_report.txt")
     localrule: True
     shell:
         """
