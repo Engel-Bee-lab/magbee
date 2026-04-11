@@ -20,7 +20,7 @@ rule list_simka:
 
         for i in "${!r1_files[@]}"; do
             sample=$(basename "${r1_files[$i]}" | sed 's/_R1.hostcleaned.fastq.gz//')
-            echo "${sample}: ${r1_files[$i]} ; ${r2_files[$i]}" >> {output.simka_list}
+            echo "${sample};  ${r1_files[$i]} ; ${r2_files[$i]}" >> {output.simka_list}
         done
 
         """
