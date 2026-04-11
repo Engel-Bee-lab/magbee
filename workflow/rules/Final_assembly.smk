@@ -16,7 +16,7 @@ rule assembly_reports:
 
 rule merge_stats:
     input:
-        stats = expand(os.path.join(dir_reports, "assembly", "{sample}_host_assembly_report.txt"), sample=sample_names)
+        stats = expand(os.path.join(dir_reports, "assembly", "{sample}_assembly_report.txt"), sample=sample_names)
     output:
         merged = os.path.join(dir_reports, "Assembly_stats_all.csv")
     conda:
