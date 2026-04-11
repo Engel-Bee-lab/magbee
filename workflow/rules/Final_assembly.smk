@@ -20,7 +20,7 @@ rule merge_stats:
     output:
         merged = os.path.join(dir_reports, "Assembly_stats_all.csv")
     conda:
-        os.path.join(dir_env, "scripts.yaml")
+        os.path.join(dir_env, "scripts.yml")
     params:
         script=os.path.join(dir_script, "merge_quast.py")
     shell:
