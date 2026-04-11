@@ -1,0 +1,6 @@
+name: scripts
+channels:
+    - bioconda
+    - anaconda
+dependencies:
+    - pandas

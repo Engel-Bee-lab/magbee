@@ -66,7 +66,9 @@ if config['args']['sequencing'] == 'paired':
     for sample in sample_names:
         targets['assemble'].append(os.path.join(dir_assembly,"{sample}.megahit.contigs.fa").format(sample=sample)),
         targets['assemble'].append(os.path.join(dir_assembly, "{sample}_quast_output", "report.txt").format(sample=sample)),
-
+        targets['assemble'].append(os.path.join(dir_reports, "assembly", "{sample}_host_assembly_report.txt").format(sample=sample)),
+        targets['assemble'].append(os.path.join(dir_reports, "Assembly_stats_all.csv"))
+    
 if config['args']['sequencing'] == 'paired':
     for sample in sample_names:
         if N_SAMPLES <= THRESHOLD:
