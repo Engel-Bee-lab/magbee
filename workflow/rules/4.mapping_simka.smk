@@ -6,6 +6,11 @@ simka rule for picking the 50 assemblies
 from glob import glob
 sample_names = [s for s in config["sample_names"].keys() if s != "*"]
 
+# Constrain wildcards to actual sample names
+wildcard_constraints:
+    sample="|".join(sample_names)
+
+#simka rules
 rule list_simka:
     input:
         r1 = expand(os.path.join(dir_hostcleaned,"{sample}_R1.hostcleaned.fastq.gz"), sample=sample_names),
@@ -20,7 +25,7 @@ rule list_simka:
 
         for i in "${!r1_files[@]}"; do
             sample=$(basename "${r1_files[$i]}" | sed 's/_R1.hostcleaned.fastq.gz//')
-            echo "${sample};  ${r1_files[$i]} ; ${r2_files[$i]}" >> {output.simka_list}
+            echo "${sample}:  ${r1_files[$i]} ; ${r2_files[$i]}" >> {output.simka_list}
         done
 
         """
