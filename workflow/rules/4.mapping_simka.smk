@@ -27,7 +27,6 @@ rule list_simka:
             sample=$(basename "${r1_files[$i]}" | sed 's/_R1.hostcleaned.fastq.gz//')
             echo "${sample}:  ${r1_files[$i]} ; ${r2_files[$i]}" >> {output.simka_list}
         done
-
         """
     
 rule simka_kmerclust:
@@ -52,8 +51,6 @@ rule simka_kmerclust:
 
 rule simka_clusters:
     input:
-        r1 = os.path.join(dir_hostcleaned,"{sample}_R1.hostcleaned.fastq.gz"),
-        r2 = os.path.join(dir_hostcleaned,"{sample}_R2.hostcleaned.fastq.gz"),
         simka_kmerclust = os.path.join(dir_binning, "mat_abundance_jaccard.csv.gz")
     output:
         simka_clusters_txt = os.path.join(dir_binning, "{sample}_cluster_50", "simka_cluster_50.txt")
