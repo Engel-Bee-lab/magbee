@@ -46,7 +46,7 @@ rule simka_kmerclust:
 
 rule simka_clusters:
     input:
-        simka_kmerclust = os.path.join(dir_binning, "mat_abundance_jaccard.csv.gz")
+        simka_kmerclust = os.path.join(dir_binning, "simka_results", "mat_abundance_jaccard.csv.gz")
     output:
         simka_clusters_txt = os.path.join(dir_binning, "{sample}_cluster_50", "simka_cluster_50.txt")
     params:
