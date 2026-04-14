@@ -29,7 +29,7 @@ rule simka_kmerclust:
     output:
         simka_kmerclust = os.path.join(dir_binning, "mat_abundance_jaccard.csv.gz")
     params:
-        dir_out = os.path.join(dir_binning, "simka_temp_output")
+        dir_out = os.path.join("simka_results")
     conda:
         os.path.join(dir_env, "simka.yaml")
     resources:
