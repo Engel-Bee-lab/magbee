@@ -40,9 +40,7 @@ rule simka_kmerclust:
         config['resources']['longjob']['threads']
     shell:
         """
-        simka -in {input.simka_list}  -max-reads 0 -abundance-min 2 -max-count 100 -max-merge 16 -max-memory {resources.mem_mb} -nb-cores {threads}
-        mv {params.dir_out} {params.binning}/.
-        """
+        simka -in {input.simka_list}  -max-reads 0 -abundance-min 2 -max-count 100 -max-merge 16 -max-memory {resources.mem_mb} -nb-cores {threads} -out-tmp {params.dir_out}
 
 rule simka_clusters:
     input:
