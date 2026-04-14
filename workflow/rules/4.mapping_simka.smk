@@ -27,9 +27,9 @@ rule simka_kmerclust:
     input:
         simka_list = os.path.join(dir_binning, "simka_input_list.txt")
     output:
-        simka_kmerclust = os.path.join(dir_binning, "mat_abundance_jaccard.csv.gz")
+        simka_kmerclust = os.path.join(dir_binning, "simka_results", "mat_abundance_jaccard.csv.gz")
     params:
-        dir_out = os.path.join("simka_results"),
+        dir_out = os.path.join(dir_binning, "simka_results"),
         binning = os.path.join(dir_binning)
     conda:
         os.path.join(dir_env, "simka.yaml")
@@ -41,7 +41,6 @@ rule simka_kmerclust:
     shell:
         """
         simka -in {input.simka_list}  -max-reads 0 -abundance-min 2 -max-count 100 -max-merge 16 -max-memory {resources.mem_mb} -nb-cores {threads} -out-tmp {params.dir_out}
-        mv {params.dir_out}/mat_abundance_jaccard.csv.gz {output.simka_kmerclust}
         mv {params.dir_out} {params.binning}/.
         """
 
