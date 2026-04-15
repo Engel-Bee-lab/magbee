@@ -24,7 +24,7 @@ rule assembly_index:
     input:
         assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa")
     output:
-        index=os.path.join(dir_binning, "{sample}_cluster_50", "{sample}.mmi")
+        index=os.path.join(dir_assembly, "{sample}.mmi"),
     conda:
         os.path.join(dir_env, "minimap2.yaml")
     resources:
@@ -46,8 +46,8 @@ rule bakckmapping_simka:
     output:
         bam=os.path.join(dir_binning, "{sample}_cluster_50", "done.txt")
     params:
-        csamples=lamda wildcards: CLUSTER_MAP[wildcards.sample],
-        reads_path=os.path.join(dir_hostcleaned),
+        csamples=lambda wildcards: CLUSTER_MAP[wildcards.sample],
+        reads_path=dir_hostcleaned,
         bam_path=os.path.join(dir_binning, "{sample}_cluster_50"),
         wsample="{sample}"
     conda:
@@ -63,7 +63,7 @@ rule bakckmapping_simka:
             r1={params.reads_path}/${{sim_sample}}_R1.hostcleaned.fastq.gz
             r2={params.reads_path}/${{sim_sample}}_R2.hostcleaned.fastq.gz
 
-            outbam={params.bam_path}/{wsample}_cluster_50_${{sim_sample}}.bam
+            outbam={params.bam_path}/{params.wsample}_cluster_50_${{sim_sample}}.bam
 
             minimap2 -ax sr -t {threads} {input.index} $r1 $r2 | samtools view -bS - | samtools sort -o $outbam                
             samtools index $outbam
