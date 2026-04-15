@@ -44,7 +44,6 @@ echo "$sample" > "$outfile"
 # Extract most similar samples
 
 # -----------------------------
-
 zcat "$dist" | awk -F';' -v sample="$sample" '
 NR==1 {
 for (i=2; i<=NF; i++) hdr[i]=$i
@@ -56,9 +55,9 @@ if (hdr[i] != sample)
 print hdr[i] ";" $i
 }
 }
-' | sort -t';' -k2,2n 
-| head -n "$nr" 
-| cut -d';' -f1 
-| sort >> "$outfile"
+' | sort -t';' -k2,2n \
+  | head -n "$nr" \
+  | cut -d';' -f1 \
+  | sort >> "$outfile"
 
 
