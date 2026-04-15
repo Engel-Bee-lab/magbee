@@ -42,7 +42,7 @@ rule simka_kmerclust:
         """
         simka -in {input.simka_list}  -max-reads 0 -abundance-min 2 -max-count 100 -max-merge 16 -max-memory {resources.mem_mb} -nb-cores {threads} -out-tmp {params.dir_out}
         mv simka_results/* {params.dir_out}/.
-        rm -rf {params.temp}
+        rm -rf simka_results
         """
 
 rule simka_clusters:
