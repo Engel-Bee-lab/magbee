@@ -11,8 +11,12 @@ resources:
     threads: 8
     mem_mb: 64000
     runtime: 480
+  long_shortjob:
+    threads: 8
+    mem_mb: 16000
+    runtime: 720
   longjob:
-    threads: 2
+    threads: 8
     mem_mb: 16000
     runtime: 1440
 
