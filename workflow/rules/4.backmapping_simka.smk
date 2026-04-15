@@ -55,10 +55,10 @@ rule bakckmapping_simka:
     conda:
         os.path.join(dir_env, "minimap2.yaml")
     resources:
-        mem_mb =config['resources']['smalljob']['mem_mb'],
-        runtime = config['resources']['smalljob']['runtime']
+        mem_mb =config['resources']['longjob']['mem_mb'],
+        runtime = config['resources']['longjob']['runtime']
     threads: 
-        config['resources']['smalljob']['threads']
+        config['resources']['longjob']['threads']
     shell:
         """
         for sim_sample in {params.csamples}; do
