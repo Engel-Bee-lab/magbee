@@ -11,8 +11,8 @@ def read_cluster_map():
 
     for sample in sample_names:
         cluster_file = os.path.join(
-            out_dir,
-            f"02_Kmers_clustering/simka/simka_clusters_50/{sample}_backmap_samples.txt"
+            dir_binning,
+            f"{sample}_cluster_50/{sample}_backmap_samples.txt"
         )
 
         with open(cluster_file) as f:
