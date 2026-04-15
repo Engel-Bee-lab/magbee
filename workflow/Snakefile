@@ -80,7 +80,11 @@ if config['args']['sequencing'] == 'paired':
             targets['binning'].append(os.path.join(dir_binning, "simka_input_list.txt"))
             #targets['binning'].append(os.path.join(dir_binning, "simka_results", "mat_abundance_jaccard.csv.gz"))
             targets['binning'].append(os.path.join(dir_binning, "{sample}_cluster_50", "{sample}_backmap_samples.txt").format(sample=sample))
-            targets['binning'].append(os.path.join(dir_binning, "{sample}_cluster_50", "done.txt").format(sample=sample))
+            #targets['binning'].append(os.path.join(dir_binning, "{sample}_cluster_50", "done.txt").format(sample=sample))
+            #targets['binning'].append(os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt").format(sample=sample))
+            #targets['binning'].append(os.path.join(dir_binning, "{sample}_metabat2_bins", "done.txt").format(sample=sample))
+            #targets['binning'].append(os.path.join(dir_binning, "{sample}_metabat2_bins", "done.txt").format(sample=sample))
+
         #targets['binning'].append(os.path.join(dir_binning, "all_metabat2_bins", "done.txt")),
         #targets['binning'].append(os.path.join(dir_binning, "checkm2_output", "quality_report.tsv")),
         #targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt")),
