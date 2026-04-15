@@ -49,25 +49,16 @@ rule simka_clusters:
     input:
         simka_kmerclust = os.path.join(dir_binning, "simka_results", "mat_abundance_jaccard.csv.gz")
     output:
-        simka_clusters_txt = os.path.join(dir_binning, "{sample}_cluster_50", "simka_cluster_50.txt")
+        simka_clusters_txt = os.path.join(dir_binning, "{sample}_cluster_50", "{sample}_backmap_samples.txt")
     params:
         script = os.path.join(dir_script, "simka_similar_samples_script.sh"), 
         sample = "{sample}",
         simka_clusters = os.path.join(dir_binning, "{sample}_cluster_50")
     conda:
         os.path.join(dir_env, "simka.yaml")
-    resources:
-        mem_mb =config['resources']['smalljob']['mem_mb'],
-        runtime = config['resources']['smalljob']['runtime']
-    threads: 
-        config['resources']['smalljob']['threads']
     shell:
         """
         bash {params.script} -s {params.sample} -d {input.simka_kmerclust} -n 49 -o {params.simka_clusters}
         touch {output.simka_clusters_txt}
         """
 
-"""
-Backmapping:
-Map reads from selected samples to each assembly.
-"""

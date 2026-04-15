@@ -19,6 +19,7 @@ if N_SAMPLES <= THRESHOLD:
 else:
     print("Using simka mapping strategy"),
     include: os.path.join("rules", "4.mapping_simka.smk")
+    include: os.path.join("rules", "4.backmapping_simka.smk")
 
 #include: os.path.join("rules", "5.metabat2.smk")
 #include: os.path.join("rules", "6.bins_quality.smk")
@@ -78,8 +79,8 @@ if config['args']['sequencing'] == 'paired':
         else:
             targets['binning'].append(os.path.join(dir_binning, "simka_input_list.txt"))
             #targets['binning'].append(os.path.join(dir_binning, "simka_results", "mat_abundance_jaccard.csv.gz"))
-            targets['binning'].append(os.path.join(dir_binning, f"{sample}_cluster_50", "simka_cluster_50.txt"))
-        
+            targets['binning'].append(os.path.join(dir_binning, "{sample}_cluster_50", "{sample}_backmap_samples.txt").format(sample=sample))
+            targets['binning'].append(os.path.join(dir_binning, "{sample}_cluster_50", "done.txt").format(sample=sample))
         #targets['binning'].append(os.path.join(dir_binning, "all_metabat2_bins", "done.txt")),
         #targets['binning'].append(os.path.join(dir_binning, "checkm2_output", "quality_report.tsv")),
         #targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt")),
@@ -91,7 +92,7 @@ rule all:
     input:
         targets['qc'],
         targets['host'],
-        targets['assemble'],
+        targets['assemble'],    
         targets['binning']
 
 @targetRule
