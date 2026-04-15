@@ -3,11 +3,13 @@ Mapping rules
 simka rule for picking the 50 assemblies run in the previous workflow
 Now backmapping based on the 50 assemblies
 """
+import os
+import glob 
 
 def read_cluster_map():
     mapping = {}
 
-    for sample in config["samples"]:
+    for sample in sample_names:
         cluster_file = os.path.join(
             out_dir,
             f"02_Kmers_clustering/simka/simka_clusters_50/{sample}_backmap_samples.txt"
