@@ -21,7 +21,7 @@ else:
     include: os.path.join("rules", "4.mapping_simka.smk")
     include: os.path.join("rules", "4.backmapping_simka.smk")
 
-#include: os.path.join("rules", "5.metabat2.smk")
+include: os.path.join("rules", "5.metabat2.smk")
 #include: os.path.join("rules", "6.bins_quality.smk")
 #include: os.path.join("rules", "7.drep.smk")
 #include: os.path.join("rules", "Final_binning.smk")
@@ -81,9 +81,8 @@ if config['args']['sequencing'] == 'paired':
             #targets['binning'].append(os.path.join(dir_binning, "simka_results", "mat_abundance_jaccard.csv.gz"))
             targets['binning'].append(os.path.join(dir_binning, "{sample}_cluster_50", "{sample}_backmap_samples.txt").format(sample=sample))
             targets['binning'].append(os.path.join(dir_binning, "{sample}_cluster_50", "done.txt").format(sample=sample))
+            targets['binning'].append(os.path.join(dir_binning, "{sample}_metabat2_bins", "done.txt").format(sample=sample))
             #targets['binning'].append(os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt").format(sample=sample))
-            #targets['binning'].append(os.path.join(dir_binning, "{sample}_metabat2_bins", "done.txt").format(sample=sample))
-            #targets['binning'].append(os.path.join(dir_binning, "{sample}_metabat2_bins", "done.txt").format(sample=sample))
 
         #targets['binning'].append(os.path.join(dir_binning, "all_metabat2_bins", "done.txt")),
         #targets['binning'].append(os.path.join(dir_binning, "checkm2_output", "quality_report.tsv")),
