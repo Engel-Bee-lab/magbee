@@ -1,5 +1,8 @@
 name: concoct
 channels:
   - bioconda
+  - conda-forge
 dependencies:
-  - concoct>=1.1.0
+  - python=3.10
+  - biopython
+  - concoct=1.1.0
