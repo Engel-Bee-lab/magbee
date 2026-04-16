@@ -49,7 +49,7 @@ rule concoct_table:
         config['resources']['smalljob']['threads']
     shell:
         """
-        concoct_coverage_table.py {input.bed} {params.bam_dir}/*.bam > {output.coverage_table}
+        concoct_coverage_table.py {input.bed} {params.bam_dir}/*.bam > {output.covtable}
         """
 
 rule run_concoct:
