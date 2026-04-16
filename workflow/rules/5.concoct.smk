@@ -12,8 +12,7 @@ rule cut_up_fasta_simka:
         contigs10k=os.path.join(dir_binning, "{sample}_concoct", "{sample}.contigs10k.fa")
     params:
         chunk_size=10000,
-        min_contig_length: 1500,
-        overlap_size: 0
+        overlap_size=0
     conda:
         os.path.join(dir_env, "concoct.yaml")
     resources:
@@ -62,7 +61,7 @@ rule run_concoct:
         clusters=os.path.join(dir_binning, "{sample}_concoct", "clustering_gt1000.csv")
     params:
         outdir=os.path.join(dir_binning, "{sample}_concoct"),
-        num_clusters=10
+        num_clusters=100
     conda:
         os.path.join(dir_env, "concoct.yaml")
     resources:
@@ -72,7 +71,7 @@ rule run_concoct:
         config['resources']['smalljob']['threads']
     shell:
         """
-        concoct --threads {threads} \
+        concoct --threads {threads} -l 1500 \
             --composition_file {input.contigs10k} --coverage_file {input.covtable} \
             -b {params.outdir} \
             -c {params.num_clusters} \
