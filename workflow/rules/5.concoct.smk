@@ -29,7 +29,7 @@ rule cut_up_fasta_simka:
           -b {output.bed} > {output.contigs10k}
         """
 
-rule concoct_table:
+rule concoct_table_simka:
     """
     Generates table with per sample coverage depth.
     """
@@ -39,7 +39,7 @@ rule concoct_table:
     output:
         covtable=os.path.join(dir_binning, "{sample}_concoct", "{sample}_covtable.tsv")
     params:
-        bam_dir=os.path.join(dir_binning, "{sample}_bam")
+        bam_dir=os.path.join(dir_binning, "{sample}_cluster_50"),
     conda:
         os.path.join(dir_env, "concoct.yaml")
     resources:
