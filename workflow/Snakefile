@@ -22,6 +22,7 @@ else:
     include: os.path.join("rules", "4.backmapping_simka.smk")
 
 include: os.path.join("rules", "5.metabat2.smk")
+include: os.path.join("rules", "5.concoct.smk")
 #include: os.path.join("rules", "6.bins_quality.smk")
 #include: os.path.join("rules", "7.drep.smk")
 #include: os.path.join("rules", "Final_binning.smk")
