@@ -8,7 +8,7 @@ rule cut_up_fasta_simka:
         assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
         bam=os.path.join(dir_binning, "{sample}_cluster_50", "done.txt")
     output:
-        bed=os.path.join(dir_binning, "{sample}_concoct", "{sample}.bed")
+        bed=os.path.join(dir_binning, "{sample}_concoct", "{sample}.bed"),
         contigs10k=os.path.join(dir_binning, "{sample}_concoct", "{sample}.contigs10k.fa")
     params:
         chunk_size=10000,
