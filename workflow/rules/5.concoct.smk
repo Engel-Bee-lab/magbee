@@ -113,7 +113,7 @@ rule concoct_bins:
     shell:
         """
         mkdir -p {params.outdir}
-        extract_fasta_bins.py {input.contigs10k} {input.merged} --output_path {params.bins_dir}
+        extract_fasta_bins.py {input.contigs10k} {input.merged} --output_path {params.outdir}
         touch {output.bins}
         """
 
