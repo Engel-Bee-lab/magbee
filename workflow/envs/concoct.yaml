@@ -1,7 +1,7 @@
 name: concoct
 channels:
- - bioconda
- - conda-forge
+  - bioconda
+  - conda-forge
 dependencies:
   - _openmp_mutex=4.5=20_gnu
   - biopython=1.85=py39h8cd3c5a_1
