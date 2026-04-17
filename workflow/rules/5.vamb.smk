@@ -51,5 +51,5 @@ rule vamb_bins:
                 cp "$f" "{params.outdir}/$newname"
             done
         done
-        touch {output.collected_dir}
+        touch {output.bins}
         """
