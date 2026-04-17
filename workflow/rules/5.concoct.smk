@@ -72,7 +72,7 @@ rule run_concoct:
     shell:
         """
         concoct --threads {threads} -l 1500 --composition_file {input.contigs10k} --coverage_file {input.covtable} \
-            -b {params.outdir} -c {params.num_clusters} -t {threads}
+            -b {params.outdir} -c {params.num_clusters}
         """
 
 rule concoct_merge:
