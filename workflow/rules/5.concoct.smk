@@ -71,11 +71,8 @@ rule run_concoct:
         config['resources']['smalljob']['threads']
     shell:
         """
-        concoct --threads {threads} -l 1500 \
-            --composition_file {input.contigs10k} --coverage_file {input.covtable} \
-            -b {params.outdir} \
-            -c {params.num_clusters} \
-            -t {threads}
+        concoct --threads {threads} -l 1500 --composition_file {input.contigs10k} --coverage_file {input.covtable} \
+            -b {params.outdir} -c {params.num_clusters} -t {threads}
         """
 
 rule concoct_merge:
