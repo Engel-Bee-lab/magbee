@@ -3,6 +3,7 @@ Metagenome binning with VAMB
 Vamb is a family of metagenomic binners which feeds kmer composition and abundance into a variational autoencoder and clusters the embedding to form bins. 
 Its binners perform excellently with multiple samples, and pretty good on single-sample data.
 """
+from glob import glob
 
 rule vamb_simka:
     input:
@@ -30,7 +31,7 @@ rule vamb_simka:
 
 rule vamb_bins:
     input:
-        bins = os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt")
+        bins = expand(os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt"), sample=sample_names)
     output:
         bins = os.path.join(dir_binning, "all_vamb_bins", "done.txt")
     localrule: True
