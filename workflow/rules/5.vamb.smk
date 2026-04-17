@@ -17,10 +17,10 @@ rule vamb_simka:
     conda:
         os.path.join(dir_env, "vamb.yaml")
     resources:
-        mem_mb =config['resources']['bigjob']['mem_mb'],
-        runtime = config['resources']['bigjob']['runtime']
+        mem_mb =config['resources']['long_shortjob']['mem_mb'],
+        runtime = config['resources']['long_shortjob']['runtime']
     threads:
-        config['resources']['bigjob']['threads']
+        config['resources']['long_shortjob']['threads']
     shell:
         """
         #using the logic that one assembly was mapped with multiple samples from simka
@@ -43,7 +43,8 @@ rule vamb_bins:
         mkdir -p {params.outdir}
         for sample in {params.sample}; do
             src_dir={dir_binning}/${{sample}}_vamb_bins
-            for f in "$src_dir"/bin*.fna; do
+            
+            for f in "$src_dir"/bins/*.fna; do
                 [ -e "$f" ] || continue
                 bn=$(basename "$f")
                 newname="${{sample}}_${{bn}}"

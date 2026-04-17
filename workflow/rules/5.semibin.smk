@@ -14,16 +14,15 @@ rule semibin_multi_sample_simka:
     params:
         bin_dir= os.path.join(dir_binning, "{sample}_semibin_bins"),
         temp=os.path.join(dir_binning, "{sample}_temp"),
-        simka_clusters_txt = os.path.join(dir_binning, "{sample}_cluster_50", "{sample}_backmap_samples.txt"),
         bam_dir= os.path.join(dir_binning, "{sample}_cluster_50"),
         sample="{sample}",
     conda:
         os.path.join(dir_env, "semibin2.yaml")
     resources:
-        mem_mb =config['resources']['smalljob']['mem_mb'],
-        runtime = config['resources']['smalljob']['runtime']
+        mem_mb =config['resources']['long_shortjob']['mem_mb'],
+        runtime = config['resources']['long_shortjob']['runtime']
     threads:
-        config['resources']['smalljob']['threads']
+        config['resources']['long_shortjob']['threads']
     shell:
         """
         #generating a concatenated fasta file for semibin2 but with only one assembly file 
@@ -34,3 +33,4 @@ rule semibin_multi_sample_simka:
         SemiBin2 multi_easy_bin -i {params.bin_dir}/{params.sample}_concatenated.fa -b {params.bam_dir}/*.bam -o {params.bin_dir} -t {params.threads}
         touch {output.bins}
         """
+ 

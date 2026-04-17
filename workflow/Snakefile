@@ -85,11 +85,15 @@ if config['args']['sequencing'] == 'paired':
             targets['binning'].append(os.path.join(dir_binning, "{sample}_cluster_50", "done.txt").format(sample=sample))
             #targets['binning'].append(os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt").format(sample=sample))
 
+        #binning nightmare targets
         targets['binning'].append(os.path.join(dir_binning, "{sample}_metabat2_bins", "done.txt").format(sample=sample))
         targets['binning'].append(os.path.join(dir_binning, "all_metabat2_bins", "done.txt"))
         targets['binning'].append(os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt").format(sample=sample))
         targets['binning'].append(os.path.join(dir_binning, "all_vamb_bins", "done.txt"))
-        #targets['binning'].append(os.path.join(dir_binning, "{sample}_concoct", "bins", "renamed.txt").format(sample=sample))
+        targets['binning'].append(os.path.join(dir_binning, "{sample}_concoct", "bins", "renamed.txt").format(sample=sample))
+        #targets['binning'].append(os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt").format(sample=sample))
+
+
         #targets['binning'].append(os.path.join(dir_binning, "checkm2_output", "quality_report.tsv")),
         #targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt")),
         #targets['binning'].append(os.path.join(dir_reports, "checkm2_quality_reports.tsv")),

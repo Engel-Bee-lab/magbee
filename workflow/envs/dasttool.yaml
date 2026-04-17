@@ -1,0 +1,5 @@
+name: dastool
+channels:
+    - bioconda
+dependencies:
+    - das_tool>=1.1.7
