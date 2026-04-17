@@ -90,7 +90,7 @@ if config['args']['sequencing'] == 'paired':
         targets['binning'].append(os.path.join(dir_binning, "all_metabat2_bins", "done.txt"))
         targets['binning'].append(os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt").format(sample=sample))
         targets['binning'].append(os.path.join(dir_binning, "all_vamb_bins", "done.txt"))
-        targets['binning'].append(os.path.join(dir_binning, "{sample}_concoct", "bins", "renamed.txt").format(sample=sample))
+        #targets['binning'].append(os.path.join(dir_binning, "{sample}_concoct", "bins", "renamed.txt").format(sample=sample))
         #targets['binning'].append(os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt").format(sample=sample))
 
 
