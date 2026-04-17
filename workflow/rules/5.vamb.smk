@@ -24,6 +24,6 @@ rule vamb_simka:
         """
         #using the logic that one assembly was mapped with multiple samples from simka
         rm -rf {params.bin_dir}
-        vamb bin default --outdir {params.bin_dir} --fasta {input.contigs} --bamdir {params.bam_dir} -o C --minfasta 200000 -t {threads}
+        vamb bin default --outdir {params.bin_dir} --fasta {input.contigs} --bamdir {params.bam_dir} --minfasta 200000 -t {threads}
         touch {output.bins}
         """
