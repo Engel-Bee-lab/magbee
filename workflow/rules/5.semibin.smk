@@ -20,10 +20,10 @@ rule semibin_multi_sample_simka:
     conda:
         os.path.join(dir_env, "semibin2.yaml")
     resources:
-        mem_mb =config['resources']['bigjob']['mem_mb'],
-        runtime = config['resources']['bigjob']['runtime']
+        mem_mb =config['resources']['smalljob']['mem_mb'],
+        runtime = config['resources']['smalljob']['runtime']
     threads:
-        config['resources']['bigjob']['threads']
+        config['resources']['smalljob']['threads']
     shell:
         """
         #generating a concatenated fasta file for semibin2 but with only one assembly file 

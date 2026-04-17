@@ -27,3 +27,27 @@ rule vamb_simka:
         vamb bin default --outdir {params.bin_dir} --fasta {input.contigs} --bamdir {params.bam_dir} --minfasta 200000 -t {threads}
         touch {output.bins}
         """
+
+rule vamb_bins:
+    input:
+        bins = os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt")
+    output:
+        bins = os.path.join(dir_binning, "all_vamb_bins", "done.txt")
+    localrule: True
+    params:
+        outdir= os.path.join(dir_binning, "all_vamb_bins"),
+        sample=" ".join(sample_names)
+    shell:
+        """
+        mkdir -p {params.outdir}
+        for sample in {params.sample}; do
+            src_dir={dir_binning}/${{sample}}_vamb_bins
+            for f in "$src_dir"/bin*.fna; do
+                [ -e "$f" ] || continue
+                bn=$(basename "$f")
+                newname="${{sample}}_${{bn}}"
+                cp "$f" "{params.outdir}/$newname"
+            done
+        done
+        touch {output.collected_dir}
+        """
