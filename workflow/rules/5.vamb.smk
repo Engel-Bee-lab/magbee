@@ -23,7 +23,7 @@ rule vamb_simka:
     shell:
         """
         #using the logic that one assembly was mapped with multiple samples from simka
-
+        rm -rf {params.bin_dir}
         vamb --outdir {params.bin_dir} --fasta {input.contigs} --bamfiles {params.bam_dir}/*.bam -o C --minfasta 200000 -t {threads}
         touch {output.bins}
         """
