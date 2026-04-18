@@ -13,6 +13,7 @@ rule semibin_multi_sample_simka:
         bins = os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt")
     params:
         bin_dir= os.path.join(dir_binning, "{sample}_semibin_bins"),
+        temp= os.path.join(dir_binning, "{sample}_semibin_bins", "temp"),
         bam_dir= os.path.join(dir_binning, "{sample}_cluster_50"),
         sample="{sample}",
     conda:
