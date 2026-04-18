@@ -13,7 +13,6 @@ rule semibin_multi_sample_simka:
         bins = os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt")
     params:
         bin_dir= os.path.join(dir_binning, "{sample}_semibin_bins"),
-        temp= os.path.join(dir_binning, "{sample}_semibin_bins", "temp"),
         bam_dir= os.path.join(dir_binning, "{sample}_cluster_50"),
         sample="{sample}",
     conda:
@@ -27,10 +26,8 @@ rule semibin_multi_sample_simka:
         """
         #generating a concatenated fasta file for semibin2 but with only one assembly file 
         #This is being done for renaming the contigs 
-        SemiBin2 concatenate_fasta -i {input.assembly} -o {params.temp}/{params.sample}_concatenated.fa
-
         #generating the bins with semibin2
-        SemiBin2 multi_easy_bin -i {params.temp}/{params.sample}_concatenated.fa \
+        SemiBin2 single_easy_bin -i {input.assembly} \
             -b {params.bam_dir}/*.bam -o {params.bin_dir} -t {threads}
         touch {output.bins}
         """
