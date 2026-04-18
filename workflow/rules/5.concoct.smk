@@ -103,10 +103,10 @@ rule concoct_bins:
     conda:
         os.path.join(dir_env, "concoct.yaml")
     resources:
-        mem_mb =config['resources']['long_shortjob']['mem_mb'],
-        runtime = config['resources']['long_shortjob']['runtime']
+        mem_mb =config['resources']['smalljob']['mem_mb'],
+        runtime = config['resources']['smalljob']['runtime']
     threads: 
-        config['resources']['long_shortjob']['threads']
+        config['resources']['smalljob']['threads']
     shell:
         """
         mkdir -p {params.outdir}
