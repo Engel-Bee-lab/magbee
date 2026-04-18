@@ -116,7 +116,7 @@ rule concoct_bins:
 
 rule rename_concoctBins:
     input:
-        bins=os.path.join(dir_binning, "{sample}_concoct", "bins", "done.txt")
+        bins=expand(os.path.join(dir_binning, "{sample}_concoct", "bins", "done.txt"), sample=sample_names),
     output:
         renamed=os.path.join(dir_binning, "all_conoct_bins", "renamed.txt")
     params:
