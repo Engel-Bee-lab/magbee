@@ -58,7 +58,7 @@ rule run_concoct:
         contigs10k=os.path.join(dir_binning, "{sample}_concoct", "{sample}.contigs10k.fa"),
         covtable=os.path.join(dir_binning, "{sample}_concoct", "{sample}_covtable.tsv")
     output:
-        clusters=os.path.join(dir_binning, "{sample}_concoct", "clustering_gt1000.csv")
+        clusters=os.path.join(dir_binning, "{sample}_concoct", "clustering_gt1500.csv")
     params:
         outdir=os.path.join(dir_binning, "{sample}_concoct"),
         num_clusters=100
@@ -77,7 +77,7 @@ rule run_concoct:
 
 rule concoct_merge:
     input:
-        clusters=os.path.join(dir_binning, "{sample}_concoct", "clustering_gt1000.csv")
+        clusters=os.path.join(dir_binning, "{sample}_concoct", "clustering_gt1500.csv")
     output:
         merged=os.path.join(dir_binning, "{sample}_concoct", "clustering_merged.csv")
     conda:
