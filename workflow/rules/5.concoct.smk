@@ -94,7 +94,7 @@ rule concoct_merge:
 
 rule concoct_bins:
     input:
-        contigs10k=os.path.join(dir_binning, "{sample}_concoct", "{sample}.contigs10k.fa"),
+        contigs10k=os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
         merged=os.path.join(dir_binning, "{sample}_concoct", "clustering_merged.csv")
     output:
         bins=os.path.join(dir_binning, "{sample}_concoct", "bins", "done.txt")
