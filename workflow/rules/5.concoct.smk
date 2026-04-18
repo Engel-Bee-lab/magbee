@@ -131,8 +131,9 @@ rule rename_concoctBins:
         for sample in {params.sample}; do
             src_dir={dir_binning}/${{sample}}_concoct/bins
             for f in "$src_dir"/concoct_*.fa; do
-                [ -e "$f" ] || continue   # <-- critical guard
-                cp "$f" "{params.outdir}/.
+                [ -e "$f" ] || continue 
+                bn=$(basename "$f")
+                cp "$f" "{params.outdir}/${sample}_${bn}"
             done
         done
         touch {output.renamed}
