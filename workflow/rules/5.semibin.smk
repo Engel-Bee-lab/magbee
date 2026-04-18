@@ -30,7 +30,8 @@ rule semibin_multi_sample_simka:
         SemiBin2 concatenate_fasta -i {input.contigs} -o {params.temp}/{params.sample}_concatenated.fa
 
         #generating the bins with semibin2
-        SemiBin2 multi_easy_bin -i {params.bin_dir}/{params.sample}_concatenated.fa -b {params.bam_dir}/*.bam -o {params.bin_dir} -t {params.threads}
+        SemiBin2 multi_easy_bin -i {params.bin_dir}/{params.sample}_concatenated.fa \
+            -b {params.bam_dir}/*.bam -o {params.bin_dir} -t {params.threads}
         touch {output.bins}
         """
  
