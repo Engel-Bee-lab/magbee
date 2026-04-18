@@ -7,13 +7,12 @@ Running CPU version
 """
 rule semibin_multi_sample_simka:
     input:
-        contigs = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
-        bam=os.path.join(dir_binning, "{sample}_cluster_50", "done.txt")
+        assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
+        bam = os.path.join(dir_binning, "{sample}_bam", "done.txt"),
     output:
         bins = os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt")
     params:
         bin_dir= os.path.join(dir_binning, "{sample}_semibin_bins"),
-        temp=os.path.join(dir_binning, "{sample}_temp"),
         bam_dir= os.path.join(dir_binning, "{sample}_cluster_50"),
         sample="{sample}",
     conda:
@@ -27,7 +26,7 @@ rule semibin_multi_sample_simka:
         """
         #generating a concatenated fasta file for semibin2 but with only one assembly file 
         #This is being done for renaming the contigs 
-        SemiBin2 concatenate_fasta -i {input.contigs} -o {params.temp}/{params.sample}_concatenated.fa
+        SemiBin2 concatenate_fasta -i {input.assembly} -o {params.temp}/{params.sample}_concatenated.fa
 
         #generating the bins with semibin2
         SemiBin2 multi_easy_bin -i {params.bin_dir}/{params.sample}_concatenated.fa \
