@@ -24,7 +24,7 @@ else:
 include: os.path.join("rules", "5.metabat2.smk")
 include: os.path.join("rules", "5.concoct.smk")
 include: os.path.join("rules", "5.vamb.smk")
-inlcude: os.path.join("rules", "5.semibin.smk")
+include: os.path.join("rules", "5.semibin.smk")
 
 #include: os.path.join("rules", "6.bins_quality.smk")
 #include: os.path.join("rules", "7.drep.smk")
