@@ -31,7 +31,7 @@ rule semibin_multi_sample_simka:
 
         #generating the bins with semibin2
         SemiBin2 multi_easy_bin -i {params.bin_dir}/{params.sample}_concatenated.fa \
-            -b {params.bam_dir}/*.bam -o {params.bin_dir} -t {params.threads}
+            -b {params.bam_dir}/*.bam -o {params.bin_dir} -t {threads}
         touch {output.bins}
         """
  
