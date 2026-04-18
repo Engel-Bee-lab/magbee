@@ -133,7 +133,7 @@ rule rename_concoctBins:
             for f in "$src_dir"/concoct_*.fa; do
                 [ -e "$f" ] || continue 
                 bn=$(basename "$f")
-                cp "$f" "{params.outdir}/${sample}_${bn}"
+                cp "$f" "{params.outdir}/${{sample}}_${{bn}}"
             done
         done
         touch {output.renamed}
