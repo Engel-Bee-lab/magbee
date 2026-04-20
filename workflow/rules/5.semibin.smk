@@ -5,6 +5,8 @@ Metagenomic Binning Using Siamese Neural Networks for short and long reads
 Here I am using this binning tool in single-sample binning mode, that is each assembly with its own bam file
 Running CPU version
 """
+from glob import glob
+ 
 rule semibin_multi_sample_simka:
     input:
         assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
@@ -32,3 +34,21 @@ rule semibin_multi_sample_simka:
         touch {output.bins}
         """
  
+ rule merge_semibins:
+    input:
+        expand(bins = os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt"), sample=samples)
+    output:
+        os.path.join(dir_binning, "merged_semibins", "done.txt")
+    localrule: True
+    params:
+        dirs=os.path.join(dir_binning, "merged_semibins"),
+        bins=expand(os.path.join(dir_binning, "{sample}_semibin_bins", "output_bins"), sample=samples),
+    shell:
+        """
+        #merging the bins from all samples into one directory
+        mkdir -p {params.dirs}
+        for sample in {samples}; do
+            cp -r {params.bins}/output_bins/*.fa.gz {params.dirs}/
+        done
+        touch {output}
+        """
