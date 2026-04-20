@@ -6,7 +6,7 @@ Here I am using this binning tool in single-sample binning mode, that is each as
 Running CPU version
 """
 from glob import glob
-print(f"sample_names: len({sample_names})")
+print(f"sample_names: {len(sample_names)}")
 
 rule semibin_multi_sample_simka:
     input:
