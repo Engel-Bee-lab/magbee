@@ -34,7 +34,7 @@ rule semibin_multi_sample_simka:
         touch {output.bins}
         """
  
- rule merge_semibins:
+rule merge_semibins:
     input:
         expand(bins = os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt"), sample=samples)
     output:
