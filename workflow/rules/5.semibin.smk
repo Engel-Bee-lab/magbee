@@ -6,7 +6,8 @@ Here I am using this binning tool in single-sample binning mode, that is each as
 Running CPU version
 """
 from glob import glob
- 
+print(f"sample_names: {sample_names}")
+
 rule semibin_multi_sample_simka:
     input:
         assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
