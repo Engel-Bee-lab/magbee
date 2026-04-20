@@ -36,7 +36,7 @@ rule semibin_multi_sample_simka:
  
 rule merge_semibins:
     input:
-        expand(bins = os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt"), sample=sample_names)
+        ins=expand(bins = os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt"), sample=sample_names)
     output:
         os.path.join(dir_binning, "merged_semibins", "done.txt")
     localrule: True
