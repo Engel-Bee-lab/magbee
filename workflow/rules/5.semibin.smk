@@ -30,8 +30,14 @@ rule semibin_multi_sample_simka:
         #generating a concatenated fasta file for semibin2 but with only one assembly file 
         #This is being done for renaming the contigs 
         #generating the bins with semibin2
-        if [ -f {output.bins} ]; then
-            echo "Already run skipping semibin2 for {params.sample}"
+        if [ -d {params.bin_dir} ]; then
+            if [ -f {output.bins} ]; then
+                echo "Already run skipping semibin2 for {params.sample}"
+            else
+                SemiBin2 single_easy_bin -i {input.assembly} \
+                    -b {params.bam_dir}/*.bam -o {params.bin_dir} -t {threads}
+                touch {output.bins}
+            fi
         else
             SemiBin2 single_easy_bin -i {input.assembly} \
                 -b {params.bam_dir}/*.bam -o {params.bin_dir} -t {threads}
