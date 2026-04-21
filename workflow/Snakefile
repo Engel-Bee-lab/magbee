@@ -96,10 +96,10 @@ if config['args']['sequencing'] == 'paired':
         targets['binning'].append(os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt").format(sample=sample))
         targets['binning'].append(os.path.join(dir_binning, "merged_semibins", "done.txt"))
 
-        targets['binning'].append(os.path.join(dir_binning, "Checkm2", "checkm2_output_metabat2", "quality_report.tsv"))
-        targets['binning'].append(os.path.join(dir_binning, "Checkm2", "checkm2_output_concoct", "quality_report.tsv"))
-        targets['binning'].append(os.path.join(dir_binning, "Checkm2", "checkm2_output_vamb", "quality_report.tsv"))
-        targets['binning'].append(os.path.join(dir_binning, "Checkm2", "checkm2_output_semibin2", "quality_report.tsv"))      
+        #targets['binning'].append(os.path.join(dir_binning, "Checkm2", "checkm2_output_metabat2", "quality_report.tsv"))
+        #targets['binning'].append(os.path.join(dir_binning, "Checkm2", "checkm2_output_concoct", "quality_report.tsv"))
+        #targets['binning'].append(os.path.join(dir_binning, "Checkm2", "checkm2_output_vamb", "quality_report.tsv"))
+        #targets['binning'].append(os.path.join(dir_binning, "Checkm2", "checkm2_output_semibin2", "quality_report.tsv"))      
         
         #targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt"))
         #targets['binning'].append(os.path.join(dir_reports, "checkm2_quality_reports.tsv")),
