@@ -50,7 +50,7 @@ def targetRule(fn):
 """
 Defining the targets dictionary
 """
-targets ={'qc':[], 'host':[], 'assemble':[], 'binning':[]}
+targets ={'qc':[], 'host':[], 'assemble':[], 'binning':[], 'binning_qual':[]}
 
 if config['args']['sequencing'] == 'paired':
     for sample in sample_names:
@@ -96,10 +96,10 @@ if config['args']['sequencing'] == 'paired':
         #targets['binning'].append(os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt").format(sample=sample))
         #targets['binning'].append(os.path.join(dir_binning, "all_semibin_bins", "done.txt"))
 
-        targets['binning'].append(os.path.join(dir_binning, "checkm2", "checkm2_output_metabat2", "quality_report.tsv"))
-        targets['binning'].append(os.path.join(dir_binning, "checkm2", "checkm2_output_concoct", "quality_report.tsv"))
-        targets['binning'].append(os.path.join(dir_binning, "checkm2", "checkm2_output_vamb", "quality_report.tsv"))
-        targets['binning'].append(os.path.join(dir_binning, "checkm2", "checkm2_output_semibin2", "quality_report.tsv"))      
+        targets['binning_qual'].append(os.path.join(dir_binning, "checkm2", "checkm2_output_metabat2", "quality_report.tsv"))
+        targets['binning_qual'].append(os.path.join(dir_binning, "checkm2", "checkm2_output_concoct", "quality_report.tsv"))
+        targets['binning_qual'].append(os.path.join(dir_binning, "checkm2", "checkm2_output_vamb", "quality_report.tsv"))
+        targets['binning_qual'].append(os.path.join(dir_binning, "checkm2", "checkm2_output_semibin2", "quality_report.tsv"))      
         
         #targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt"))
         #targets['binning'].append(os.path.join(dir_reports, "checkm2_quality_reports.tsv")),
@@ -112,6 +112,7 @@ rule all:
         targets['host'],
         targets['assemble'],    
         targets['binning']
+        targets['binning_qual']
 
 @targetRule
 rule qc:
@@ -127,3 +128,8 @@ rule assembly:
 rule binning:
     input:
         targets['binning']
+
+@targetRule
+rule binning_quality:
+    input:
+        targets['binning_qual']
