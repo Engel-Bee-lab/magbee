@@ -43,21 +43,28 @@ rule merge_semibins:
     input:
         ins = expand(os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt"), sample=sample_names)
     output:
-        os.path.join(dir_binning, "merged_semibins", "done.txt")
+        os.path.join(dir_binning, "all_semibin_bins", "done.txt")
     localrule: True
     params:
-        dirs=os.path.join(dir_binning, "merged_semibins"),
+        dirs=os.path.join(dir_binning, "all_semibin_bins"),
         bins=os.path.join(dir_binning),
         sample=" ".join(sample_names)
     shell:
         """
-        #merging the bins from all samples into one directory
         mkdir -p {params.dirs}
-        for sample in {params.samples}; do
-            [ -e "$f" ] || continue
-            bn=$(basename "$f")
-            newname="${{sample}}_${{bn}}"
-            cp -r {params.bins}/"${{sample}}_semibin_bins/merged_bins/*.fa.gz {params.dirs}/$newname"
+
+        for f in {params.bins}/*_semibin_bins; do
+            sample=$(basename "$f" _semibin_bins)
+
+            for file in "$f"/output_bins/*.fa.gz; do
+                [ -e "$file" ] || continue
+
+                bn=$(basename "$file")
+                newname="${{sample}}_${{bn}}"
+
+                cp "$file" "{params.dirs}/$newname"
+            done
         done
+
         touch {output}
         """
