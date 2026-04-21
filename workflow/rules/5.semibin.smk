@@ -43,7 +43,7 @@ rule merge_semibins:
     localrule: True
     params:
         dirs=os.path.join(dir_binning, "merged_semibins"),
-        bins=os.path.join(dir_binning, "{sample}_semibin_bins", "output_bins"),
+        bins=os.path.join(dir_binning),
         sample=" ".join(sample_names)
     shell:
         """
@@ -53,7 +53,7 @@ rule merge_semibins:
             [ -e "$f" ] || continue
             bn=$(basename "$f")
             newname="${{sample}}_${{bn}}"
-            cp -r {params.bins}/*.fa.gz {params.dirs}/$newname"
+            cp -r {params.bins}/"${{sample}}_semibin_bins/merged_bins/*.fa.gz {params.dirs}/$newname"
         done
         touch {output}
         """
