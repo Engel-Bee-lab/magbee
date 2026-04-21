@@ -111,7 +111,7 @@ rule all:
         targets['qc'],
         targets['host'],
         targets['assemble'],    
-        targets['binning']
+        targets['binning'],
         targets['binning_qual']
 
 @targetRule
