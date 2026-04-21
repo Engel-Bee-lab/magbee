@@ -6,7 +6,7 @@ Here I am using this binning tool in single-sample binning mode, that is each as
 Running CPU version
 """
 from glob import glob
-print(f"sample_names: {len(sample_names)}")
+print(f"sample_names: {len(sample_names)})")
 
 rule semibin_multi_sample_simka:
     input:
@@ -37,7 +37,7 @@ rule semibin_multi_sample_simka:
  
 rule merge_semibins:
     input:
-        ins=expand(bins = os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt"), sample=sample_names)
+        ins=expand(os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt"), sample=sample_names)
     output:
         os.path.join(dir_binning, "merged_semibins", "done.txt")
     localrule: True
