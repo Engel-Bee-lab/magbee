@@ -38,7 +38,7 @@ sample_names = list(paired_samples.keys())
 N_SAMPLES = len(sample_names)
 THRESHOLD = config['args'].get('mapping_threshold', 50)
 
-print(f"Detected {N_SAMPLES} samples")
+#print(f"Detected {N_SAMPLES} samples")
 
 """Mark target rules"""
 target_rules = []

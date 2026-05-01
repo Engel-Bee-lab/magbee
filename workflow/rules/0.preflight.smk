@@ -116,7 +116,7 @@ if config['args']['sequencing'] == 'paired':
     THRESHOLD = config['args'].get('mapping_threshold', 100)
 
     print(f"Detected {N_SAMPLES} paired-end samples")
-    print(f"Sample inputs: {paired_samples}")
+    #print(f"Sample inputs: {paired_samples}")
 
 
 """ONSTART/END/ERROR

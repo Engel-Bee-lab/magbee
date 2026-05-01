@@ -17,7 +17,7 @@ def read_cluster_map():
 
         with open(cluster_file) as f:
             mapping[sample] = [l.strip() for l in f if l.strip()]
-
+ 
     return mapping
 
 CLUSTER_MAP = read_cluster_map()
