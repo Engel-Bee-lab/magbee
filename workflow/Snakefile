@@ -50,7 +50,7 @@ def targetRule(fn):
 """
 Defining the targets dictionary
 """
-targets ={'qc':[], 'host':[], 'assemble':[], 'binning':[], 'binning_qual':[]}
+targets ={'qc':[], 'host':[], 'assemble':[], 'backmapping':[], 'binning':[], 'binning_qual':[]}
 
 if config['args']['sequencing'] == 'paired':
     for sample in sample_names:
@@ -78,23 +78,23 @@ if config['args']['sequencing'] == 'paired':
 if config['args']['sequencing'] == 'paired':
     for sample in sample_names:
         if N_SAMPLES <= THRESHOLD:
-            targets['binning'].append(os.path.join(dir_binning, "{sample}_index.mmi").format(sample=sample))
-            targets['binning'].append(os.path.join(dir_binning, "{sample}_bam", "done.txt").format(sample=sample))
+            targets['backmapping'].append(os.path.join(dir_binning, "{sample}_index.mmi").format(sample=sample))
+            targets['backmapping'].append(os.path.join(dir_binning, "{sample}_bam", "done.txt").format(sample=sample))
         else:
-            targets['binning'].append(os.path.join(dir_binning, "simka_input_list.txt"))
+            targets['backmapping'].append(os.path.join(dir_binning, "simka_input_list.txt"))
             #targets['binning'].append(os.path.join(dir_binning, "simka_results", "mat_abundance_jaccard.csv.gz"))
-            targets['binning'].append(os.path.join(dir_binning, "{sample}_cluster_50", "{sample}_backmap_samples.txt").format(sample=sample))
-            targets['binning'].append(os.path.join(dir_binning, "{sample}_cluster_50", "done.txt").format(sample=sample))
+            targets['backmapping'].append(os.path.join(dir_binning, "{sample}_cluster_50", "{sample}_backmap_samples.txt").format(sample=sample))
+            targets['backmapping'].append(os.path.join(dir_binning, "{sample}_cluster_50", "done.txt").format(sample=sample))
 
         #binning nightmare targets
-        #targets['binning'].append(os.path.join(dir_binning, "{sample}_metabat2_bins", "done.txt").format(sample=sample))
-        #targets['binning'].append(os.path.join(dir_binning, "all_metabat2_bins", "done.txt"))
-        #targets['binning'].append(os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt").format(sample=sample))
-        #targets['binning'].append(os.path.join(dir_binning, "all_vamb_bins", "done.txt"))
-        #targets['binning'].append(os.path.join(dir_binning, "{sample}_concoct", "bins", "done.txt").format(sample=sample))
-        #targets['binning'].append(os.path.join(dir_binning, "all_conoct_bins", "renamed.txt"))
-        #targets['binning'].append(os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt").format(sample=sample))
-        #targets['binning'].append(os.path.join(dir_binning, "all_semibin_bins", "done.txt"))
+        targets['binning'].append(os.path.join(dir_binning, "{sample}_metabat2_bins", "done.txt").format(sample=sample))
+        targets['binning'].append(os.path.join(dir_binning, "all_metabat2_bins", "done.txt"))
+        targets['binning'].append(os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt").format(sample=sample))
+        targets['binning'].append(os.path.join(dir_binning, "all_vamb_bins", "done.txt"))
+        targets['binning'].append(os.path.join(dir_binning, "{sample}_concoct", "bins", "done.txt").format(sample=sample))
+        targets['binning'].append(os.path.join(dir_binning, "all_conoct_bins", "renamed.txt"))
+        targets['binning'].append(os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt").format(sample=sample))
+        targets['binning'].append(os.path.join(dir_binning, "all_semibin_bins", "done.txt"))
 
         targets['binning_qual'].append(os.path.join(dir_binning, "checkm2", "checkm2_output_metabat2", "quality_report.tsv"))
         targets['binning_qual'].append(os.path.join(dir_binning, "checkm2", "checkm2_output_concoct", "quality_report.tsv"))
@@ -110,7 +110,8 @@ rule all:
     input:
         targets['qc'],
         targets['host'],
-        targets['assemble'],    
+        targets['assemble'],  
+        targets['backmapping'],  
         targets['binning'],
         targets['binning_qual']
 
@@ -123,6 +124,11 @@ rule qc:
 rule assembly:
     input:
         targets['assemble']
+
+@targetRule
+rule backmapping:
+    input:
+        targets['backmapping']
 
 @targetRule
 rule binning:
