@@ -8,7 +8,7 @@ from glob import glob
 rule vamb_simka:
     input:
         contigs = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
-        bam=os.path.join(dir_binning, "{sample}_cluster_50", "done.txt")
+        bam = os.path.join(dir_binning, "{sample}_cluster_50", "done.txt")
     output:
         bins = os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt")
     params:

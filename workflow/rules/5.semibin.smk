@@ -11,7 +11,7 @@ print(f"sample_names: {len(sample_names)})")
 rule semibin_multi_sample_simka:
     input:
         assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
-        bam = os.path.join(dir_binning, "{sample}_cluster_50", "done.txt"),
+        bam = os.path.join(dir_binning, "{sample}_cluster_50", "done.txt")
     output:
         bins = os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt")
     params:

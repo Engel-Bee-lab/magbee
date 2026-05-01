@@ -6,69 +6,78 @@ Now backmapping based on the 50 assemblies
 import os
 import glob 
 
-def read_cluster_map():
-    mapping = {}
+############################################
+# Helper: read cluster file SAFELY (lazy)
+############################################
+def get_cluster_samples(wildcards, input):
+    with open(input.simka_clusters_txt) as f:
+        return [l.strip() for l in f if l.strip()]
 
-    for sample in sample_names:
-        cluster_file = os.path.join(
-            dir_binning,
-            f"{sample}_cluster_50/{sample}_backmap_samples.txt"
-        )
+  
+#CLUSTER_MAP = read_cluster_map()
 
-        with open(cluster_file) as f:
-            mapping[sample] = [l.strip() for l in f if l.strip()]
- 
-    return mapping
-
-CLUSTER_MAP = read_cluster_map()
-
+############################################
+# Rule: index assembly
+############################################
 rule assembly_index:
     input:
-        assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa")
+        assembly = os.path.join(dir_assembly, "{sample}.megahit.contigs.fa")
     output:
-        index=os.path.join(dir_assembly, "{sample}.mmi"),
+        index = os.path.join(dir_assembly, "{sample}.mmi")
     conda:
         os.path.join(dir_env, "minimap2.yaml")
-    resources:
-        mem_mb =config['resources']['smalljob']['mem_mb'],
-        runtime = config['resources']['smalljob']['runtime']
-    threads: 
+    threads:
         config['resources']['smalljob']['threads']
+    resources:
+        mem_mb = config['resources']['smalljob']['mem_mb'],
+        runtime = config['resources']['smalljob']['runtime']
     shell:
         """
         minimap2 -d {output.index} {input.assembly}
         """
 
-
-rule bakckmapping_simka:
+############################################
+# Rule: backmapping reads to assembly
+############################################
+rule backmapping_simka:
     input:
-        assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
-        index=os.path.join(dir_assembly, "{sample}.mmi"),
-        simka_clusters_txt = os.path.join(dir_binning, "{sample}_cluster_50", "{sample}_backmap_samples.txt")
+        assembly = os.path.join(dir_assembly, "{sample}.megahit.contigs.fa"),
+        index = os.path.join(dir_assembly, "{sample}.mmi"),
+        simka_clusters_txt = os.path.join(
+            dir_binning,
+            "{sample}_cluster_50",
+            "{sample}_backmap_samples.txt"
+        )
     output:
-        bam=os.path.join(dir_binning, "{sample}_cluster_50", "done.txt")
+        done = os.path.join(dir_binning, "{sample}_cluster_50", "done.txt")
     params:
-        csamples=lambda wildcards: CLUSTER_MAP[wildcards.sample],
-        reads_path=dir_hostcleaned,
-        bam_path=os.path.join(dir_binning, "{sample}_cluster_50"),
-        wsample="{sample}"
+        csamples = get_cluster_samples,
+        reads_path = dir_hostcleaned,
+        bam_path = os.path.join(dir_binning, "{sample}_cluster_50"),
+        wsample = "{sample}"
     conda:
         os.path.join(dir_env, "minimap2.yaml")
-    resources:
-        mem_mb =config['resources']['long_shortjob']['mem_mb'],
-        runtime = config['resources']['long_shortjob']['runtime']
-    threads: 
+    threads:
         config['resources']['long_shortjob']['threads']
+    resources:
+        mem_mb = config['resources']['long_shortjob']['mem_mb'],
+        runtime = config['resources']['long_shortjob']['runtime']
     shell:
         """
+        mkdir -p {params.bam_path}
+
         for sim_sample in {params.csamples}; do
             r1={params.reads_path}/${{sim_sample}}_R1.hostcleaned.fastq.gz
             r2={params.reads_path}/${{sim_sample}}_R2.hostcleaned.fastq.gz
 
             outbam={params.bam_path}/{params.wsample}_cluster_50_${{sim_sample}}.bam
 
-            minimap2 -ax sr -t {threads} {input.index} $r1 $r2 | samtools view -bS - | samtools sort -o $outbam                
+            minimap2 -ax sr -t {threads} {input.index} $r1 $r2 \
+                | samtools view -bS - \
+                | samtools sort -o $outbam
+
             samtools index $outbam
         done
-        touch {output.bam}
+
+        touch {output.done}
         """

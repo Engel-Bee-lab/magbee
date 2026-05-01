@@ -6,7 +6,7 @@ from glob import glob
 rule metabat2_binning_individual_sample:
     input:
         assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
-        bam = os.path.join(dir_binning, "{sample}_bam", "done.txt"),
+        bam = os.path.join(dir_binning, "{sample}_cluster_50", "done.txt")
     output:
         bins_dir = os.path.join(dir_binning, "{sample}_metabat2_bins", "done.txt")
     params:

@@ -34,7 +34,7 @@ include: os.path.join("rules", "6.bins_quality.smk")
 # AFTER sample detection logic for maping 
 #############################################
 
-sample_names = list(paired_samples.keys())
+#sample_names = list(paired_samples.keys())
 N_SAMPLES = len(sample_names)
 THRESHOLD = config['args'].get('mapping_threshold', 50)
 
