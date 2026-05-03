@@ -40,13 +40,12 @@ rule vamb_sep:
         bin_dir= os.path.join(dir_binning, "{sample}_vamb_bins"),
         outdir=os.path.join(dir_binning, "{sample}_vamb_bins", "bins"),
         scripts= os.path.join(dir_script, "vamb_bins_sep.py"),
-    conda:
-        os.path.join(dir_env, "vamb.yaml")
     localrule: True
     shell:
         """
         python {params.scripts} --mapping {input.bam} --fasta {input.contigs} \
             --outdir {params.outdir}
+        rm -rf {params.outdir}/bin_clustername.fasta
         touch {output.bins}
         """
 
