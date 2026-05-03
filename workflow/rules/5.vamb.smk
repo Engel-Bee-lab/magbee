@@ -26,7 +26,7 @@ rule vamb_simka:
     shell:
         """
         #using the logic that one assembly was mapped with multiple samples from simka
-        f [ -f "{params.abundance}" ]; then
+        if [ -f "{params.abundance}" ]; then
             echo "abundance file already exists, skipping abundance calculation"
             touch {output.done}
         else
