@@ -44,7 +44,7 @@ rule collect_metabat2_bins:
             for f in "$src_dir"/bin*.fa; do
                 [ -e "$f" ] || continue
                 bn=$(basename "$f")
-                newname="${{sample}}_${{bn}}"
+                newname="${{sample}}_metabat_${{bn}}"
                 cp "$f" "{params.outdir}/$newname"
             done
         done

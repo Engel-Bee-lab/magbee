@@ -121,7 +121,8 @@ rule rename_concoctBins:
         renamed=os.path.join(dir_binning, "all_conoct_bins", "renamed.txt")
     params:
         outdir=os.path.join(dir_binning, "all_conoct_bins"),
-        sample=" ".join(sample_names)
+        sample=" ".join(sample_names),
+        dir_bins=os.path.join(dir_binning)
     conda:
         os.path.join(dir_env, "concoct.yaml")
     localrule: True
@@ -129,11 +130,11 @@ rule rename_concoctBins:
         """
         mkdir -p {params.outdir}
         for sample in {params.sample}; do
-            src_dir={dir_binning}/${{sample}}_concoct/bins
+            src_dir={params.dir_bins}/${{sample}}_concoct/bins
             for f in "$src_dir"/concoct_*.fa; do
                 [ -e "$f" ] || continue 
                 bn=$(basename "$f")
-                cp "$f" "{params.outdir}/${{sample}}_${{bn}}"
+                cp "$f" "{params.outdir}/${{sample}}_concoct_${{bn}}"
             done
         done
         touch {output.renamed}
