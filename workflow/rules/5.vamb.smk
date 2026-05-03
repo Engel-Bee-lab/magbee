@@ -45,7 +45,6 @@ rule vamb_sep:
     localrule: True
     shell:
         """
-        mkdir -p {params.outdir}
         python {params.scripts} --mapping {input.bam} --fasta {input.contigs} \
             --outdir {output}
         touch {output.bins}
