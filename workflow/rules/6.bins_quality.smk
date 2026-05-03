@@ -78,32 +78,6 @@ rule bins_checkm2_vamb:
         cp {params.outdir}/checkm2_assessment.tsv {output.checkm2_dir}
         """
 
-rule bins_checkm2_semibin:
-    input:
-        bins_dir = os.path.join(dir_binning, "all_semibin_bins", "done.txt")
-    output:
-        checkm2_dir = os.path.join(dir_binning, "checkm2", "checkm2_output_semibin2", "quality_report.tsv")
-    params:
-        bins=os.path.join(dir_binning, "merged_semibins"),
-        outdir=os.path.join(dir_binning, "checkm2_output_semibin2"),
-        database = config["databases"]["checkm_db"]
-    conda:
-        os.path.join(dir_env, "checkm2.yaml")
-    resources:
-        mem_mb =config['resources']['smalljob']['mem_mb'],
-        runtime = config['resources']['smalljob']['runtime']
-    threads: 
-        config['resources']['smalljob']['threads']
-    shell:
-        """
-        mkdir -p {params.outdir}
-        export CHECKM2_DB_PATH={params.database}
-        checkm2 predict -i {params.bins} -o {params.outdir} --database_path {params.database}/uniref100.KO.1.dmnd \
-            -x fa --force --threads {threads}
-        cp {params.outdir}/checkm2_assessment.tsv {output.checkm2_dir}
-        """
-
-
 rule gtdbtk_bins:
     input:
         bins_done = os.path.join(dir_binning, "all_metabat2_bins", "done.txt"),
