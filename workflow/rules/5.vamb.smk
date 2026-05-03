@@ -46,7 +46,7 @@ rule vamb_sep:
     shell:
         """
         python {params.scripts} --mapping {input.bam} --fasta {input.contigs} \
-            --outdir {output}
+            --outdir {params.outdir}
         touch {output.bins}
         """
 
