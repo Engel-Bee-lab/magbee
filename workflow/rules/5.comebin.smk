@@ -5,7 +5,7 @@ rule comebin_simka:
     output:
         bins_dir = os.path.join(dir_binning, "{sample}_comebin_bins", "done.txt")
     params:
-        outdir=os.path.join(dir_binning, "{sample}_comebin_bins")
+        outdir=os.path.join(dir_binning, "{sample}_comebin_bins"),
         bam_dir=os.path.join(dir_binning, "{sample}_cluster_50")
     conda:
         os.path.join(dir_env, "comebin.yaml")
