@@ -7,7 +7,7 @@ rule comebin_simka:
     params:
         outdir=os.path.join(dir_binning, "{sample}_comebin_bins"),
         bam_dir=os.path.join(dir_binning, "{sample}_cluster_50"),
-        checkm_db = config['databases']['checkm']
+        checkm_db = config['databases']['checkm_db']
     conda:
         os.path.join(dir_env, "comebin.yaml")
     resources:
