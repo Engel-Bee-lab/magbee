@@ -25,7 +25,7 @@ rule vamb_simka:
         """
         #using the logic that one assembly was mapped with multiple samples from simka
         rm -rf {params.bin_dir}
-        vamb bin default --outdir {params.bin_dir} --fasta {input.contigs} --bamdir {params.bam_dir} -t {threads}
+        vamb bin default -o C --outdir {params.bin_dir} --fasta {input.contigs} --bamdir {params.bam_dir} -t {threads}
         touch {output.bins}
         """
 
@@ -47,7 +47,7 @@ rule vamb_bins:
             for f in "$src_dir"/bins/*.fna; do
                 [ -e "$f" ] || continue
                 bn=$(basename "$f")
-                newname="${{sample}}_${{bn}}"
+                newname="${{sample}}_vamb_${{bn}}"
                 cp "$f" "{params.outdir}/$newname"
             done
         done
