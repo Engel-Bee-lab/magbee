@@ -13,7 +13,8 @@ rule vamb_simka:
         bins = os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt")
     params:
         bin_dir= os.path.join(dir_binning, "{sample}_vamb_bins"),
-        bam_dir=os.path.join(dir_binning, "{sample}_cluster_50")
+        bam_dir=os.path.join(dir_binning, "{sample}_cluster_50"),
+        script=os.path.join(dir_scripts, "vamb_concatenate.py"),
     conda:
         os.path.join(dir_env, "vamb.yaml")
     resources:
