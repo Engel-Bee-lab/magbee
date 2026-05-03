@@ -17,10 +17,10 @@ rule comebin_simka:
         config['resources']['bigjob']['threads']
     shell:
         """
-        mkdir -p {params.outdir}
+        rm -rf {params.outdir}
         checkm data setRoot {params.checkm_db}
         run_comebin.sh -a {input.assembly} -o {params.outdir} \
-            -p {params.bam_dir}/*.bam -t {threads}
+            -p {params.bam_dir} -t {threads}
         touch {output.bins_dir}
         """
 
