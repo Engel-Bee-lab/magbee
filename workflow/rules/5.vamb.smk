@@ -10,11 +10,12 @@ rule vamb_simka:
         contigs = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
         bam = os.path.join(dir_binning, "{sample}_cluster_50", "done.txt")
     output:
-        abundance = os.path.join(dir_binning, "{sample}_vamb_bins", "vae_clusters_unsplit.tsv")
+        done = os.path.join(dir_binning, "{sample}_vamb_bins", "vae_clust_done.txt")
     params:
         contigs_rename = os.path.join(dir_binning, "{sample}_vamb_bins", "{sample}_contigs.fa"),
         bin_dir= os.path.join(dir_binning, "{sample}_vamb_bins"),
         bam_dir=os.path.join(dir_binning, "{sample}_cluster_50"),
+        abundance = os.path.join(dir_binning, "{sample}_vamb_bins", "vae_clusters_unsplit.tsv")
     conda:
         os.path.join(dir_env, "vamb.yaml")
     resources:
@@ -32,17 +33,18 @@ rule vamb_simka:
 rule vamb_sep:
     input:
         contigs = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
-        bam = os.path.join(dir_binning, "{sample}_vamb_bins", "vae_clusters_unsplit.tsv")
+        bam = os.path.join(dir_binning, "{sample}_vamb_bins", "vae_clust_done.txt")
     output:
         bins = os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt")
     params:
+        binsplit=os.path.join(dir_binning, "{sample}_vamb_bins", "vae_clusters_unsplit.tsv"),
         bin_dir= os.path.join(dir_binning, "{sample}_vamb_bins"),
         outdir=os.path.join(dir_binning, "{sample}_vamb_bins", "bins"),
         scripts= os.path.join(dir_script, "vamb_bins_sep.py"),
     localrule: True
     shell:
         """
-        python {params.scripts} --mapping {input.bam} --fasta {input.contigs} \
+        python {params.scripts} --mapping {params.binsplit} --fasta {input.contigs} \
             --outdir {params.outdir}
         rm -rf {params.outdir}/bin_clustername.fasta
         touch {output.bins}
