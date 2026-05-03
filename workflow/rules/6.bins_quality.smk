@@ -11,7 +11,7 @@ rule bins_checkm2_metabat2:
     params:
         bins=os.path.join(dir_binning, "all_metabat2_bins"),
         outdir=os.path.join(dir_binning, "checkm2_output_metabat2"),
-        database = config["databases"]["checkm_db"]
+        database = config["databases"]["checkm2_db"]
     conda:
         os.path.join(dir_env, "checkm2.yaml")
     resources:
@@ -36,7 +36,7 @@ rule bins_checkm2_concoct:
     params:
         bins=os.path.join(dir_binning, "all_conoct_bins"),
         outdir=os.path.join(dir_binning, "checkm2_output_concoct"),
-        database = config["databases"]["checkm_db"]
+        database = config["databases"]["checkm2_db"]
     conda:
         os.path.join(dir_env, "checkm2.yaml")
     resources:

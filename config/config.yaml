@@ -31,5 +31,6 @@ args:
   mapping_threshold: 50 
 
 databases:
-  checkm_db: /work/FAC/FBM/DMF/pengel/general_data/common_databases/checkm2/CheckM2_database
+  checkm2_db: /work/FAC/FBM/DMF/pengel/general_data/common_databases/checkm2/CheckM2_database
   gtdbtk_db: /work/FAC/FBM/DMF/pengel/general_data/common_databases/gtdb/release226
+  checkm_db: /work/FAC/FBM/DMF/pengel/general_data/common_databases/checkm

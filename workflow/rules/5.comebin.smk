@@ -7,6 +7,7 @@ rule comebin_simka:
     params:
         outdir=os.path.join(dir_binning, "{sample}_comebin_bins"),
         bam_dir=os.path.join(dir_binning, "{sample}_cluster_50")
+        checkm_db = config['databases']['checkm']
     conda:
         os.path.join(dir_env, "comebin.yaml")
     resources:
@@ -17,6 +18,7 @@ rule comebin_simka:
     shell:
         """
         mkdir -p {params.outdir}
+        checkm data setRoot {params.checkm_db}
         run_comebin.sh -a {input.assembly} -o {params.outdir} \
             -p {params.bam_dir}/*.bam -t {threads}
         touch {output.bins_dir}
