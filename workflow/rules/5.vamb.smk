@@ -8,14 +8,13 @@ from glob import glob
 rule vamb_simka:
     input:
         contigs = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
-        bam = os.path.join(dir_binning, "{sample}_cluster_50", "done.txt")
+        bins = os.path.join(dir_binning, "{sample}_cluster_50", "vae_clusters_unsplit.tsv")
     output:
-        bins = os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt")
+        abundance = os.path.join(dir_binning, "{sample}_vamb_bins", "abundance.npz")
     params:
         contigs_rename = os.path.join(dir_binning, "{sample}_vamb_bins", "{sample}_contigs.fa"),
         bin_dir= os.path.join(dir_binning, "{sample}_vamb_bins"),
         bam_dir=os.path.join(dir_binning, "{sample}_cluster_50"),
-        script=os.path.join(dir_script, "vamb_concatenate.py"),
     conda:
         os.path.join(dir_env, "vamb.yaml")
     resources:
@@ -27,8 +26,27 @@ rule vamb_simka:
         """
         #using the logic that one assembly was mapped with multiple samples from simka
         rm -rf {params.bin_dir}
-        python {params.script} {input.contigs} --outdir {params.contigs_rename}
-        vamb bin default -o C --outdir {params.bin_dir} --fasta {params.contigs_rename} --bamdir {params.bam_dir} -t {threads}
+        vamb bin default --outdir {params.bin_dir} --fasta {input.contigs} --bamdir {params.bam_dir} -t {threads}
+        touch {output.abundance}
+        """
+
+rule vamb_sep:
+    input:
+        contigs = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
+        bins = os.path.join(dir_binning, "{sample}_cluster_50", "vae_clusters_unsplit.tsv")
+    output:
+        bins = os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt")
+    params:
+        bin_dir= os.path.join(dir_binning, "{sample}_vamb_bins"),
+        outdir=os.path.join(dir_binning, "{sample}_vamb_bins", "bins"),
+        scripts= os.path.join(dir_script, "vamb_bins_sep.py"),
+    conda:
+        os.path.join(dir_env, "vamb.yaml")
+    localrule: True
+    shell:
+        """
+        mkdir -p {params.outdir}
+        python {params.scripts} --mapping {input.bins} --fasta {input.contigs} --outdir {output}
         touch {output.bins}
         """
 
