@@ -46,7 +46,7 @@ rule vamb_sep:
     shell:
         """
         mkdir -p {params.outdir}
-        python {params.scripts} --mapping {input.mapping} --fasta {input.fasta} \
+        python {params.scripts} --mapping {input.bam} --fasta {input.contigs} \
             --outdir {output}
         touch {output.bins}
         """
