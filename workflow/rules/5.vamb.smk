@@ -26,8 +26,15 @@ rule vamb_simka:
     shell:
         """
         #using the logic that one assembly was mapped with multiple samples from simka
-        rm -rf {params.bin_dir}
-        vamb bin default --outdir {params.bin_dir} --fasta {input.contigs} --bamdir {params.bam_dir} -t {threads}
+        if [-f {params.abundance}]; then
+            echo "abundance file already exists, skipping abundance calculation"
+            touch {output.done}
+        else
+
+            rm -rf {params.bin_dir}
+            vamb bin default --outdir {params.bin_dir} --fasta {input.contigs} --bamdir {params.bam_dir} -t {threads}
+            touch {output.done}
+        fi
         """
 
 rule vamb_sep:
