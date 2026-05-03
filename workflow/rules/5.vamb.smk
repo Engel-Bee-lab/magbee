@@ -12,6 +12,7 @@ rule vamb_simka:
     output:
         bins = os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt")
     params:
+        contigs_rename = os.path.join(dir_binning, "{sample}_vamb_bins", "{sample}_contigs.fa"),
         bin_dir= os.path.join(dir_binning, "{sample}_vamb_bins"),
         bam_dir=os.path.join(dir_binning, "{sample}_cluster_50"),
         script=os.path.join(dir_scripts, "vamb_concatenate.py"),
@@ -26,7 +27,8 @@ rule vamb_simka:
         """
         #using the logic that one assembly was mapped with multiple samples from simka
         rm -rf {params.bin_dir}
-        vamb bin default -o C --outdir {params.bin_dir} --fasta {input.contigs} --bamdir {params.bam_dir} -t {threads}
+        python {params.script} {input.contigs} --outdir {params.contigs_rename}
+        vamb bin default -o C --outdir {params.bin_dir} --fasta {params.contigs_rename} --bamdir {params.bam_dir} -t {threads}
         touch {output.bins}
         """
 
