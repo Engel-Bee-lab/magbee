@@ -8,9 +8,9 @@ from glob import glob
 rule vamb_simka:
     input:
         contigs = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
-        bins = os.path.join(dir_binning, "{sample}_cluster_50", "vae_clusters_unsplit.tsv")
+        bam = os.path.join(dir_binning, "{sample}_cluster_50", "done.txt")
     output:
-        abundance = os.path.join(dir_binning, "{sample}_vamb_bins", "abundance.npz")
+        abundance = os.path.join(dir_binning, "{sample}_vamb_bins", "vae_clusters_unsplit.tsv")
     params:
         contigs_rename = os.path.join(dir_binning, "{sample}_vamb_bins", "{sample}_contigs.fa"),
         bin_dir= os.path.join(dir_binning, "{sample}_vamb_bins"),
@@ -33,7 +33,7 @@ rule vamb_simka:
 rule vamb_sep:
     input:
         contigs = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
-        bins = os.path.join(dir_binning, "{sample}_cluster_50", "vae_clusters_unsplit.tsv")
+        bam = os.path.join(dir_binning, "{sample}_vamb_bins", "vae_clusters_unsplit.tsv")
     output:
         bins = os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt")
     params:
@@ -46,7 +46,8 @@ rule vamb_sep:
     shell:
         """
         mkdir -p {params.outdir}
-        python {params.scripts} --mapping {input.bins} --fasta {input.contigs} --outdir {output}
+        python {params.scripts} --mapping {input.mapping} --fasta {input.fasta} \
+            --outdir {output}
         touch {output.bins}
         """
 
