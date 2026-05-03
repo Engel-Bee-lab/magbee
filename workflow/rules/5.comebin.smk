@@ -23,6 +23,7 @@ rule comebin_simka:
         """
 
 #this is work in progress still 
+"""
 rule collect_comebin_bins:
     input:
         bins_done = expand(bins_dir = os.path.join(dir_binning, "{sample}_comebin_bins", "done.txt"), sample=sample_names),
@@ -33,7 +34,6 @@ rule collect_comebin_bins:
         outdir= os.path.join(dir_binning, "all_comebin_bins"),
         sample=" ".join(sample_names)
     shell:
-        """
         mkdir -p {params.outdir}
         for sample in {params.sample}; do
             src_dir={dir_binning}/${{sample}}_metabat2_bins
@@ -45,4 +45,4 @@ rule collect_comebin_bins:
             done
         done
         touch {output.collected_dir}
-        """
+"""
