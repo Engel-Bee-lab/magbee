@@ -32,8 +32,8 @@ rule map_reads_to_individual_assembly:
         index = os.path.join(dir_backmapping, "{sample}_index.mmi"),
         assemble = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa")
     params:
-        bins= os.path.join(dir_binning),
-        samples= os.path.join(dir_binning, "{sample}_bam"),
+        bins= os.path.join(dir_backmapping),
+        samples= os.path.join(dir_backmapping, "{sample}_bam"),
         s=expand("{sample}", sample=sample_names),
         ids="{sample}",
         reads=os.path.join(dir_hostcleaned)
