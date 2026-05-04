@@ -49,7 +49,7 @@ dir_reports = os.path.join(dir_out, 'REPORTS')
 #dir_assembly = os.path.join(dir_out, 'PROCESSING' ,'3_coassembly')
 dir_assembly = os.path.join(dir_out, 'PROCESSING' ,'3_individual_assembly')
 dir_backmapping = os.path.join(dir_out, 'PROCESSING' ,'4_backmapping')
-dir_binning = os.path.join(dir_out, 'PROCESSING' ,'4_binning')
+dir_binning = os.path.join(dir_out, 'PROCESSING' ,'5_binning')
 
 
 """

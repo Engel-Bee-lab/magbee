@@ -112,6 +112,13 @@ Store in config for downstream rules
 config["contigs"] = contig_map
 config["bams"] = bam_map
 
+"""
+Declaring other directories
+"""
+dir_assembly=contig_map
+dir_bakmapping=bam_map
+dir_reports = os.path.join(dir_out, 'REPORTS')
+dir_binning = os.path.join(dir_out, 'PROCESSING' ,'5_binning')
 
 """Rules"""
 include: os.path.join("rules", "5.metabat2.smk")
@@ -133,7 +140,6 @@ def targetRule(fn):
 Defining the targets dictionary
 """
 targets ={'binning':[], 'binning_qual':[]}
-
 
 if config['args']['sequencing'] == 'paired':
     for sample in sample_names:
