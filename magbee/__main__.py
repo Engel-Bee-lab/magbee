@@ -50,7 +50,7 @@ def common_options(func):
     options = [
         click.option('--input', '_input', help='Directory of reads', type=click.Path(), required=False, default='testReads/paired', show_default=True),
         click.option('--extn', 'extn',  help='Reads extension; fastq, fq, fastq.gz', type=click.Path(), required=False, default='fastq', show_default=True),
-        click.option('--host_seq', 'host_seq', help='Path to host genome index for host read removal', type=click.Path(), required=True, show_default=True),
+        click.option('--host_seq', 'host_seq', help='Path to host genome index for host read removal', type=click.Path(), required=False, show_default=True),
         click.option('--pattern_r1', 'r1', help='Pattern to identify R1 reads (for paired-end data)', default='_R1', show_default=True),
         click.option('--pattern_r2', 'r2', help='Pattern to identify R2 reads (for paired-end data)', default='_R2', show_default=True),
         click.option('--contigs', 'contigs', help='Assembled contigs', type=click.Path(), required=False, show_default=True),
