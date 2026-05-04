@@ -35,10 +35,11 @@ rule one_dir_contigs:
         contigs = os.path.join(dir_reports, "assembly", "{sample}.megahit.contigs.fa.gz")
     localrule: True
     params:
-        dirs=os.path.join(dir_reports, "assembly")
+        dirs=os.path.join(dir_reports, "assembly"),
+        unzip=os.path.join(dir_reports, "assembly", "{sample}.megahit.contigs.fa")
     shell:
         """
         mkdir -p {params.dirs}
         cp {input.assembly} {params.dirs}/.
-        gzip {output.contigs}
+        gzip {params.unzip}
         """
