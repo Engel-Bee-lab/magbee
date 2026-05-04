@@ -9,18 +9,6 @@ from metasnek import fastq_finder
 """Parse config"""
 configfile: os.path.join(workflow.basedir, "..", "config", "config.yaml")
 
-"""Rules"""
-include: os.path.join("rules", "1.qc.smk")
-include: os.path.join("rules", "2.host_contamination.smk")
-include: os.path.join("rules", "Final_QC.smk")
-
-"""Mark target rules"""
-target_rules = []
-def targetRule(fn):
-    assert fn.__name__.startswith('__')
-    target_rules.append(fn.__name__[2:])
-    return fn
-
 """
 PREFLIGHT CHECKS
 """
@@ -113,7 +101,7 @@ if config['args']['sequencing'] == 'paired':
     #print(f"Sample inputs: {paired_samples}")
 
 """
-Declaring the rules here
+Declaring directories for each step
 """
 #making directories for each step
 #Saving most of the files to PROCESSING, sine they are intermediate files
@@ -148,6 +136,18 @@ onsuccess:
 
 onerror:
     sys.stderr.write('\n\nWorkflow run failed\n\n')
+
+"""Rules"""
+include: os.path.join("rules", "1.qc.smk")
+include: os.path.join("rules", "2.host_contamination.smk")
+include: os.path.join("rules", "Final_QC.smk")
+
+"""Mark target rules"""
+target_rules = []
+def targetRule(fn):
+    assert fn.__name__.startswith('__')
+    target_rules.append(fn.__name__[2:])
+    return fn
 
 """
 Defining the targets dictionary
