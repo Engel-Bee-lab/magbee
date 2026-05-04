@@ -4,7 +4,7 @@ Rule to get the final backmapping outputs
 
 rule report_all_to_all:
     input:
-        samples= os.path.join(dir_backmapping, "{sample}_bam")
+        samples= os.path.join(dir_backmapping, "{sample}_bam", "done.txt")
     output:
         os.path.join(dir_reports, "backmapping_report_all_to_all.txt")
     params:
