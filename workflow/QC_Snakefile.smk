@@ -96,8 +96,6 @@ if config['args']['sequencing'] == 'paired':
 
     config["sample_names"] = paired_samples
     sample_names = list(paired_samples.keys())
-
-    print(f"Detected {N_SAMPLES} paired-end samples")
     #print(f"Sample inputs: {paired_samples}")
 
 """
