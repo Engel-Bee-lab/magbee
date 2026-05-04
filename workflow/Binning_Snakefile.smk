@@ -109,14 +109,14 @@ if missing_bam:
 """
 Store in config for downstream rules
 """
-config["contigs"] = contigs_dir
+config["contigs"] = contig_map
 config["bams"] = bam_map
 
 """
 Declaring other directories
 """
-dir_assembly=contig_map
-dir_bakmapping=bam_map
+dir_assembly = contigs_dir
+dir_backmapping = bam_dir
 dir_reports = os.path.join(dir_out, 'REPORTS')
 dir_binning = os.path.join(dir_out, 'PROCESSING' ,'5_binning')
 
