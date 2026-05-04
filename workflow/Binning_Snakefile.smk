@@ -109,7 +109,7 @@ if missing_bam:
 """
 Store in config for downstream rules
 """
-config["contigs"] = contig_map
+config["contigs"] = contigs_dir
 config["bams"] = bam_map
 
 """
