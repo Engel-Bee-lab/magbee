@@ -10,7 +10,7 @@ rule make_index_of_individual_assembly:
     input:
         assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa")
     output:
-        index = os.path.join(dir_binning,"{sample}_index.mmi")
+        index = os.path.join(dir_backmapping,"{sample}_index.mmi")
     conda:
         os.path.join(dir_env, "minimap2.yaml")
     resources:
@@ -29,7 +29,7 @@ rule make_index_of_individual_assembly:
 
 rule map_reads_to_individual_assembly:
     input:
-        index = os.path.join(dir_binning, "{sample}_index.mmi"),
+        index = os.path.join(dir_backmapping, "{sample}_index.mmi"),
         assemble = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa")
     params:
         bins= os.path.join(dir_binning),
@@ -38,7 +38,7 @@ rule map_reads_to_individual_assembly:
         ids="{sample}",
         reads=os.path.join(dir_hostcleaned)
     output:
-        txt = os.path.join(dir_binning, "{sample}_bam", "done.txt")
+        txt = os.path.join(dir_backmapping, "{sample}_bam", "done.txt")
     conda:
         os.path.join(dir_env, "minimap2.yaml")
     resources:

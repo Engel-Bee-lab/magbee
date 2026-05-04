@@ -77,13 +77,13 @@ if config['args']['sequencing'] == 'paired':
 if config['args']['sequencing'] == 'paired':
     for sample in sample_names:
         if N_SAMPLES <= THRESHOLD:
-            targets['backmapping'].append(os.path.join(dir_binning, "{sample}_index.mmi").format(sample=sample))
-            targets['backmapping'].append(os.path.join(dir_binning, "{sample}_bam", "done.txt").format(sample=sample))
+            targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_index.mmi").format(sample=sample))
+            targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_bam", "done.txt").format(sample=sample))
         else:
-            targets['backmapping'].append(os.path.join(dir_binning, "simka_input_list.txt"))
-            #targets['binning'].append(os.path.join(dir_binning, "simka_results", "mat_abundance_jaccard.csv.gz"))
-            targets['backmapping'].append(os.path.join(dir_binning, "{sample}_cluster_50", "{sample}_backmap_samples.txt").format(sample=sample))
-            targets['backmapping'].append(os.path.join(dir_binning, "{sample}_cluster_50", "done.txt").format(sample=sample))
+            targets['backmapping'].append(os.path.join(dir_backmapping, "simka_input_list.txt"))
+            #targets['binning'].append(os.path.join(dir_backmapping, "simka_results", "mat_abundance_jaccard.csv.gz"))
+            targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_cluster_50", "{sample}_backmap_samples.txt").format(sample=sample))
+            targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt").format(sample=sample))
 
         #binning nightmare targets
         targets['binning'].append(os.path.join(dir_binning, "{sample}_metabat2_bins", "done.txt").format(sample=sample))

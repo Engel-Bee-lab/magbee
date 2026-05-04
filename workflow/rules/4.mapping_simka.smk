@@ -16,7 +16,7 @@ rule list_simka:
         r1 = expand(os.path.join(dir_hostcleaned,"{sample}_R1.hostcleaned.fastq.gz"), sample=sample_names),
         r2 = expand(os.path.join(dir_hostcleaned,"{sample}_R2.hostcleaned.fastq.gz"), sample=sample_names)
     output:
-        simka_list = os.path.join(dir_binning, "simka_input_list.txt")
+        simka_list = os.path.join(dir_backmapping, "simka_input_list.txt")
     run:
         with open(output.simka_list, "w") as out_handle:
             for r1_file, r2_file in zip(input.r1, input.r2):
@@ -25,12 +25,12 @@ rule list_simka:
     
 rule simka_kmerclust:
     input:
-        simka_list = os.path.join(dir_binning, "simka_input_list.txt")
+        simka_list = os.path.join(dir_backmapping, "simka_input_list.txt")
     output:
-        simka_kmerclust = os.path.join(dir_binning, "simka_results", "mat_abundance_jaccard.csv.gz")
+        simka_kmerclust = os.path.join(dir_backmapping, "simka_results", "mat_abundance_jaccard.csv.gz")
     params:
-        dir_out = os.path.join(dir_binning, "simka_results"),
-        binning = os.path.join(dir_binning)
+        dir_out = os.path.join(dir_backmapping, "simka_results"),
+        binning = os.path.join(dir_backmapping)
     conda:
         os.path.join(dir_env, "simka.yaml")
     resources:
@@ -47,13 +47,13 @@ rule simka_kmerclust:
 
 rule simka_clusters:
     input:
-        simka_kmerclust = os.path.join(dir_binning, "simka_results", "mat_abundance_jaccard.csv.gz")
+        simka_kmerclust = os.path.join(dir_backmapping, "simka_results", "mat_abundance_jaccard.csv.gz")
     output:
-        simka_clusters_txt = os.path.join(dir_binning, "{sample}_cluster_50", "{sample}_backmap_samples.txt")
+        simka_clusters_txt = os.path.join(dir_backmapping, "{sample}_cluster_50", "{sample}_backmap_samples.txt")
     params:
         script = os.path.join(dir_script, "simka_similar_samples_script.sh"), 
         sample = "{sample}",
-        simka_clusters = os.path.join(dir_binning, "{sample}_cluster_50")
+        simka_clusters = os.path.join(dir_backmapping, "{sample}_cluster_50")
     conda:
         os.path.join(dir_env, "simka.yaml")
     shell:

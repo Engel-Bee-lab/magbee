@@ -8,9 +8,7 @@ from metasnek import fastq_finder
 
 """Parse config"""
 configfile: os.path.join(workflow.basedir, "..", "config", "config.yaml")
-"""
-PREFLIGHT CHECKS
-"""
+
 """
 Declaring directories
 """

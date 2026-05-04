@@ -49,11 +49,11 @@ rule backmapping_simka:
             "{sample}_backmap_samples.txt"
         )
     output:
-        done = os.path.join(dir_binning, "{sample}_cluster_50", "done.txt")
+        done = os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt")
     params:
         csamples = get_cluster_samples,
         reads_path = dir_hostcleaned,
-        bam_path = os.path.join(dir_binning, "{sample}_cluster_50"),
+        bam_path = os.path.join(dir_backmapping, "{sample}_cluster_50"),
         wsample = "{sample}"
     conda:
         os.path.join(dir_env, "minimap2.yaml")
