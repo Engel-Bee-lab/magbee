@@ -26,35 +26,6 @@ PREFLIGHT CHECKS
 """
 
 """
-Declaring directories
-"""
-dir = {}
-#declaring output file
-try:
-    if config['args']['output'] is None:
-        dir_out = os.path.join('output')
-    else:
-	    dir_out = config['args']['output']
-except KeyError:
-    dir_out = os.path.join('output')
-
-# temp dir
-if config['args']['temp_dir'] is None:
-    dir_temp = os.path.join(dir_out, "temp")
-else:
-    dir_temp = config['args']['temp_dir']
-
-#declaring some the base directories
-dir_env = os.path.join(workflow.basedir,"envs")
-dir_script = os.path.join(workflow.basedir,"scripts")
-
-#making directories for each step
-#Saving most of the files to PROCESSING, sine they are intermediate files
-dir_fastp = os.path.join(dir_out, 'PROCESSING' ,'1_fastp')
-dir_hostcleaned = os.path.join(dir_out, 'PROCESSING' ,'2_host_cleaned')
-dir_reports = os.path.join(dir_out, 'REPORTS')
-
-"""
 Check input files
 """
 input_dir = config['args']['input']
@@ -120,6 +91,35 @@ if config['args']['sequencing'] == 'paired':
     #print(f"Sample inputs: {paired_samples}")
 
     sample_names = [s for s in config["sample_names"].keys() if s != "*"]
+
+"""
+Declaring directories
+"""
+dir = {}
+#declaring output file
+try:
+    if config['args']['output'] is None:
+        dir_out = os.path.join('output')
+    else:
+	    dir_out = config['args']['output']
+except KeyError:
+    dir_out = os.path.join('output')
+
+# temp dir
+if config['args']['temp_dir'] is None:
+    dir_temp = os.path.join(dir_out, "temp")
+else:
+    dir_temp = config['args']['temp_dir']
+
+#declaring some the base directories
+dir_env = os.path.join(workflow.basedir,"envs")
+dir_script = os.path.join(workflow.basedir,"scripts")
+
+#making directories for each step
+#Saving most of the files to PROCESSING, sine they are intermediate files
+dir_fastp = os.path.join(dir_out, 'PROCESSING' ,'1_fastp')
+dir_hostcleaned = os.path.join(dir_out, 'PROCESSING' ,'2_host_cleaned')
+dir_reports = os.path.join(dir_out, 'REPORTS')
 
 """ONSTART/END/ERROR
 Tasks to perform at various stages the start and end of a run.
