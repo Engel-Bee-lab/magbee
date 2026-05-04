@@ -190,7 +190,7 @@ magbee assembly --input <input directory with reads> --extn fq --pattern_r1 <fas
 
 @common_options
 def assembly(_input, extn, r1, r2, output, sequencing, temp_dir, configfile, conda_frontend, **kwargs):
-    """QC magbee"""
+    """Assembly magbee"""
     copy_config(configfile, system_config=snake_base(os.path.join('config', 'config.yaml')))
 
     merge_config = {
@@ -231,7 +231,7 @@ magbee backmapping --input <input directory with reads> --extn fq --pattern_r1 <
 
 @common_options
 def backmapping(_input, extn, r1, r2, contigs, output, sequencing, temp_dir, configfile, conda_frontend, **kwargs):
-    """QC magbee"""
+    """Backmapping magbee"""
     copy_config(configfile, system_config=snake_base(os.path.join('config', 'config.yaml')))
 
     merge_config = {
@@ -272,7 +272,7 @@ magbee binning --bam_folder <input directory with bamfiles> --contigs <input dir
 
 @common_options
 def binning(bam_folder, contigs, output, temp_dir, configfile, conda_frontend, **kwargs):
-    """QC magbee"""
+    """Binning magbee"""
     copy_config(configfile, system_config=snake_base(os.path.join('config', 'config.yaml')))
 
     merge_config = {
