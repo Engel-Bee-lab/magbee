@@ -2,7 +2,8 @@
 Rules for quality control and quality assurance - Illumina paired end reads 
 """
 
-sample_names = [s for s in config["sample_names"].keys() if s != "*"]
+#sample_names = [s for s in config["sample_names"].keys() if s != "*"]
+sample_names = list(config.get("sample_names", {}).keys())
 
 # Constrain wildcards to actual sample names
 wildcard_constraints:
