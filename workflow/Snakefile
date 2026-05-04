@@ -62,6 +62,8 @@ if config['args']['sequencing'] == 'paired':
         targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_R2.hostcleaned.fastq.gz"), sample=sample)),
         targets['qc'].append(expand(os.path.join(dir_reports,"QC","{sample}_host_qc_report.txt"), sample=sample)),
         targets['qc'].append(os.path.join(dir_reports, "final_host_qc_summary.txt"))
+        targets['qc'].append(expand(os.path.join(dir_reports, "QC", "reads", "{sample}_R1.hostcleaned.fastq.gz"), sample=sample)),
+        targets['qc'].append(expand(os.path.join(dir_reports, "QC", "reads", "{sample}_R2.hostcleaned.fastq.gz"), sample=sample)),
 
 
 if config['args']['sequencing'] == 'paired':

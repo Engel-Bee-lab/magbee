@@ -57,3 +57,20 @@ rule final_qc_report:
             echo -e "${{sample}}\t${{total_reads}}\t${{QC_reads}}\t${{mapped}}\t${{percent}}" >> {output}
         done
     """
+
+rule copy_fastq_files:
+    input:
+        r1 = os.path.join(dir_hostcleaned, "{sample}_R1.hostcleaned.fastq.gz"),
+        r2 = os.path.join(dir_hostcleaned, "{sample}_R2.hostcleaned.fastq.gz")
+    output:
+        or1 = os.path.join(dir_reports, "QC", "reads", "{sample}_R1.hostcleaned.fastq.gz"),
+        or2 = os.path.join(dir_reports, "QC", "reads", "{sample}_R2.hostcleaned.fastq.gz")
+    params:
+        dirs=os.path.join(dir_reports, "QC", "reads")
+    localrule: True
+    shell:
+        """
+        mkdir -p {params.dirs}
+        mv {input.r1} {params.dirs}/.
+        mv {input.r2} {params.dirs}/.
+        """
