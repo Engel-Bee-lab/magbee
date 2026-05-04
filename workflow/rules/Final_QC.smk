@@ -71,6 +71,6 @@ rule copy_fastq_files:
     shell:
         """
         mkdir -p {params.dirs}
-        mv {input.r1} {params.dirs}/.
-        mv {input.r2} {params.dirs}/.
+        cp {input.r1} {params.dirs}/.
+        cp {input.r2} {params.dirs}/.
         """
