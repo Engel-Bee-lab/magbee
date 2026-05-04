@@ -162,7 +162,8 @@ Declaring directories for each step
 #making directories for each step
 #Saving most of the files to PROCESSING, sine they are intermediate files
 #dir_assembly = os.path.join(dir_out, 'PROCESSING' ,'3_coassembly')
-dir_assembly= input_dir
+dir_hostcleaned= input_dir
+dir_assembly= contigs_dir
 dir_backmapping = os.path.join(dir_out, 'PROCESSING' ,'4_backmapping')
 dir_reports = os.path.join(dir_out, 'REPORTS')
 
