@@ -26,7 +26,7 @@ PREFLIGHT CHECKS
 """
 
 """
-DECLARING DIRECTORIES
+Declaring directories
 """
 dir = {}
 #declaring output file
@@ -53,8 +53,9 @@ dir_script = os.path.join(workflow.basedir,"scripts")
 dir_fastp = os.path.join(dir_out, 'PROCESSING' ,'1_fastp')
 dir_hostcleaned = os.path.join(dir_out, 'PROCESSING' ,'2_host_cleaned')
 dir_reports = os.path.join(dir_out, 'REPORTS')
+
 """
-CHECK INPUT FILES
+Check input files
 """
 input_dir = config['args']['input']
 
@@ -114,11 +115,11 @@ if config['args']['sequencing'] == 'paired':
 
     config["sample_names"] = paired_samples
     sample_names = list(paired_samples.keys())
-    N_SAMPLES = len(sample_names)
-    THRESHOLD = config['args'].get('mapping_threshold', 100)
 
     print(f"Detected {N_SAMPLES} paired-end samples")
     #print(f"Sample inputs: {paired_samples}")
+
+    sample_names = [s for s in config["sample_names"].keys() if s != "*"]
 
 """ONSTART/END/ERROR
 Tasks to perform at various stages the start and end of a run.
