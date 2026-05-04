@@ -224,10 +224,12 @@ if config['args']['sequencing'] == 'paired':
         if N_SAMPLES <= THRESHOLD:
             targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_index.mmi").format(sample=sample))
             targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_bam", "done.txt").format(sample=sample))
+            targets['backmapping'].append(os.path.join("results", "backmapping_report_all_to_all.txt"))
         else:
             targets['backmapping'].append(os.path.join(dir_backmapping, "simka_input_list.txt"))
             targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_cluster_50", "{sample}_backmap_samples.txt").format(sample=sample))
             targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt").format(sample=sample))
+            targets['backmapping'].append(os.path.join("results", "backmapping_report_simka.txt"))
 
 @targetRule
 rule all:

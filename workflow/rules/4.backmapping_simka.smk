@@ -43,11 +43,7 @@ rule backmapping_simka:
     input:
         assembly = os.path.join(dir_assembly, "{sample}.megahit.contigs.fa.gz"),
         index = os.path.join(dir_assembly, "{sample}.mmi"),
-        simka_clusters_txt = os.path.join(
-            dir_binning,
-            "{sample}_cluster_50",
-            "{sample}_backmap_samples.txt"
-        )
+        simka_clusters_txt = os.path.join(dir_backmapping,"{sample}_cluster_50","{sample}_backmap_samples.txt")
     output:
         done = os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt")
     params:
