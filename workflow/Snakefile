@@ -112,7 +112,6 @@ if config['args']['sequencing'] == 'paired':
 rule all:
     input:
         targets['qc'],
-        targets['host'],
         targets['assemble'],  
         targets['backmapping'],  
         targets['binning'],

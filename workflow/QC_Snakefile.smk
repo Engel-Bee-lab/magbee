@@ -1,24 +1,32 @@
-#Snakemake rule to amke sure the input files are correct and all the params are provided to start the workflow
-
-#To start with the input files have to be in a folders
-#can be compressed or decompressed
-#For now there can be no sub folders, the files have to be saved in the same folder
-
+import yaml
 import os
 import glob
-import yaml
 import re
 import sys
 import shutil
 from metasnek import fastq_finder
 
-"""
-CONFIG FILE
-"""
+"""Parse config"""
 configfile: os.path.join(workflow.basedir, "..", "config", "config.yaml")
 
+"""Rules"""
+include: os.path.join("rules", "1.qc.smk")
+include: os.path.join("rules", "2.host_contamination.smk")
+include: os.path.join("rules", "Final_QC.smk")
+
+"""Mark target rules"""
+target_rules = []
+def targetRule(fn):
+    assert fn.__name__.startswith('__')
+    target_rules.append(fn.__name__[2:])
+    return fn
+
 """
-DIRECTORIES
+PREFLIGHT CHECKS
+"""
+
+"""
+DECLARING DIRECTORIES
 """
 dir = {}
 #declaring output file
@@ -36,7 +44,6 @@ if config['args']['temp_dir'] is None:
 else:
     dir_temp = config['args']['temp_dir']
 
-
 #declaring some the base directories
 dir_env = os.path.join(workflow.basedir,"envs")
 dir_script = os.path.join(workflow.basedir,"scripts")
@@ -46,12 +53,6 @@ dir_script = os.path.join(workflow.basedir,"scripts")
 dir_fastp = os.path.join(dir_out, 'PROCESSING' ,'1_fastp')
 dir_hostcleaned = os.path.join(dir_out, 'PROCESSING' ,'2_host_cleaned')
 dir_reports = os.path.join(dir_out, 'REPORTS')
-#dir_assembly = os.path.join(dir_out, 'PROCESSING' ,'3_coassembly')
-dir_assembly = os.path.join(dir_out, 'PROCESSING' ,'3_individual_assembly')
-dir_backmapping = os.path.join(dir_out, 'PROCESSING' ,'4_backmapping')
-dir_binning = os.path.join(dir_out, 'PROCESSING' ,'4_binning')
-
-
 """
 CHECK INPUT FILES
 """
@@ -119,7 +120,6 @@ if config['args']['sequencing'] == 'paired':
     print(f"Detected {N_SAMPLES} paired-end samples")
     #print(f"Sample inputs: {paired_samples}")
 
-
 """ONSTART/END/ERROR
 Tasks to perform at various stages the start and end of a run.
 """
@@ -132,16 +132,39 @@ def copy_log_file():
     shutil.copy(current_log, target_log)
 
 dir = {'log': os.path.join(dir_out, 'logs')}
-onstart:
-    """Cleanup old log files before starting"""
+
+def cleanup_logs():
     if os.path.isdir(dir["log"]):
         oldLogs = filter(re.compile(r'.*.log').match, os.listdir(dir["log"]))
         for logfile in oldLogs:
             os.unlink(os.path.join(dir["log"], logfile))
+
+onstart:
+    cleanup_logs()
+
 onsuccess:
-    """Print a success message"""
-    sys.stderr.write('\n\n Workflow ran successfully!\n\n')
+    sys.stderr.write('\n\nWorkflow ran successfully!\n\n')
 
 onerror:
-    """Print an error message"""
-    sys.stderr.write('\n\n Workflow run failed\n\n')
+    sys.stderr.write('\n\nWorkflow run failed\n\n')
+
+"""
+Defining the targets dictionary
+"""
+targets ={'qc':[]}
+
+if config['args']['sequencing'] == 'paired':
+    for sample in sample_names:
+        targets['qc'].append(expand(os.path.join(dir_fastp,"{sample}.stats.html"), sample=sample)),
+        targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_temp.bam"), sample=sample)),
+        targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_bamstats.txt"), sample=sample)),
+        targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_R1.hostcleaned.fastq.gz"), sample=sample)),
+        targets['qc'].append(expand(os.path.join(dir_hostcleaned,"{sample}_R2.hostcleaned.fastq.gz"), sample=sample)),
+        targets['qc'].append(expand(os.path.join(dir_reports,"QC","{sample}_host_qc_report.txt"), sample=sample)),
+        targets['qc'].append(os.path.join(dir_reports, "final_host_qc_summary.txt"))
+
+@targetRule
+rule all:
+    input:
+        targets['qc']
+
