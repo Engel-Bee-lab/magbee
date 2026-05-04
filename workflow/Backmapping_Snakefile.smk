@@ -35,30 +35,129 @@ dir_env = os.path.join(workflow.basedir,"envs")
 dir_script = os.path.join(workflow.basedir,"scripts")
 
 """
-Check input files
+Check input reads
 """
-input_dir = config['args']['contigs_dir']
+input_dir = config['args']['input']
 
-fa_files = glob.glob(os.path.join(input_dir, "*.fa"))
-fasta_files = glob.glob(os.path.join(input_dir, "*.fasta"))
+# List of file paths matching the pattern
+#replace R1 to 1 for SRA reads
+extn=config['args']['extn']
 
-seq_files = fa_files + fasta_files
+if config['args']['sequencing'] == 'paired':
 
-if not seq_files:
-    raise ValueError("No .fa or .fasta files found")
+    pattern_r1 = config['args']['pattern_r1']
+    pattern_r2 = config['args']['pattern_r2']
 
-sample_inputs = {}
+    # Step 1: Find files
+    r1_files = glob.glob(os.path.join(input_dir, f"*{pattern_r1}*.{extn}"))
+    r2_files = glob.glob(os.path.join(input_dir, f"*{pattern_r2}*.{extn}"))
 
-for f in seq_files:
+    if not r1_files or not r2_files:
+        raise ValueError("No R1 or R2 files found.")
+
+    # Step 2: Build mapping
+    sample_inputs = {}
+
+    def extract_sample_name(filename, ext, pattern_r1, pattern_r2):
+        name = os.path.basename(filename)
+        
+        # remove extension
+        if name.endswith(f".{ext}"):
+            name = name[:-(len(ext) + 1)]
+        
+        # determine which pattern is at the end
+        if name.endswith(pattern_r1):
+            sample = name.rsplit(pattern_r1, 1)[0]
+        elif name.endswith(pattern_r2):
+            sample = name.rsplit(pattern_r2, 1)[0]
+        else:
+            raise ValueError(f"File does not end with R1/R2 pattern: {filename}")
+        
+        return sample
+            
+    for f in r1_files:
+        sample = extract_sample_name(f, extn, pattern_r1, pattern_r2)
+        sample_inputs.setdefault(sample, {})["r1"] = f
+
+    for f in r2_files:
+        sample = extract_sample_name(f, extn, pattern_r1, pattern_r2)
+        sample_inputs.setdefault(sample, {})["r2"] = f
+
+    # Step 3: Validate pairs
+    paired_samples = {}
+
+    for sample, reads in sample_inputs.items():
+        print (sample, reads)
+        if "r1" in reads and "r2" in reads:
+            paired_samples[sample] = reads
+        else:
+            raise ValueError(f"Missing pair for sample {sample}")
+
+    config["sample_names"] = paired_samples
+    sample_names = list(paired_samples.keys())
+    #print(f"Sample inputs: {paired_samples}")
+
+"""
+Check input contigs
+"""
+##Here checking the contigs input, each sample should have a contigs folder here
+contigs = config['args']['contigs_dir']
+contigs_dir = config['args']['contigs_dir']
+
+if not os.path.isdir(contigs_dir):
+    raise ValueError(f"Contigs directory not found: {contigs_dir}")
+
+# find contig files (.fa / .fasta)
+contig_files = glob.glob(os.path.join(contigs_dir, "*.fa")) + \
+               glob.glob(os.path.join(contigs_dir, "*.fasta")) + \
+               glob.glob(os.path.join(contigs_dir, "*.fa.gz")) + \
+               glob.glob(os.path.join(contigs_dir, "*.fasta.gz"))
+
+if not contig_files:
+    raise ValueError("No contig files found")
+
+# map sample -> contig file
+def get_sample_name_from_contig(filename):
+    name = os.path.basename(filename)
+
+    # remove extensions (.fa/.fasta + optional .gz)
+    name = re.sub(r'\.(fa|fasta)(\.gz)?$', '', name)
+
+    # take only the first token before a dot
+    sample = name.split(".")[0]
+
+    return sample
+
+contig_map = {}
+
+contig_map = {}
+
+for f in contig_files:
     name = os.path.basename(f)
-    sample = name.rsplit(".", 1)[0]
+    name = re.sub(r'\.(fa|fasta)(\.gz)?$', '', name)
 
-    if sample in sample_inputs:
-        raise ValueError(f"Duplicate sample detected: {sample}")
+    matched = None
+    for sample in sample_names:
+        if name.startswith(sample):
+            matched = sample
+            break
 
-    sample_inputs[sample] = f
+    if not matched:
+        raise ValueError(f"Could not match contig file to any sample: {f}")
 
-config["sample_names"] = sample_inputs
+    if matched in contig_map:
+        raise ValueError(f"Duplicate contig file for sample: {matched}")
+
+    contig_map[matched] = f
+
+# validate: every sample has contigs
+missing = [s for s in sample_names if s not in contig_map]
+
+if missing:
+    raise ValueError(f"Missing contigs for samples: {missing}")
+
+# optional: store in config for later rules
+config["contigs"] = contig_map
 
 """
 Declaring directories for each step
@@ -89,15 +188,6 @@ def cleanup_logs():
         for logfile in oldLogs:
             os.unlink(os.path.join(dir["log"], logfile))
 
-"""Rules"""
-if N_SAMPLES <= THRESHOLD:
-    print("Using all-vs-all mapping strategy"),
-    include: os.path.join("rules", "4.mapping_all_2_all.smk")
-else:
-    print("Using simka mapping strategy"),
-    include: os.path.join("rules", "4.mapping_simka.smk")
-    include: os.path.join("rules", "4.backmapping_simka.smk")
-
 #############################################
 # AFTER sample detection logic for maping 
 #############################################
@@ -108,6 +198,16 @@ THRESHOLD = config['args'].get('mapping_threshold', 50)
 
 #print(f"Detected {N_SAMPLES} samples")
 
+"""
+Rules
+"""
+if N_SAMPLES <= THRESHOLD:
+    print("Using all-vs-all mapping strategy")
+    include: os.path.join("rules", "4.mapping_all_2_all.smk")
+else:
+    print("Using simka mapping strategy")
+    include: os.path.join("rules", "4.mapping_simka.smk")
+    include: os.path.join("rules", "4.backmapping_simka.smk")
 
 """Mark target rules"""
 target_rules = []
