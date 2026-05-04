@@ -1,6 +1,10 @@
 import yaml
 import os
 import glob
+import re
+import sys
+import shutil
+from metasnek import fastq_finder
 
 """Parse config"""
 configfile: os.path.join(workflow.basedir, "..", "config", "config.yaml")
