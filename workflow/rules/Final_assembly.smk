@@ -27,3 +27,17 @@ rule merge_stats:
         """
         python {params.script} -i {input.stats} -o {output.merged}
         """
+    
+rule one_dir_contigs:
+    input:
+        assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa")
+    output:
+        contigs = os.path.join(dir_reports, "assembly", "{sample}.megahit.contigs.fa")
+    localrule: True
+    params:
+        dirs=os.path.join(dir_reports, "assembly")
+    shell:
+        """
+        mkdir -p {params.dirs}
+        cp {input.assembly} {params.dirs}/.
+        """
