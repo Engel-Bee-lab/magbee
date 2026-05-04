@@ -127,8 +127,6 @@ def get_sample_name_from_contig(filename):
 
 contig_map = {}
 
-contig_map = {}
-
 for f in contig_files:
     name = os.path.basename(f)
     name = re.sub(r'\.(fa|fasta)(\.gz)?$', '', name)
