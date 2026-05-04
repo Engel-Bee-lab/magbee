@@ -101,8 +101,7 @@ if config['args']['sequencing'] == 'paired':
 Check input contigs
 """
 ##Here checking the contigs input, each sample should have a contigs folder here
-contigs = config['args']['contigs_dir']
-contigs_dir = config['args']['contigs_dir']
+contigs_dir = config['args']['contigs']
 
 if not os.path.isdir(contigs_dir):
     raise ValueError(f"Contigs directory not found: {contigs_dir}")
