@@ -6,7 +6,7 @@ from glob import glob
 rule cut_up_fasta_simka:
     input:
         assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
-        bam = os.path.join(dir_binning, "{sample}_cluster_50", "done.txt")
+        bam = os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt")
     output:
         bed=os.path.join(dir_binning, "{sample}_concoct", "{sample}.bed"),
         contigs10k=os.path.join(dir_binning, "{sample}_concoct", "{sample}.contigs10k.fa")
@@ -35,7 +35,7 @@ rule concoct_table_simka:
     """
     input:
         bed = os.path.join(dir_binning, "{sample}_concoct", "{sample}.bed"),
-        bam=os.path.join(dir_binning, "{sample}_cluster_50", "done.txt")
+        bam=os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt")
     output:
         covtable=os.path.join(dir_binning, "{sample}_concoct", "{sample}_covtable.tsv")
     params:

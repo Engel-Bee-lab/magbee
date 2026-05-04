@@ -11,12 +11,12 @@ from glob import glob
 rule semibin_multi_sample_simka:
     input:
         assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
-        bam = os.path.join(dir_binning, "{sample}_cluster_50", "done.txt")
+        bam = os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt")
     output:
         bins = os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt")
     params:
         bin_dir= os.path.join(dir_binning, "{sample}_semibin_bins"),
-        bam_dir= os.path.join(dir_binning, "{sample}_cluster_50"),
+        bam_dir= os.path.join(dir_backmapping, "{sample}_cluster_50"),
         sample="{sample}",
     conda:
         os.path.join(dir_env, "semibin2.yaml")

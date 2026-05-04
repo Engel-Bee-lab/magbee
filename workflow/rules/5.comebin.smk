@@ -1,12 +1,12 @@
 rule comebin_simka:
     input:
         assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
-        bam=os.path.join(dir_binning, "{sample}_cluster_50", "done.txt")
+        bam=os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt")
     output:
         bins_dir = os.path.join(dir_binning, "{sample}_comebin_bins", "done.txt")
     params:
         outdir=os.path.join(dir_binning, "{sample}_comebin_bins"),
-        bam_dir=os.path.join(dir_binning, "{sample}_cluster_50"),
+        bam_dir=os.path.join(dir_backmapping, "{sample}_cluster_50"),
         checkm_db = config['databases']['checkm_db']
     conda:
         os.path.join(dir_env, "comebin.yaml")

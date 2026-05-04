@@ -6,12 +6,12 @@ from glob import glob
 rule metabat2_binning_simka_samples:
     input:
         assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
-        bam=os.path.join(dir_binning, "{sample}_cluster_50", "done.txt")
+        bam=os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt")
     output:
         bins_dir = os.path.join(dir_binning, "{sample}_metabat2_bins", "done.txt")
     params:
         outdir=os.path.join(dir_binning, "{sample}_metabat2_bins"),
-        bam_dir=os.path.join(dir_binning, "{sample}_cluster_50")
+        bam_dir=os.path.join(dir_backmapping, "{sample}_cluster_50")
     conda:
         os.path.join(dir_env, "metabat2.yaml")
     resources:
