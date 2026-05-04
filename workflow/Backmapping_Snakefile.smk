@@ -206,6 +206,7 @@ else:
     print("Using simka mapping strategy")
     include: os.path.join("rules", "4.mapping_simka.smk")
     include: os.path.join("rules", "4.backmapping_simka.smk")
+include: os.path.join("rules", "Final_backmapping.smk")
 
 """Mark target rules"""
 target_rules = []
