@@ -6,7 +6,7 @@ rule report_all_to_all:
     input:
         samples= os.path.join(dir_backmapping, "{sample}_bam")
     output:
-        os.path.join("results", "backmapping_report_all_to_all.txt")
+        os.path.join(dir_reports, "backmapping_report_all_to_all.txt")
     params:
         folder=dir_backmapping
     localrule:True
@@ -22,7 +22,7 @@ rule report_simka_strategy:
     input:
         done = os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt")
     output:
-        os.path.join("results", "backmapping_report_simka.txt")
+        os.path.join(dir_reports, "backmapping_report_simka.txt")
     params:
         folder=dir_backmapping
     localrule:True
