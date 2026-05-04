@@ -21,7 +21,7 @@ def get_cluster_samples(wildcards, input):
 ############################################
 rule assembly_index:
     input:
-        assembly = os.path.join(dir_assembly, "{sample}.megahit.contigs.fa")
+        assembly = os.path.join(dir_assembly, "{sample}.megahit.contigs.fa.gz")
     output:
         index = os.path.join(dir_assembly, "{sample}.mmi")
     conda:
@@ -41,7 +41,7 @@ rule assembly_index:
 ############################################
 rule backmapping_simka:
     input:
-        assembly = os.path.join(dir_assembly, "{sample}.megahit.contigs.fa"),
+        assembly = os.path.join(dir_assembly, "{sample}.megahit.contigs.fa.gz"),
         index = os.path.join(dir_assembly, "{sample}.mmi"),
         simka_clusters_txt = os.path.join(
             dir_binning,

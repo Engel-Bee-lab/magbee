@@ -8,7 +8,7 @@ from glob import glob
 
 rule make_index_of_individual_assembly:
     input:
-        assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa")
+        assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa.gz")
     output:
         index = os.path.join(dir_backmapping,"{sample}_index.mmi")
     conda:
@@ -30,7 +30,7 @@ rule make_index_of_individual_assembly:
 rule map_reads_to_individual_assembly:
     input:
         index = os.path.join(dir_backmapping, "{sample}_index.mmi"),
-        assemble = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa")
+        assemble = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa.gz")
     params:
         bins= os.path.join(dir_backmapping),
         samples= os.path.join(dir_backmapping, "{sample}_bam"),
