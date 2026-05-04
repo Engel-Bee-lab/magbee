@@ -1,10 +1,11 @@
 """
 Rule to get the final backmapping outputs 
 """
+from glob import glob
 
 rule report_all_to_all:
     input:
-        samples= os.path.join(dir_backmapping, "{sample}_bam", "done.txt")
+        samples= expand(os.path.join(dir_backmapping, "{sample}_bam", "done.txt"), sample=sample_names)
     output:
         os.path.join(dir_reports, "backmapping_report_all_to_all.txt")
     params:
@@ -20,7 +21,7 @@ rule report_all_to_all:
 
 rule report_simka_strategy:
     input:
-        done = os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt")
+        done = expand(os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt"), sample=sample_names)
     output:
         os.path.join(dir_reports, "backmapping_report_simka.txt")
     params:
