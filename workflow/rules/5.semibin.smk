@@ -54,10 +54,10 @@ rule semibin_multi_sample_all2all:
     conda:
         os.path.join(dir_env, "semibin_gpu.yaml")
     resources:
+        partition = "gpu",
+        gres = "gpu:1",
         mem_mb =config['resources']['gpujob']['mem_mb'],
         runtime = config['resources']['gpujob']['runtime'],
-        partition = "gpu",
-        gres = "gpu:1"
     threads:
         config['resources']['gpujob']['threads']
     shell:
