@@ -50,7 +50,7 @@ rule vamb_simka:
 
 rule vamb_sep:
     input:
-        contigs = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
+        contigs = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa.gz"),
         bam = os.path.join(dir_binning, "{sample}_vamb_bins", "vae_clust_done.txt")
     output:
         bins = os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt")
