@@ -8,7 +8,7 @@ rule comebin_simka:
     output:
         bins_dir = os.path.join(dir_binning, "{sample}_comebin_bins", "done.txt")
     params:
-        temp=os.path.join(dir_temp),
+        temp=os.path.join(dir_binning, "temp"),
         outdir=os.path.join(dir_binning, "{sample}_comebin_bins"),
         bam_dir=os.path.join(dir_backmapping, "{sample}_cluster_50"),
         checkm_db = config['databases']['checkm_db'],
@@ -25,6 +25,7 @@ rule comebin_simka:
     shell:
         """
         rm -rf {params.outdir}
+        mkdir -p {params.temp}
         gzip -dc {input.assembly} > {params.temp}/{params.sample}.fa
         checkm data setRoot {params.checkm_db}
         run_comebin.sh -a {params.temp}/{params.sample}.fa -o {params.outdir} \
