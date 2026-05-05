@@ -61,7 +61,7 @@ rule bins_checkm2_vamb:
     params:
         bins=os.path.join(dir_binning, "all_vamb_bins"),
         outdir=os.path.join(dir_binning, "checkm2_output_vamb"),
-        database = config["databases"]["checkm_db"]
+        database = config["databases"]["checkm2_db"]
     conda:
         os.path.join(dir_env, "checkm2.yaml")
     resources:
