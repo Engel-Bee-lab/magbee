@@ -23,7 +23,7 @@ rule semibin_multi_sample_simka:
     resources:
         mem_mb =config['resources']['gpujob']['mem_mb'],
         runtime = config['resources']['gpujob']['runtime'],
-        partition = "gpu",
+        slurm_partition = "gpu",
         gres = "gpu:1"
     threads:
         config['resources']['gpujob']['threads']
