@@ -26,7 +26,12 @@ rule bins_checkm2_metabat2:
         if ls {params.bins}/*.fa 1> /dev/null 2>&1; then
             checkm2 predict -i {params.bins} -o {params.outdir} --database_path {params.database}/uniref100.KO.1.dmnd \
                 -x fa --force --threads {threads}
-            cp {params.outdir}/checkm2_assessment.tsv {output.checkm2_dir}
+            
+            if [ -f {params.outdir}/checkm2_assessment.tsv ]; then
+                cp {params.outdir}/checkm2_assessment.tsv {output.checkm2_dir}
+            else
+                echo "CheckM2 failed for metabat2 bins" > {output.checkm2_dir}
+            fi
         else
             echo "No bins found, skipping CheckM2 for metabat2 bins" > {output.checkm2_dir}
         fi
@@ -55,7 +60,11 @@ rule bins_checkm2_concoct:
         if ls {params.bins}/*.fa 1> /dev/null 2>&1; then
             checkm2 predict -i {params.bins} -o {params.outdir} --database_path {params.database}/uniref100.KO.1.dmnd \
                 -x fa --force --threads {threads}
-            cp {params.outdir}/checkm2_assessment.tsv {output.checkm2_dir}
+            if [ -f {params.outdir}/checkm2_assessment.tsv ]; then
+                cp {params.outdir}/checkm2_assessment.tsv {output.checkm2_dir}
+            else
+                echo "CheckM2 failed for CONCOCT bins" > {output.checkm2_dir}
+            fi
         else
             echo "No bins found, skipping CheckM2 for concoct bins" > {output.checkm2_dir}
         fi
@@ -84,7 +93,11 @@ rule bins_checkm2_vamb:
         if ls {params.bins}/*.fa 1> /dev/null 2>&1; then
             checkm2 predict -i {params.bins} -o {params.outdir} --database_path {params.database}/uniref100.KO.1.dmnd \
                 -x fa --force --threads {threads}
-            cp {params.outdir}/checkm2_assessment.tsv {output.checkm2_dir}
+            if [ -f {params.outdir}/checkm2_assessment.tsv ]; then
+                cp {params.outdir}/checkm2_assessment.tsv {output.checkm2_dir}
+            else
+                echo "CheckM2 failed for VAMB bins" > {output.checkm2_dir}
+            fi
         else
             echo "No bins found, skipping CheckM2 for vamb bins" > {output.checkm2_dir}
         fi
