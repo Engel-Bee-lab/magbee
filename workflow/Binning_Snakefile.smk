@@ -151,7 +151,7 @@ if config['args']['sequencing'] == 'paired':
         targets['binning_qual'].append(os.path.join(dir_binning, "checkm2", "checkm2_output_metabat2", "quality_report.tsv"))
         targets['binning_qual'].append(os.path.join(dir_binning, "checkm2", "checkm2_output_concoct", "quality_report.tsv"))
         targets['binning_qual'].append(os.path.join(dir_binning, "checkm2", "checkm2_output_vamb", "quality_report.tsv"))
-        targets['binning_qual'].append(os.path.join(dir_reports, "checkm2", "checkM2_SemiBin2_quality_report.tsv"))
+        #targets['binning_qual'].append(os.path.join(dir_reports, "checkm2", "checkM2_SemiBin2_quality_report.tsv"))
         
         #targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt"))
         #targets['binning'].append(os.path.join(dir_reports, "gtdbtk_bac120_summary.tsv")),
