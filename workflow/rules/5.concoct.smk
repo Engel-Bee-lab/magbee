@@ -46,7 +46,7 @@ rule concoct_table_simka:
     """
     input:
         bed = os.path.join(dir_binning, "{sample}_concoct", "{sample}.bed"),
-        bam=os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt")
+        bam_dir = lambda wc: get_bam_dir(wc.sample)
     output:
         covtable=os.path.join(dir_binning, "{sample}_concoct", "{sample}_covtable.tsv")
     params:
