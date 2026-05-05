@@ -7,7 +7,7 @@ rule bins_checkm2_metabat2:
     input:
         bins_dir = os.path.join(dir_binning, "all_metabat2_bins", "done.txt")
     output:
-        checkm2_dir = os.path.join(dir_binning, "checkm2", "checkm2_output_metabat2", "quality_report.tsv")
+        checkm2_dir = os.path.join(dir_binning, "checkm2", "CheckM2_Metabat2_quality_report.tsv")
     params:
         bins=os.path.join(dir_binning, "all_metabat2_bins"),
         outdir=os.path.join(dir_binning, "checkm2_output_metabat2"),
@@ -41,7 +41,7 @@ rule bins_checkm2_concoct:
     input:
         bins_dir = os.path.join(dir_binning, "all_conoct_bins", "renamed.txt")
     output:
-        checkm2_dir = os.path.join(dir_binning, "checkm2", "checkm2_output_concoct", "quality_report.tsv")
+        checkm2_dir = os.path.join(dir_binning, "checkm2", "CheckM2_CONCOCT_quality_report.tsv")
     params:
         bins=os.path.join(dir_binning, "all_conoct_bins"),
         outdir=os.path.join(dir_binning, "checkm2_output_concoct"),
@@ -74,7 +74,7 @@ rule bins_checkm2_vamb:
     input:
         bins_dir = os.path.join(dir_binning, "all_vamb_bins", "done.txt")
     output:
-        checkm2_dir = os.path.join(dir_binning, "checkm2", "checkm2_output_vamb", "quality_report.tsv")
+        checkm2_dir = os.path.join(dir_binning, "checkm2", "CheckM2_VAMB_quality_report.tsv")
     params:
         bins=os.path.join(dir_binning, "all_vamb_bins"),
         outdir=os.path.join(dir_binning, "checkm2_output_vamb"),
