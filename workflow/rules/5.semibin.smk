@@ -53,7 +53,7 @@ rule semibin_multi_sample_all2all:
     conda:
         os.path.join(dir_env, "semibin_gpu.yaml")
     resources:
-        slurm_partition  = "gpu",
+        slurm_partition  = "gpu-h100",
         gres = "gpu:1",
         mem_mb =config['resources']['gpujob']['mem_mb'],
         runtime = config['resources']['gpujob']['runtime'],
