@@ -60,7 +60,7 @@ rule comebin_all2all:
 #this is work in progress still 
 rule collect_comebin_bins:
     input:
-        bins_done = expand(bins_dir = os.path.join(dir_binning, "{sample}_comebin_bins", "done.txt"), sample=sample_names),
+        bins_done = expand(os.path.join(dir_binning, "{sample}_comebin_bins", "done.txt"), sample=sample_names),
     localrule: True
     output:
         collected_dir = os.path.join(dir_binning, "all_comebin_bins", "done.txt")
