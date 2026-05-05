@@ -106,30 +106,6 @@ missing_bam = [s for s in sample_names if s not in bam_map]
 if missing_bam:
     raise ValueError(f"Missing BAMs for samples: {missing_bam}")
 
-"""
-Store in config for downstream rules
-"""
-config["contigs"] = contig_map
-config["bams"] = bam_map
-
-print("\n===== DEBUG INFO =====")
-
-print("\ncontigs_dir:")
-print(contigs_dir)
-
-print("\ncontig_map:")
-for k, v in contig_map.items():
-    print(f"{k} -> {v}")
-
-print("\nbam_dir:")
-print(bam_dir)
-
-print("\nbam_map:")
-for k, v in bam_map.items():
-    print(f"{k} -> {v}")
-
-print("\n======================\n")
-"""
 Declaring other directories
 """
 dir_assembly = contigs_dir

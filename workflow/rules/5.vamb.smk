@@ -5,27 +5,48 @@ Its binners perform excellently with multiple samples, and pretty good on single
 """
 from glob import glob
 
-def get_bam_dir(sample):
-    p1 = os.path.join(dir_backmapping, f"{sample}_cluster_50")
-    p2 = os.path.join(dir_backmapping, f"{sample}_bam")
-
-    if os.path.exists(p1):
-        return p1
-    if os.path.exists(p2):
-        return p2
-
-    raise ValueError(f"No BAM dir for sample {sample}. Checked: {p1}, {p2}")
-
 rule vamb_simka:
     input:
         contigs = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa.gz"),
-        bam_dir = lambda wc: get_bam_dir(wc.sample)
+        bam = os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt")
     output:
         done = os.path.join(dir_binning, "{sample}_vamb_bins", "vae_clust_done.txt")
     params:
         contigs_rename = os.path.join(dir_binning, "{sample}_vamb_bins", "{sample}_contigs.fa"),
         bin_dir= os.path.join(dir_binning, "{sample}_vamb_bins"),
         bam_dir=os.path.join(dir_backmapping, "{sample}_cluster_50"),
+        abundance = os.path.join(dir_binning, "{sample}_vamb_bins", "vae_clusters_unsplit.tsv")
+    conda:
+        os.path.join(dir_env, "vamb.yaml")
+    resources:
+        mem_mb =config['resources']['long_shortjob']['mem_mb'],
+        runtime = config['resources']['long_shortjob']['runtime']
+    threads:
+        config['resources']['long_shortjob']['threads']
+    shell:
+        """
+        #using the logic that one assembly was mapped with multiple samples from simka
+        if [ -f "{params.abundance}" ]; then
+            echo "abundance file already exists, skipping abundance calculation"
+            touch {output.done}
+        else
+
+            rm -rf {params.bin_dir}
+            vamb bin default --outdir {params.bin_dir} --fasta {input.contigs} --bamdir {params.bam_dir} -t {threads}
+            touch {output.done}
+        fi
+        """
+
+rule vamb_all2all:
+    input:
+        contigs = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa.gz"),
+        bam = os.path.join(dir_backmapping, "{sample}_bam", "done.txt")
+    output:
+        done = os.path.join(dir_binning, "{sample}_vamb_bins", "vae_clust_done.txt")
+    params:
+        contigs_rename = os.path.join(dir_binning, "{sample}_vamb_bins", "{sample}_contigs.fa"),
+        bin_dir= os.path.join(dir_binning, "{sample}_vamb_bins"),
+        bam_dir=os.path.join(dir_backmapping, "{sample}_bam"),
         abundance = os.path.join(dir_binning, "{sample}_vamb_bins", "vae_clusters_unsplit.tsv")
     conda:
         os.path.join(dir_env, "vamb.yaml")
