@@ -30,7 +30,7 @@ rule semibin_multi_sample_simka:
     shell:
         """
         zcat {input.assembly} | \
-        awk '/^>/ {{print ">{params.sample}:" substr($0,2); next}} {{print}}' \
+        awk -v sample="{params.sample}" '/^>/ {{print ">" sample ":" substr($0,2); next}} {{print}}' \
         > {params.temp}/{params.sample}.sembin.fa
 
         SemiBin2 single_easy_bin -i params.temp}/{params.sample}.sembin.fa -b {params.bam_dir}/*.bam -o {params.bin_dir} --engine gpu -t {threads}
@@ -59,7 +59,7 @@ rule semibin_multi_sample_all2all:
     shell:
         """
         zcat {input.assembly} | \
-        awk '/^>/ {{print ">{params.sample}:" substr($0,2); next}} {{print}}' \
+        awk -v sample="{params.sample}" '/^>/ {{print ">" sample ":" substr($0,2); next}} {{print}}' \
         > {params.temp}/{params.sample}.sembin.fa
 
         SemiBin2 single_easy_bin -i params.temp}/{params.sample}.sembin.fa -b {params.bam_dir}/*.bam -o {params.bin_dir} --engine gpu -t {threads}
