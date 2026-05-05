@@ -10,14 +10,14 @@ def get_bam_dir(sample):
 
     if os.path.exists(p1):
         return p1
-    elif os.path.exists(p2):
+    if os.path.exists(p2):
         return p2
-    else:
-        raise ValueError(f"No BAM dir for sample {sample}")
+
+    raise ValueError(f"No BAM dir for sample {sample}. Checked: {p1}, {p2}")
 
 rule metabat2_binning_samples:
     input:
-        assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
+        assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa.gz"),
         bam_dir = lambda wc: get_bam_dir(wc.sample)
     output:
         bins_dir = os.path.join(dir_binning, "{sample}_metabat2_bins", "done.txt")

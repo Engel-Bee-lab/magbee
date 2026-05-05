@@ -10,7 +10,7 @@ from glob import glob
 
 rule semibin_multi_sample_simka:
     input:
-        assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
+        assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa.gz"),
         bam = os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt")
     output:
         bins = os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt")

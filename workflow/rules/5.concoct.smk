@@ -5,7 +5,7 @@ from glob import glob
 
 rule cut_up_fasta_simka:
     input:
-        assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
+        assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa.gz"),
         bam = os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt")
     output:
         bed=os.path.join(dir_binning, "{sample}_concoct", "{sample}.bed"),
