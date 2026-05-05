@@ -74,7 +74,7 @@ rule semibin_multi_sample_all2all:
         fi
         touch {output.bins}
         """
-
+        
 rule merge_semibins:
     input:
         ins = expand(os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt"), sample=sample_names)
