@@ -15,6 +15,7 @@ rule semibin_multi_sample_simka:
     output:
         bins = os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt")
     params:
+        temp=os.path.join(dir_binning, "temp"),
         bin_dir= os.path.join(dir_binning, "{sample}_semibin_bins"),
         bam_dir= os.path.join(dir_backmapping, "{sample}_cluster_50"),
         sample="{sample}",
@@ -28,7 +29,11 @@ rule semibin_multi_sample_simka:
     threads: 2
     shell:
         """
-        SemiBin2 single_easy_bin -i {input.assembly} -b {params.bam_dir}/*.bam -o {params.bin_dir} --engine gpu -t {threads}
+        zcat {input.assembly} | \
+        awk '/^>/ {{print ">{params.sample}:" substr($0,2); next}} {{print}}' \
+        > {params.temp}/{params.sample}.sembin.fa
+
+        SemiBin2 single_easy_bin -i params.temp}/{params.sample}.sembin.fa -b {params.bam_dir}/*.bam -o {params.bin_dir} --engine gpu -t {threads}
         touch {output.bins}
         """
  
@@ -39,6 +44,7 @@ rule semibin_multi_sample_all2all:
     output:
         bins = os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt")
     params:
+        temp=os.path.join(dir_binning, "temp"),
         bin_dir= os.path.join(dir_binning, "{sample}_semibin_bins"),
         bam_dir= os.path.join(dir_backmapping, "{sample}_bam"),
         sample="{sample}",
@@ -52,7 +58,11 @@ rule semibin_multi_sample_all2all:
     threads: 2
     shell:
         """
-        SemiBin2 single_easy_bin -i {input.assembly} -b {params.bam_dir}/*.bam -o {params.bin_dir} --engine gpu -t {threads}
+        zcat {input.assembly} | \
+        awk '/^>/ {{print ">{params.sample}:" substr($0,2); next}} {{print}}' \
+        > {params.temp}/{params.sample}.sembin.fa
+
+        SemiBin2 single_easy_bin -i params.temp}/{params.sample}.sembin.fa -b {params.bam_dir}/*.bam -o {params.bin_dir} --engine gpu -t {threads}
         touch {output.bins}
         """
         

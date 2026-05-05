@@ -40,7 +40,7 @@ rule comebin_all2all:
     output:
         bins_dir = os.path.join(dir_binning, "{sample}_comebin_bins", "done.txt")
     params:
-        temp=os.path.join(dir_temp),
+        temp=os.path.join(dir_binning, "temp"),
         outdir=os.path.join(dir_binning, "{sample}_comebin_bins"),
         bam_dir=os.path.join(dir_backmapping, "{sample}_bam"),
         checkm_db = config['databases']['checkm_db'],
