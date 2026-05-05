@@ -38,6 +38,8 @@ rule cut_up_fasta_all2all:
         bed=os.path.join(dir_binning, "{sample}_concoct", "{sample}.bed"),
         contigs10k=os.path.join(dir_binning, "{sample}_concoct", "{sample}.contigs10k.fa")
     params:
+        dirs=os.path.join(dir_binning, "{sample}_concoct"),
+        sample="{sample}",
         chunk_size=10000,
         overlap_size=0
     conda:
