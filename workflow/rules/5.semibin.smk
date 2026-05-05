@@ -39,7 +39,7 @@ rule semibin_multi_sample_simka:
         touch {output.bins}
         """
  
- rule semibin_multi_sample_all2all:
+rule semibin_multi_sample_all2all:
     input:
         assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa.gz"),
         bam = os.path.join(dir_backmapping, "{sample}_bam", "done.txt")
