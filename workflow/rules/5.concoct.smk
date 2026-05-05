@@ -52,6 +52,7 @@ rule cut_up_fasta_all2all:
           --merge_last \
           -b {output.bed} > {output.contigs10k}
         """
+
 rule concoct_table_simka:
     """
     Generates table with per sample coverage depth.

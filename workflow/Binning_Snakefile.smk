@@ -105,7 +105,7 @@ missing_bam = [s for s in sample_names if s not in bam_map]
 
 if missing_bam:
     raise ValueError(f"Missing BAMs for samples: {missing_bam}")
-
+"""
 Declaring other directories
 """
 dir_assembly = contigs_dir
