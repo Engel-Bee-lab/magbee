@@ -8,9 +8,11 @@ rule comebin_simka:
     output:
         bins_dir = os.path.join(dir_binning, "{sample}_comebin_bins", "done.txt")
     params:
+        temp=os.path.join(dir_temp),
         outdir=os.path.join(dir_binning, "{sample}_comebin_bins"),
         bam_dir=os.path.join(dir_backmapping, "{sample}_cluster_50"),
-        checkm_db = config['databases']['checkm_db']
+        checkm_db = config['databases']['checkm_db'],
+        sample="{sample}"
     conda:
         os.path.join(dir_env, "comebin_gpu.yaml")
     resources:
@@ -23,8 +25,9 @@ rule comebin_simka:
     shell:
         """
         rm -rf {params.outdir}
+        gzip -dc {input.assembly} > {params.temp}/{params.sample}.fa
         checkm data setRoot {params.checkm_db}
-        run_comebin.sh -a {input.assembly} -o {params.outdir} \
+        run_comebin.sh -a {params.temp}/{params.sample}.fa -o {params.outdir} \
             -p {params.bam_dir} -t {threads}
         touch {output.bins_dir}
         """
@@ -36,9 +39,11 @@ rule comebin_all2all:
     output:
         bins_dir = os.path.join(dir_binning, "{sample}_comebin_bins", "done.txt")
     params:
+        temp=os.path.join(dir_temp),
         outdir=os.path.join(dir_binning, "{sample}_comebin_bins"),
         bam_dir=os.path.join(dir_backmapping, "{sample}_bam"),
-        checkm_db = config['databases']['checkm_db']
+        checkm_db = config['databases']['checkm_db'],
+        sample="{sample}"
     conda:
         os.path.join(dir_env, "comebin_gpu.yaml")
     resources:
@@ -52,7 +57,8 @@ rule comebin_all2all:
         """
         rm -rf {params.outdir}
         checkm data setRoot {params.checkm_db}
-        run_comebin.sh -a {input.assembly} -o {params.outdir} \
+        gzip -dc {input.assembly} > {params.temp}/{params.sample}.fa
+        run_comebin.sh -a {params.temp}/{params.sample}.fa -o {params.outdir} \
             -p {params.bam_dir} -t {threads}
         touch {output.bins_dir}
         """
