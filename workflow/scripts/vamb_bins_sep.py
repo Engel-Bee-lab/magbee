@@ -22,8 +22,9 @@ if args.fasta.endswith(".gz"):
     handle = gzip.open(args.fasta, "rt")
 else:
     handle = open(args.fasta, "r")
-    
-fasta_dict = SeqIO.to_dict(SeqIO.parse(args.fasta, "fasta"))
+
+fasta_dict = SeqIO.to_dict(SeqIO.parse(handle, "fasta"))
+handle.close()
 
 for cluster, contigs in clusters.items():
     outfile = os.path.join(args.outdir, f"bin_{cluster}.fasta")
