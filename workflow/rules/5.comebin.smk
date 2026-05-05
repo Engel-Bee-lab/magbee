@@ -31,7 +31,7 @@ rule comebin_simka:
 
 rule comebin_all2all:
     input:
-        assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa"),
+        assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa.gz"),
         bam = os.path.join(dir_backmapping, "{sample}_bam", "done.txt")
     output:
         bins_dir = os.path.join(dir_binning, "{sample}_comebin_bins", "done.txt")
