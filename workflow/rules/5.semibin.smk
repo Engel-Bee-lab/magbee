@@ -21,12 +21,11 @@ rule semibin_multi_sample_simka:
     conda:
         os.path.join(dir_env, "semibin_gpu.yaml")
     resources:
-        #partition = "gpu",
-        #gres = "gpu:1",
+        partition = "gpu",
+        gres = "gpu:1",
         mem_mb =config['resources']['gpujob']['mem_mb'],
         runtime = config['resources']['gpujob']['runtime'],
-    threads:
-        config['resources']['gpujob']['threads']
+    threads: 2
     shell:
         """
         #generating a concatenated fasta file for semibin2 but with only one assembly file 
@@ -54,12 +53,11 @@ rule semibin_multi_sample_all2all:
     conda:
         os.path.join(dir_env, "semibin_gpu.yaml")
     resources:
-        partition = "gpu",
+        slurm_partition  = "gpu",
         gres = "gpu:1",
         mem_mb =config['resources']['gpujob']['mem_mb'],
         runtime = config['resources']['gpujob']['runtime'],
-    threads:
-        config['resources']['gpujob']['threads']
+    threads: 2
     shell:
         """
         #generating a concatenated fasta file for semibin2 but with only one assembly file 
