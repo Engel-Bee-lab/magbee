@@ -9,6 +9,8 @@ rule cut_up_fasta_simka:
         bed=os.path.join(dir_binning, "{sample}_concoct", "{sample}.bed"),
         contigs10k=os.path.join(dir_binning, "{sample}_concoct", "{sample}.contigs10k.fa")
     params:
+        dirs=os.path.join(dir_binning, "{sample}_concoct"),
+        sample="{sample}",
         chunk_size=10000,
         overlap_size=0
     conda:
@@ -20,7 +22,8 @@ rule cut_up_fasta_simka:
         config['resources']['smalljob']['threads']
     shell:
         """
-        cut_up_fasta.py {input.assembly} \
+        gzip -dc {input.assembly} > {params.dirs}/{params.sample}.contigs.fa
+        cut_up_fasta.py {params.dirs}/{params.sample}.contigs.fa \
           -c {params.chunk_size} \
           -o {params.overlap_size} \
           --merge_last \
@@ -46,7 +49,8 @@ rule cut_up_fasta_all2all:
         config['resources']['smalljob']['threads']
     shell:
         """
-        cut_up_fasta.py {input.assembly} \
+        gzip -dc {input.assembly} > {params.dirs}/{params.sample}.contigs.fa
+        cut_up_fasta.py {params.dirs}/{params.sample}.contigs.fa \
           -c {params.chunk_size} \
           -o {params.overlap_size} \
           --merge_last \
