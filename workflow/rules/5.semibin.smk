@@ -25,6 +25,8 @@ rule semibin_multi_sample_simka:
         runtime = config['resources']['gpujob']['runtime'],
         partition = "gpu",
         gres = "gpu:1"
+    threads:
+        config['resources']['gpujob']['threads']
     shell:
         """
         #generating a concatenated fasta file for semibin2 but with only one assembly file 
@@ -56,6 +58,8 @@ rule semibin_multi_sample_all2all:
         runtime = config['resources']['gpujob']['runtime'],
         partition = "gpu",
         gres = "gpu:1"
+    threads:
+        config['resources']['gpujob']['threads']
     shell:
         """
         #generating a concatenated fasta file for semibin2 but with only one assembly file 
