@@ -22,7 +22,7 @@ resources:
   gpujob:
     threads: 8
     mem_mb: 32000
-    runtime: 720
+    runtime: 600
 
   
 args:
