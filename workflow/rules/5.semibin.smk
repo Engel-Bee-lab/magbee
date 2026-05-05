@@ -55,7 +55,7 @@ rule semibin_multi_sample_all2all:
         os.path.join(dir_env, "semibin_gpu.yaml")
     resources:
         partition = "gpu",
-        gres = "gpu:1",
+        #gres = "gpu:1",
         mem_mb =config['resources']['gpujob']['mem_mb'],
         runtime = config['resources']['gpujob']['runtime'],
     threads:
