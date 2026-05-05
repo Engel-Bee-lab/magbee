@@ -2,6 +2,7 @@ import argparse
 from collections import defaultdict
 from Bio import SeqIO
 import os
+import gzip
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--mapping", required=True)
@@ -17,6 +18,11 @@ with open(args.mapping) as f:
         cluster, contig = line.strip().split()
         clusters[cluster].append(contig)
 
+if args.fasta.endswith(".gz"):
+    handle = gzip.open(args.fasta, "rt")
+else:
+    handle = open(args.fasta, "r")
+    
 fasta_dict = SeqIO.to_dict(SeqIO.parse(args.fasta, "fasta"))
 
 for cluster, contigs in clusters.items():
