@@ -21,10 +21,12 @@ rule semibin_multi_sample_simka:
     conda:
         os.path.join(dir_env, "semibin2.yaml")
     resources:
-        mem_mb =config['resources']['long_shortjob']['mem_mb'],
-        runtime = config['resources']['long_shortjob']['runtime']
+        mem_mb =config['resources']['gpujob']['mem_mb'],
+        runtime = config['resources']['gpujob']['runtime']
+        partition = "gpu",
+        gres = "gpu:1"
     threads:
-        config['resources']['long_shortjob']['threads']
+        config['resources']['gpujob']['threads']
     shell:
         """
         #generating a concatenated fasta file for semibin2 but with only one assembly file 
@@ -33,7 +35,7 @@ rule semibin_multi_sample_simka:
         if [ -f {params.bin_dir}/output_bins/SemiBin_0.fq.gz ]; then
             echo "Already run skipping semibin2 for {params.sample}"
         else
-            SemiBin2 single_easy_bin -i {input.assembly} -b {params.bam_dir}/*.bam -o {params.bin_dir} -t {threads}
+            SemiBin2 single_easy_bin -i {input.assembly} -b {params.bam_dir}/*.bam -o {params.bin_dir} -t {threads} --engine
             touch {output.bins}
         fi
         touch {output.bins}

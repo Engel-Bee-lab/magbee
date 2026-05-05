@@ -19,7 +19,12 @@ resources:
     threads: 8
     mem_mb: 16000
     runtime: 1440
+  gpujob:
+    threads: 8
+    mem_mb: 32000
+    runtime: 720
 
+  
 args:
   input: 
   extn: 

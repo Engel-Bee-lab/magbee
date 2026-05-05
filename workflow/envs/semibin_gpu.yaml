@@ -1,0 +1,17 @@
+name: semibin2
+channels:
+  - pytorch
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - pytorch
+  - torchvision
+  - torchaudio
+  - cudatoolkit=11.8   # remove if CPU-only cluster
+  - semibin
+  - pip:
+      - numpy
+      - scipy
