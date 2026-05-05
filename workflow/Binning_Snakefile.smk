@@ -73,8 +73,8 @@ bam_dir = config['args']['bam_folder']
 if not os.path.isdir(bam_dir):
     raise ValueError(f"BAM directory not found: {bam_dir}")
 
-bam_files = glob.glob(os.path.join(bam_dir, "*_bam"))
-
+bam_files = glob.glob(os.path.join(bam_dir, "*_bam")) + \
+            glob.glob(os.path.join(bam_dir, "*cluster_50"))
 if not bam_files:
     raise ValueError("No BAM files found")
 
