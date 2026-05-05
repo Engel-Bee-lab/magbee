@@ -107,7 +107,7 @@ rule bins_checkm2_semibin:
     input:
         bins_dir = os.path.join(dir_binning, "all_semibin_bins", "done.txt")
     output:
-        checkm2_dir = os.path.join(dir_reports, "checkm2", "CheckM2_SemiBin2_quality_report.tsv")
+        checkm2_dir = os.path.join(dir_reports, "checkm2", "checkM2_SemiBin2_quality_report.tsv")
     params:
         bins=os.path.join(dir_binning, "all_semibin_bins"),
         outdir=os.path.join(dir_binning, "checkm2_output_semibin"),
