@@ -152,7 +152,8 @@ rule concoct_bins:
     output:
         bins=os.path.join(dir_binning, "{sample}_concoct", "bins", "done.txt")
     params:
-        outdir=os.path.join(dir_binning, "{sample}_concoct", "bins")
+        outdir=os.path.join(dir_binning, "{sample}_concoct", "bins"),
+        dirs=os.path.join(dir_binning, "{sample}_concoct", "{sample}.contigs.fa"),
     conda:
         os.path.join(dir_env, "concoct.yaml")
     resources:
@@ -163,7 +164,7 @@ rule concoct_bins:
     shell:
         """
         mkdir -p {params.outdir}
-        extract_fasta_bins.py {input.contigs10k} {input.merged} --output_path {params.outdir}
+        extract_fasta_bins.py {params.dirs} {input.merged} --output_path {params.outdir}
         touch {output.bins}
         """
 
