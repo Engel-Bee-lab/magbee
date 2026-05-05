@@ -1,0 +1,8 @@
+name: comebin_gpu
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+dependencies:
+  - pytorch
+  - pytorch-cuda=11.8
