@@ -23,9 +23,13 @@ rule bins_checkm2_metabat2:
         """
         mkdir -p {params.outdir}
         export CHECKM2_DB_PATH={params.database}
-        checkm2 predict -i {params.bins} -o {params.outdir} --database_path {params.database}/uniref100.KO.1.dmnd \
-            -x fa --force --threads {threads}
-        cp {params.outdir}/checkm2_assessment.tsv {output.checkm2_dir}
+        if ls {params.bins}/*.fa 1> /dev/null 2>&1; then
+            checkm2 predict -i {params.bins} -o {params.outdir} --database_path {params.database}/uniref100.KO.1.dmnd \
+                -x fa --force --threads {threads}
+            cp {params.outdir}/checkm2_assessment.tsv {output.checkm2_dir}
+        else
+            echo "No bins found, skipping CheckM2 for metabat2 bins" > {output.checkm2_dir}
+        fi
         """
 
 rule bins_checkm2_concoct:
@@ -48,9 +52,13 @@ rule bins_checkm2_concoct:
         """
         mkdir -p {params.outdir}
         export CHECKM2_DB_PATH={params.database}
-        checkm2 predict -i {params.bins} -o {params.outdir} --database_path {params.database}/uniref100.KO.1.dmnd \
-            -x fa --force --threads {threads}
-        cp {params.outdir}/checkm2_assessment.tsv {output.checkm2_dir}
+        if ls {params.bins}/*.fa 1> /dev/null 2>&1; then
+            checkm2 predict -i {params.bins} -o {params.outdir} --database_path {params.database}/uniref100.KO.1.dmnd \
+                -x fa --force --threads {threads}
+            cp {params.outdir}/checkm2_assessment.tsv {output.checkm2_dir}
+        else
+            echo "No bins found, skipping CheckM2 for concoct bins" > {output.checkm2_dir}
+        fi
         """
 
 rule bins_checkm2_vamb:
@@ -73,9 +81,13 @@ rule bins_checkm2_vamb:
         """
         mkdir -p {params.outdir}
         export CHECKM2_DB_PATH={params.database}
-        checkm2 predict -i {params.bins} -o {params.outdir} --database_path {params.database}/uniref100.KO.1.dmnd \
-            -x fa --force --threads {threads}
-        cp {params.outdir}/checkm2_assessment.tsv {output.checkm2_dir}
+        if ls {params.bins}/*.fa 1> /dev/null 2>&1; then
+            checkm2 predict -i {params.bins} -o {params.outdir} --database_path {params.database}/uniref100.KO.1.dmnd \
+                -x fa --force --threads {threads}
+            cp {params.outdir}/checkm2_assessment.tsv {output.checkm2_dir}
+        else
+            echo "No bins found, skipping CheckM2 for vamb bins" > {output.checkm2_dir}
+        fi
         """
 
 rule gtdbtk_bins:
