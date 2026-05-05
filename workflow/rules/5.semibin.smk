@@ -68,7 +68,6 @@ rule semibin_multi_sample_all2all:
         else
             #debug statement to check if GPU is available, should be removed in the final version
             python -c "import torch; print(torch.cuda.is_available())"
-            module load cuda/12.2.1
             SemiBin2 single_easy_bin -i {input.assembly} -b {params.bam_dir}/*.bam -o {params.bin_dir} --engine gpu
             touch {output.bins}
         fi
