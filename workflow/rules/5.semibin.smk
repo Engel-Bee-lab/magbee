@@ -33,7 +33,7 @@ rule semibin_multi_sample_simka:
         if [ -f {params.bin_dir}/output_bins/SemiBin_0.fq.gz ]; then
             echo "Already run skipping semibin2 for {params.sample}"
         else
-            SemiBin2 single_easy_bin -i {input.assembly} -b {params.bam_dir}/*.bam -o {params.bin_dir} -t {threads} --engine gpu
+            SemiBin2 single_easy_bin -i {input.assembly} -b {params.bam_dir}/*.bam -o {params.bin_dir} --engine gpu
             touch {output.bins}
         fi
         touch {output.bins}
@@ -67,7 +67,7 @@ rule semibin_multi_sample_all2all:
             #debug statement to check if GPU is available, should be removed in the final version
             python -c "import torch; print(torch.cuda.is_available())"
             module load cuda/12.2.1
-            SemiBin2 single_easy_bin -i {input.assembly} -b {params.bam_dir}/*.bam -o {params.bin_dir} -t {threads} --engine gpu
+            SemiBin2 single_easy_bin -i {input.assembly} -b {params.bam_dir}/*.bam -o {params.bin_dir} --engine gpu
             touch {output.bins}
         fi
         touch {output.bins}
