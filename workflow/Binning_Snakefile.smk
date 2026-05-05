@@ -117,10 +117,10 @@ dir_binning = os.path.join(dir_out, 'PROCESSING' ,'5_binning')
 include: os.path.join("rules", "5.metabat2.smk")
 include: os.path.join("rules", "5.concoct.smk")
 include: os.path.join("rules", "5.vamb.smk")
-#include: os.path.join("rules", "5.semibin.smk")
+include: os.path.join("rules", "5.semibin.smk")
 #include: os.path.join("rules", "5.comebin.smk")
 
-include: os.path.join("rules", "6.bins_quality.smk")
+include: os.path.join("rules", "6.bins_quality_checkm2.smk")
 
 """Mark target rules"""
 target_rules = []
@@ -143,15 +143,15 @@ if config['args']['sequencing'] == 'paired':
         targets['binning'].append(os.path.join(dir_binning, "all_vamb_bins", "done.txt"))
         targets['binning'].append(os.path.join(dir_binning, "{sample}_concoct", "bins", "done.txt").format(sample=sample))
         targets['binning'].append(os.path.join(dir_binning, "all_conoct_bins", "renamed.txt"))
-        
         #these are erroing out in buidling training models, so not including tme for now.
-        #targets['binning'].append(os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt").format(sample=sample))
+        targets['binning'].append(os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt").format(sample=sample))
         #targets['binning'].append(os.path.join(dir_binning, "all_semibin_bins", "done.txt"))
         #targets['binning'].append(os.path.join(dir_binning, "{sample}_comebin_bins", "done.txt").format(sample=sample))
 
         targets['binning_qual'].append(os.path.join(dir_binning, "checkm2", "checkm2_output_metabat2", "quality_report.tsv"))
         targets['binning_qual'].append(os.path.join(dir_binning, "checkm2", "checkm2_output_concoct", "quality_report.tsv"))
         targets['binning_qual'].append(os.path.join(dir_binning, "checkm2", "checkm2_output_vamb", "quality_report.tsv"))
+        targets['binning_qual'].append(os.path.join(dir_reports, "checkm2", "CheckM2_SemiBin2_quality_report.tsv"))
         
         #targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt"))
         #targets['binning'].append(os.path.join(dir_reports, "gtdbtk_bac120_summary.tsv")),

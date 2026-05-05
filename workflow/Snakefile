@@ -27,7 +27,7 @@ include: os.path.join("rules", "5.vamb.smk")
 #include: os.path.join("rules", "5.semibin.smk")
 #include: os.path.join("rules", "5.comebin.smk")
 
-include: os.path.join("rules", "6.bins_quality.smk")
+include: os.path.join("rules", "6.bins_quality_checkm2.smk")
 #include: os.path.join("rules", "7.drep.smk")
 #include: os.path.join("rules", "Final_binning.smk")
 

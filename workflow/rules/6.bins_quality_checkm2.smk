@@ -7,7 +7,7 @@ rule bins_checkm2_metabat2:
     input:
         bins_dir = os.path.join(dir_binning, "all_metabat2_bins", "done.txt")
     output:
-        checkm2_dir = os.path.join(dir_binning, "checkm2", "CheckM2_Metabat2_quality_report.tsv")
+        checkm2_dir = os.path.join(dir_reports, "checkm2", "CheckM2_Metabat2_quality_report.tsv")
     params:
         bins=os.path.join(dir_binning, "all_metabat2_bins"),
         outdir=os.path.join(dir_binning, "checkm2_output_metabat2"),
@@ -41,7 +41,7 @@ rule bins_checkm2_concoct:
     input:
         bins_dir = os.path.join(dir_binning, "all_conoct_bins", "renamed.txt")
     output:
-        checkm2_dir = os.path.join(dir_binning, "checkm2", "CheckM2_CONCOCT_quality_report.tsv")
+        checkm2_dir = os.path.join(dir_reports, "checkm2", "CheckM2_CONCOCT_quality_report.tsv")
     params:
         bins=os.path.join(dir_binning, "all_conoct_bins"),
         outdir=os.path.join(dir_binning, "checkm2_output_concoct"),
@@ -74,7 +74,7 @@ rule bins_checkm2_vamb:
     input:
         bins_dir = os.path.join(dir_binning, "all_vamb_bins", "done.txt")
     output:
-        checkm2_dir = os.path.join(dir_binning, "checkm2", "CheckM2_VAMB_quality_report.tsv")
+        checkm2_dir = os.path.join(dir_reports, "checkm2", "CheckM2_VAMB_quality_report.tsv")
     params:
         bins=os.path.join(dir_binning, "all_vamb_bins"),
         outdir=os.path.join(dir_binning, "checkm2_output_vamb"),
@@ -103,33 +103,37 @@ rule bins_checkm2_vamb:
         fi
         """
 
-rule gtdbtk_bins:
+rule bins_checkm2_semibin:
     input:
-        bins_done = os.path.join(dir_binning, "all_metabat2_bins", "done.txt"),
+        bins_dir = os.path.join(dir_binning, "all_semibin_bins", "done.txt")
     output:
-        gtdbtk_dir = os.path.join(dir_binning, "gtdbtk_output", "done.txt")
+        checkm2_dir = os.path.join(dir_reports, "checkm2", "CheckM2_SemiBin2_quality_report.tsv")
     params:
-        bins = os.path.join(dir_binning, "all_metabat2_bins"),
-        outdir = os.path.join(dir_binning, "gtdbtk_output"),
-        database = config["databases"]["gtdbtk_db"]
+        bins=os.path.join(dir_binning, "all_semibin_bins"),
+        outdir=os.path.join(dir_binning, "checkm2_output_semibin"),
+        database = config["databases"]["checkm2_db"]
     conda:
-        os.path.join(dir_env, "gtdbtk.yaml")
+        os.path.join(dir_env, "checkm2.yaml")
     resources:
-        mem_mb  = config['resources']['bigjob']['mem_mb'],
-        runtime = config['resources']['bigjob']['runtime']
-    threads:
-        config['resources']['bigjob']['threads']
+        mem_mb =config['resources']['smalljob']['mem_mb'],
+        runtime = config['resources']['smalljob']['runtime']
+    threads: 
+        config['resources']['smalljob']['threads']
     shell:
         """
-        set -euo pipefail
-
         mkdir -p {params.outdir}
-        export GTDBTK_DATA_PATH={params.database}
-        gtdbtk identify --genome_dir {params.bins} --cpus {threads} --out_dir {params.outdir} -x fa
-        gtdbtk align --identify_dir {params.outdir} --out_dir {params.outdir} --cpus {threads} 
-        gtdbtk classify --genome_dir {params.bins} --out_dir {params.outdir} --cpus {threads} -x fa -f --align_dir {params.outdir}
-        touch {output.gtdbtk_dir}
+        export CHECKM2_DB_PATH={params.database}
+        if ls {params.bins}/*.fa 1> /dev/null 2>&1; then
+            checkm2 predict -i {params.bins} -o {params.outdir} --database_path {params.database}/uniref100.KO.1.dmnd \
+                -x fa --force --threads {threads}
+            if [ -f {params.outdir}/checkm2_assessment.tsv ]; then
+                cp {params.outdir}/checkm2_assessment.tsv {output.checkm2_dir}
+            else
+                echo "CheckM2 failed for Semibin2 bins" > {output.checkm2_dir}
+            fi
+        else
+            echo "No bins found, skipping CheckM2 for Semibin2 bins" > {output.checkm2_dir}
+        fi
         """
-
 
 
