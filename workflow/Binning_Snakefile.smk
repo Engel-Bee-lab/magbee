@@ -117,8 +117,8 @@ dir_binning = os.path.join(dir_out, 'PROCESSING' ,'5_binning')
 include: os.path.join("rules", "5.metabat2.smk")
 include: os.path.join("rules", "5.concoct.smk")
 include: os.path.join("rules", "5.vamb.smk")
-include: os.path.join("rules", "5.semibin.smk")
-include: os.path.join("rules", "5.comebin.smk")
+#include: os.path.join("rules", "5.semibin.smk")
+#include: os.path.join("rules", "5.comebin.smk")
 
 include: os.path.join("rules", "6.bins_quality_checkm2.smk")
 
@@ -144,14 +144,13 @@ for sample in sample_names:
     targets['binning'].append(os.path.join(dir_binning, "all_conoct_bins", "renamed.txt"))
 
     #these are erroing out in buidling training models, so not including tme for now. Testig GPU support for semibin2 training and comebin
-    targets['binning'].append(os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt").format(sample=sample))
-    targets['binning'].append(os.path.join(dir_binning, "all_semibin_bins", "done.txt"))
-    targets['binning'].append(os.path.join(dir_binning, "{sample}_comebin_bins", "done.txt").format(sample=sample))
+    #targets['binning'].append(os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt").format(sample=sample))
+    #targets['binning'].append(os.path.join(dir_binning, "all_semibin_bins", "done.txt"))
+    #targets['binning'].append(os.path.join(dir_binning, "{sample}_comebin_bins", "done.txt").format(sample=sample))
 
     targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_Metabat2_quality_report.tsv"))
     targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_CONCOCT_quality_report.tsv"))
     targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_VAMB_quality_report.tsv"))
-    targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "checkM2_SemiBin2_quality_report.tsv"))
         
     #targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt"))
     #targets['binning'].append(os.path.join(dir_reports, "gtdbtk_bac120_summary.tsv")),
