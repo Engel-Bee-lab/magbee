@@ -28,15 +28,7 @@ rule semibin_multi_sample_simka:
     threads: 2
     shell:
         """
-        #generating a concatenated fasta file for semibin2 but with only one assembly file 
-        #This is being done for renaming the contigs 
-        #generating the bins with semibin2
-        if [ -f {params.bin_dir}/output_bins/SemiBin_0.fq.gz ]; then
-            echo "Already run skipping semibin2 for {params.sample}"
-        else
-            SemiBin2 single_easy_bin -i {input.assembly} -b {params.bam_dir}/*.bam -o {params.bin_dir} --engine gpu
-            touch {output.bins}
-        fi
+        SemiBin2 single_easy_bin -i {input.assembly} -b {params.bam_dir}/*.bam -o {params.bin_dir} --engine gpu -t {threads}
         touch {output.bins}
         """
  
@@ -60,15 +52,7 @@ rule semibin_multi_sample_all2all:
     threads: 2
     shell:
         """
-        #generating a concatenated fasta file for semibin2 but with only one assembly file 
-        #This is being done for renaming the contigs 
-        #generating the bins with semibin2
-        if [ -f {params.bin_dir}/output_bins/SemiBin_0.fq.gz ]; then
-            echo "Already run skipping semibin2 for {params.sample}"
-        else
-            SemiBin2 single_easy_bin -i {input.assembly} -b {params.bam_dir}/*.bam -o {params.bin_dir} --engine gpu
-            touch {output.bins}
-        fi
+        SemiBin2 single_easy_bin -i {input.assembly} -b {params.bam_dir}/*.bam -o {params.bin_dir} --engine gpu -t {threads}
         touch {output.bins}
         """
         
