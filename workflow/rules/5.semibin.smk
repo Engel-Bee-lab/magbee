@@ -19,7 +19,7 @@ rule semibin_multi_sample_simka:
         bam_dir= os.path.join(dir_backmapping, "{sample}_cluster_50"),
         sample="{sample}",
     conda:
-        os.path.join(dir_env, "semibin2.yaml")
+        os.path.join(dir_env, "semibin_gpu.yaml")
     resources:
         mem_mb =config['resources']['gpujob']['mem_mb'],
         runtime = config['resources']['gpujob']['runtime'],
@@ -52,7 +52,7 @@ rule semibin_multi_sample_all2all:
         bam_dir= os.path.join(dir_backmapping, "{sample}_bam"),
         sample="{sample}",
     conda:
-        os.path.join(dir_env, "semibin2.yaml")
+        os.path.join(dir_env, "semibin_gpu.yaml")
     resources:
         mem_mb =config['resources']['gpujob']['mem_mb'],
         runtime = config['resources']['gpujob']['runtime'],
