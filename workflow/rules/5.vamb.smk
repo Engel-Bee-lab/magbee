@@ -5,10 +5,21 @@ Its binners perform excellently with multiple samples, and pretty good on single
 """
 from glob import glob
 
+def get_bam_dir(sample):
+    p1 = os.path.join(dir_backmapping, f"{sample}_cluster_50")
+    p2 = os.path.join(dir_backmapping, f"{sample}_bam")
+
+    if os.path.exists(p1):
+        return p1
+    if os.path.exists(p2):
+        return p2
+
+    raise ValueError(f"No BAM dir for sample {sample}. Checked: {p1}, {p2}")
+
 rule vamb_simka:
     input:
         contigs = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa.gz"),
-        bam = os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt")
+        bam_dir = lambda wc: get_bam_dir(wc.sample)
     output:
         done = os.path.join(dir_binning, "{sample}_vamb_bins", "vae_clust_done.txt")
     params:

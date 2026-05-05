@@ -2,11 +2,22 @@
 Binning rule using coconct
 """
 from glob import glob
+#function grabbing bam files from backmapping directory either all2all or simka output 
+def get_bam_dir(sample):
+    p1 = os.path.join(dir_backmapping, f"{sample}_cluster_50")
+    p2 = os.path.join(dir_backmapping, f"{sample}_bam")
+
+    if os.path.exists(p1):
+        return p1
+    if os.path.exists(p2):
+        return p2
+
+    raise ValueError(f"No BAM dir for sample {sample}. Checked: {p1}, {p2}")
 
 rule cut_up_fasta_simka:
     input:
         assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa.gz"),
-        bam = os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt")
+        bam_dir = lambda wc: get_bam_dir(wc.sample)
     output:
         bed=os.path.join(dir_binning, "{sample}_concoct", "{sample}.bed"),
         contigs10k=os.path.join(dir_binning, "{sample}_concoct", "{sample}.contigs10k.fa")
