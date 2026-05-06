@@ -97,13 +97,13 @@ rule vamb_bins:
     localrule: True
     params:
         outdir= os.path.join(dir_binning, "all_vamb_bins"),
-        sample=" ".join(sample_names)
+        sample=" ".join(sample_names),
         dir_binning= os.path.join(dir_binning)
     shell:
         """
         mkdir -p {params.outdir}
         for sample in {params.sample}; do
-            src_dir={params.outdir}/${{sample}}_vamb_bins
+            src_dir={params.dir_binning}/${{sample}}_vamb_bins
 
             echo "=== SAMPLE: $sample ==="
             echo "Looking in: $src_dir"
