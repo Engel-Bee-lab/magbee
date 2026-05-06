@@ -119,7 +119,6 @@ rule vamb_bins:
                 [ -e "$f" ] || continue
                 bn=$(basename "$f")
                 newname="${{sample}}_vamb_${{bn}}"
-                echo "Copying $f -> {params.outdir}/$newname"
                 cp "$f" {params.outdir}/"$newname"
             done
         done
