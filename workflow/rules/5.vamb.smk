@@ -102,7 +102,7 @@ rule vamb_bins:
     shell:
         """
         mkdir -p {params.outdir}
-        for dir in {params.bin_dir}/${{sample}}_vamb_bins
+        for dir in {params.bin_dir}/${params.sample}_vamb_bins
 
             if [ ! -d "$dir" ]; then
                 echo "Directory missing!"
@@ -114,7 +114,7 @@ rule vamb_bins:
             for f in "$dir"/bins/*.fasta; do
                 [ -e "$f" ] || continue
                 bn=$(basename "$f")
-                newname="${{sample}}_vamb_${{bn}}"
+                newname="{params.sample}_vamb_${{bn}}"
                 echo "Copying $f -> {params.outdir}/$newname"
                 cp "$f" {params.outdir}/"$newname"
             done
