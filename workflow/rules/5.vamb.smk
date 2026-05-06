@@ -104,7 +104,7 @@ rule vamb_bins:
         for sample in {params.sample}; do
             src_dir={dir_binning}/bins/${{sample}}_vamb_bins
             
-            for f in "$src_dir"/bins/*.fna; do
+            for f in "$src_dir"/bins/*.fasta; do
                 [ -e "$f" ] || continue
                 bn=$(basename "$f")
                 newname="${{sample}}_vamb_${{bn}}"
