@@ -102,7 +102,7 @@ rule vamb_bins:
         """
         mkdir -p {params.outdir}
         for sample in {params.sample}; do
-            src_dir={params.dir_binning}/${{sample}}_vamb_bins
+            src_dir={params.outdir}/${{sample}}_vamb_bins
 
             echo "=== SAMPLE: $sample ==="
             echo "Looking in: $src_dir"
