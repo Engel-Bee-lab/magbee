@@ -102,14 +102,26 @@ rule vamb_bins:
         """
         mkdir -p {params.outdir}
         for sample in {params.sample}; do
-            src_dir={dir_binning}/bins/${{sample}}_vamb_bins
-            
+            src_dir={params.dir_binning}/${{sample}}_vamb_bins
+
+            echo "=== SAMPLE: $sample ==="
+            echo "Looking in: $src_dir"
+
+            if [ ! -d "$src_dir" ]; then
+                echo "Directory missing!"
+                continue
+            fi
+
+            ls "$src_dir"/bins/*.fasta 2>/dev/null
+
             for f in "$src_dir"/bins/*.fasta; do
                 [ -e "$f" ] || continue
                 bn=$(basename "$f")
                 newname="${{sample}}_vamb_${{bn}}"
-                cp "$f" "{params.outdir}/$newname"
+                echo "Copying $f -> {params.outdir}/$newname"
+                cp "$f" {params.outdir}/"$newname"
             done
         done
+
         touch {output.bins}
         """
