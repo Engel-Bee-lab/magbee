@@ -102,7 +102,7 @@ rule vamb_bins:
         """
         mkdir -p {params.outdir}
         for sample in {params.sample}; do
-            src_dir={dir_binning}/${{sample}}_vamb_bins
+            src_dir={dir_binning}/bins/${{sample}}_vamb_bins
             
             for f in "$src_dir"/bins/*.fna; do
                 [ -e "$f" ] || continue
