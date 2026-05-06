@@ -96,25 +96,29 @@ rule vamb_bins:
         bins = os.path.join(dir_binning, "all_vamb_bins", "done.txt")
     localrule: True
     params:
-        bin_dir= os.path.join(dir_binning, "{sample}_vamb_bins"),
         outdir= os.path.join(dir_binning, "all_vamb_bins"),
         sample=" ".join(sample_names)
+        dir_binning= os.path.join(dir_binning)
     shell:
         """
         mkdir -p {params.outdir}
-        for dir in {params.bin_dir}/${params.sample}_vamb_bins
+        for sample in {params.sample}; do
+            src_dir={params.outdir}/${{sample}}_vamb_bins
 
-            if [ ! -d "$dir" ]; then
+            echo "=== SAMPLE: $sample ==="
+            echo "Looking in: $src_dir"
+
+            if [ ! -d "$src_dir" ]; then
                 echo "Directory missing!"
                 continue
             fi
 
-            ls "$dir"/bins/*.fasta 2>/dev/null
+            ls "$src_dir"/bins/*.fasta 2>/dev/null
 
-            for f in "$dir"/bins/*.fasta; do
+            for f in "$src_dir"/bins/*.fasta; do
                 [ -e "$f" ] || continue
                 bn=$(basename "$f")
-                newname="{params.sample}_vamb_${{bn}}"
+                newname="${{sample}}_vamb_${{bn}}"
                 echo "Copying $f -> {params.outdir}/$newname"
                 cp "$f" {params.outdir}/"$newname"
             done
