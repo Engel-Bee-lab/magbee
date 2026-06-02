@@ -42,35 +42,153 @@ Output files: The user can define the output folder name, or defaults to `magbee
 
     - Binning results:
 
-### `magbee run`
-The workflow is written to run the whole workflow with `magbee run`
-- complete workflow: Runs all the steps
+### Workflow 
+Magbee options:
+
+```
+magbee --help
+Usage: magbee [OPTIONS] COMMAND [ARGS]...
+
+  Assembling pure culture phages from both Illumina and Nanopore sequencing
+  technology For more options, run: magbee --help
+
+Options:
+  -v, --version  Show the version and exit.
+  -h, --help     Show this message and exit.
+
+Commands:
+  run          Run magbee
+  qc           QC magbee
+  assembly     Assembly magbee
+  backmapping  Backmapping magbee
+  binning      Binning magbee
+  config       Copy the system default config file
+  citation     Print the citation(s) for this tool
+```
+
+### Workflow example commands 
+**run option**
+This command runs all the steps in the whole workflow with `magbee run`.
+
+The options for this command:
+
     ```
-    magbee run --input metagenome_reads --extn fq.gz --sequencing paired  \
-        --pattern_r1 _R1 --pattern_r2 _R2 \
-        --host_seq Apis_mellifera_genome_genomic.fna \
-        --conda-frontend mamba --output magbee.out \
-        --profile slurm
+    magbee run --help
+    Usage: magbee run [OPTIONS] [SNAKE_ARGS]...
+
+    Run magbee
+
+    Options:
+    --sequencing [paired|longread]  sequencing method  [default: paired]
+    --input PATH                    Directory of reads  [default:
+                                    testReads/paired]
+    --extn PATH                     Reads extension; fastq, fq, fastq.gz
+                                    [default: fastq]
+    --host_seq PATH                 Path to host genome index for host read
+                                    removal
+    --pattern_r1 TEXT               Pattern to identify R1 reads (for paired-end
+                                    data)  [default: _R1]
+    --pattern_r2 TEXT               Pattern to identify R2 reads (for paired-end
+                                    data)  [default: _R2]
+    --output PATH                   Output directory  [default: output]
+    --configfile TEXT               Custom config file [default: config.yaml]
+    --threads INTEGER               Number of threads to use  [default: 1]
+    --profile TEXT                  Snakemake profile
+    --temp-dir TEXT                 Temp directory
+    --snake-default TEXT            Customise Snakemake runtime args  [default:
+                                    --rerun-incomplete, --printshellcmds,
+                                    --nolock, --show-failed-logs]
+    --use-conda BOOLEAN             Use conda for Snakemake rules  [default:
+                                    True]
+    --conda-frontend TEXT           Use mamba for Snakemake rules  [default:
+                                    mamba]
+    --conda-prefix PATH             Custom conda env directory  [default:
+                                    /scratch/bnalaga1/magbee/workflow/conda]
+    -h, --help                      Show this message and exit.
+
+    RUN EXAMPLES 
+    magbee run --input <input directory with reads> --extn fq --pattern_r1 _R1 --pattern_r2 _R2 --host_seq <path to host genomes> --sequencing paired --output <output directory> -k --profile slurm 
     ```
 
-- host submodule: This part runs fastp and host contamination removal
-    ```
-    magbee run --input metagenome_reads --extn fq.gz --sequencing paired  \
-        --pattern_r1 _R1 --pattern_r2 _R2 \
-        --host_seq Apis_mellifera_genome_genomic.fna \
-        --conda-frontend mamba --output magbee.out \
-        --profile slurm -k host 
-    ```
+**QC module**
+This command runs the steps for quality control using FastP, and host read removal using Minimap2,  `magbee qc`
 
-- assembly submodule: QC reads are then used to perform individual assemblies and quast
-    ```
-    magbee run --input metagenome_reads --extn fq.gz --sequencing paired  \
-        --pattern_r1 _R1 --pattern_r2 _R2 \
-        --host_seq Apis_mellifera_genome_genomic.fna \
-        --conda-frontend mamba --output magbee.out \
-        --profile slurm -k assembly 
-    ```
+```
+Usage: magbee qc [OPTIONS] [SNAKE_ARGS]...
 
-- backmapping submodule: This is the part that performs read mapping to the assemblies
-There are two strategies here
-    1.  
+  QC magbee
+
+Options:
+  --sequencing [paired|longread]  sequencing method  [default: paired]
+  --input PATH                    Directory of reads  [default:
+                                  testReads/paired]
+  --extn PATH                     Reads extension; fastq, fq, fastq.gz
+                                  [default: fastq]
+  --host_seq PATH                 Path to host genome index for host read
+                                  removal
+  --pattern_r1 TEXT               Pattern to identify R1 reads (for paired-end
+                                  data)  [default: _R1]
+  --pattern_r2 TEXT               Pattern to identify R2 reads (for paired-end
+                                  data)  [default: _R2]
+  --output PATH                   Output directory  [default: output]
+  --configfile TEXT               Custom config file [default: config.yaml]
+  --threads INTEGER               Number of threads to use  [default: 1]
+  --profile TEXT                  Snakemake profile
+  --db_dir PATH                   Custom database directory
+  --temp-dir TEXT                 Temp directory
+  --snake-default TEXT            Customise Snakemake runtime args  [default:
+                                  --rerun-incomplete, --printshellcmds,
+                                  --nolock, --show-failed-logs]
+  --use-conda BOOLEAN             Use conda for Snakemake rules  [default:
+                                  True]
+  --conda-frontend TEXT           Use mamba for Snakemake rules  [default:
+                                  mamba]
+  --conda-prefix PATH             Custom conda env directory  [default:
+                                  /scratch/bnalaga1/magbee/workflow/conda]
+  -h, --help                      Show this message and exit.
+
+  QC EXAMPLES 
+  magbee qc --input <input directory with reads> --extn fq --pattern_r1 _R1 --pattern_r2 _R2 --host_seq <path to host genomes> --sequencing paired --output <output directory> -k --profile slurm
+  ```
+
+**Assembly module** 
+This command runs individual assemblies for each sample using megahit and QUAST for contig reports,  `magbee assembly`
+
+```
+Usage: magbee assembly [OPTIONS] [SNAKE_ARGS]...
+
+  Assembly magbee
+
+Options:
+  --sequencing [paired|longread]  sequencing method  [default: paired]
+  --input PATH                    Directory of reads  [default:
+                                  testReads/paired]
+  --extn PATH                     Reads extension; fastq, fq, fastq.gz
+                                  [default: fastq]
+  --pattern_r1 TEXT               Pattern to identify R1 reads (for paired-end
+                                  data)  [default: _R1]
+  --pattern_r2 TEXT               Pattern to identify R2 reads (for paired-end
+                                  data)  [default: _R2]
+  --output PATH                   Output directory  [default: output]
+  --configfile TEXT               Custom config file [default: config.yaml]
+  --threads INTEGER               Number of threads to use  [default: 1]
+  --profile TEXT                  Snakemake profile
+  --db_dir PATH                   Custom database directory
+  --temp-dir TEXT                 Temp directory
+  --snake-default TEXT            Customise Snakemake runtime args  [default:
+                                  --rerun-incomplete, --printshellcmds,
+                                  --nolock, --show-failed-logs]
+  --use-conda BOOLEAN             Use conda for Snakemake rules  [default:
+                                  True]
+  --conda-frontend TEXT           Use mamba for Snakemake rules  [default:
+                                  mamba]
+  --conda-prefix PATH             Custom conda env directory  [default:
+                                  /scratch/bnalaga1/magbee/workflow/conda]
+  -h, --help                      Show this message and exit.
+
+  Assembly EXAMPLES 
+  magbee assembly --input <input directory with reads> --extn fq --pattern_r1 <fastq.gz> --pattern_r2 <fastq.gz> --sequencing paired --output <output directory> -k --profile slurm
+```
+
+**Backmapping module**
+This command 

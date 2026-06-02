@@ -19,6 +19,10 @@ resources:
     threads: 8
     mem_mb: 16000
     runtime: 1440
+  small_longjob:
+    threads: 2
+    mem_mb: 16000
+    runtime: 1440
   gpujob:
     threads: 2
     mem_mb: 16000

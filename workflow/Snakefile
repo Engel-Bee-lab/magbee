@@ -12,13 +12,19 @@ include: os.path.join("rules", "2.host_contamination.smk")
 include: os.path.join("rules", "Final_QC.smk")
 include: os.path.join("rules", "3.individual_assembly.smk")
 include: os.path.join("rules", "Final_assembly.smk")
-if N_SAMPLES <= THRESHOLD:
-    print("Using all-vs-all mapping strategy"),
-    include: os.path.join("rules", "4.mapping_all_2_all.smk")
-else:
-    print("Using simka mapping strategy"),
-    include: os.path.join("rules", "4.mapping_simka.smk")
-    include: os.path.join("rules", "4.backmapping_simka.smk")
+
+if config['args']['mode'] == 'individual':
+    print("Mapping all reads to individual assemblies"),
+    if N_SAMPLES <= THRESHOLD:
+        print("Using all-vs-all mapping strategy"),
+        include: os.path.join("rules", "4.mapping_all_2_all.smk")
+    else:
+        print("Using simka mapping strategy"),
+        include: os.path.join("rules", "4.mapping_simka.smk")
+        include: os.path.join("rules", "4.backmapping_simka.smk")
+elif config['args']['mode'] == 'concatenate':
+    print("Mapping all reads to concatenated assembly"),
+    include: os.path.join("rules", "4.backmapping_concat.smk")
 include: os.path.join("rules", "Final_backmapping.smk")
 
 include: os.path.join("rules", "5.metabat2.smk")
@@ -76,17 +82,23 @@ if config['args']['sequencing'] == 'paired':
         targets['assemble'].append(os.path.join(dir_reports, "assembly", "{sample}.megahit.contigs.fa.gz").format(sample=sample))
 
 if config['args']['sequencing'] == 'paired':
-    for sample in sample_names:
-        if N_SAMPLES <= THRESHOLD:
-            targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_index.mmi").format(sample=sample))
-            targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_bam", "done.txt").format(sample=sample))
-            targets['backmapping'].append(os.path.join(dir_reports, "backmapping_report_all_to_all.txt"))
-        else:
-            targets['backmapping'].append(os.path.join(dir_backmapping, "simka_input_list.txt"))
-            #targets['binning'].append(os.path.join(dir_backmapping, "simka_results", "mat_abundance_jaccard.csv.gz"))
-            targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_cluster_50", "{sample}_backmap_samples.txt").format(sample=sample))
-            targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt").format(sample=sample))
-            targets['backmapping'].append(os.path.join(dir_reports, "backmapping_report_simka.txt"))
+    if config['args']['mode'] == 'individual':
+        for sample in sample_names:
+            if N_SAMPLES <= THRESHOLD:
+                targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_index.mmi").format(sample=sample))
+                targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_bam", "done.txt").format(sample=sample))
+                targets['backmapping'].append(os.path.join(dir_reports, "backmapping_report_all_to_all.txt"))
+            else:
+                targets['backmapping'].append(os.path.join(dir_backmapping, "simka_input_list.txt"))
+                #targets['binning'].append(os.path.join(dir_backmapping, "simka_results", "mat_abundance_jaccard.csv.gz"))
+                targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_cluster_50", "{sample}_backmap_samples.txt").format(sample=sample))
+                targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt").format(sample=sample))
+                targets['backmapping'].append(os.path.join(dir_reports, "backmapping_report_simka.txt"))
+    elif config['args']['mode'] == 'concatenate':
+        targets['backmapping'].append(os.path.join(dir_backmapping, "concatenate_index.mmi"))
+        targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_bam", "done.txt").format(sample=sample))
+        targets['backmapping'].append(os.path.join(dir_reports, "backmapping_report_all_to_concat.txt"))
+
 
         #binning nightmare targets
         targets['binning'].append(os.path.join(dir_binning, "{sample}_metabat2_bins", "done.txt").format(sample=sample))

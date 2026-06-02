@@ -54,6 +54,7 @@ def common_options(func):
         click.option('--pattern_r1', 'r1', help='Pattern to identify R1 reads (for paired-end data)', default='_R1', show_default=True),
         click.option('--pattern_r2', 'r2', help='Pattern to identify R2 reads (for paired-end data)', default='_R2', show_default=True),
         click.option('--contigs', 'contigs', help='Assembled contigs', type=click.Path(), required=False, show_default=True),
+        click.option('--mode', 'mode', help='Backmapping mode: "individual" or "concatenate"', type=click.Choice(['individual', 'concatenate']), default='concatenate', show_default=True),
         click.option('--bam_folder', 'bam_folder', help='Directory of bam files for binning', type=click.Path(), required=False, show_default=True),
         click.option('--output', 'output', help='Output directory', type=click.Path(),
                      default='output', show_default=True),
@@ -94,7 +95,7 @@ def cli():
 help_msg_run = """
 \b
 RUN EXAMPLES 
-magbee run --input <input directory with reads> --extn fq --host_seq <path to host genomes> --sequencing paired --output <output directory> -k
+magbee run --input <input directory with reads> --extn fq --pattern_r1 <fastq.gz> --pattern_r2 <fastq.gz> --host_seq <path to host genomes> --sequencing paired --output <output directory> -k
 """
 @click.command(epilog=help_msg_run, 
     context_settings=dict(help_option_names=["-h", "--help"], ignore_unknown_options=True)
@@ -230,7 +231,7 @@ magbee backmapping --input <input directory with reads> --extn fq --pattern_r1 <
 @click.option('--sequencing', 'sequencing', help="sequencing method", default='paired', show_default=True, type=click.Choice(['paired', 'longread']))
 
 @common_options
-def backmapping(_input, extn, r1, r2, contigs, output, sequencing, temp_dir, configfile, conda_frontend, **kwargs):
+def backmapping(_input, extn, r1, r2, contigs, mode, output, sequencing, temp_dir, configfile, conda_frontend, **kwargs):
     """Backmapping magbee"""
     copy_config(configfile, system_config=snake_base(os.path.join('config', 'config.yaml')))
 
@@ -243,6 +244,7 @@ def backmapping(_input, extn, r1, r2, contigs, output, sequencing, temp_dir, con
             "pattern_r1": r1,
             "pattern_r2": r2,
             "sequencing": sequencing,
+            "mode": mode,
             "configfile": configfile,
             "temp_dir": temp_dir,
         }
@@ -264,7 +266,7 @@ def backmapping(_input, extn, r1, r2, contigs, output, sequencing, temp_dir, con
 help_msg_run = """
 \b
 Backmapping EXAMPLES 
-magbee binning --bam_folder <input directory with bamfiles> --contigs <input directory with contigs> --output <output directory> -k
+magbee binning --bam_folder <input directory with bamfiles> --contigs <input directory with contigs> --mode concatenate --output <output directory> -k
 """
 @click.command(epilog=help_msg_run, 
     context_settings=dict(help_option_names=["-h", "--help"], ignore_unknown_options=True)

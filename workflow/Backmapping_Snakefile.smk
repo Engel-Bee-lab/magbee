@@ -197,13 +197,18 @@ THRESHOLD = config['args'].get('mapping_threshold', 50)
 """
 Rules
 """
-if N_SAMPLES <= THRESHOLD:
-    print("Using all-vs-all mapping strategy")
-    include: os.path.join("rules", "4.mapping_all_2_all.smk")
-else:
-    print("Using simka mapping strategy")
-    include: os.path.join("rules", "4.mapping_simka.smk")
-    include: os.path.join("rules", "4.backmapping_simka.smk")
+if config['args']['mode'] == 'individual':
+    print("Using individual mode")
+    if N_SAMPLES <= THRESHOLD:
+        print("Using all-vs-all mapping strategy")
+        include: os.path.join("rules", "4.mapping_all_2_all.smk")
+    else:
+        print("Using simka mapping strategy")
+        include: os.path.join("rules", "4.mapping_simka.smk")
+        include: os.path.join("rules", "4.backmapping_simka.smk")
+elif config['args']['mode'] == 'concatenate':
+    print("Using concatenate mode")
+    include: os.path.join("rules", "4.backmapping_concat.smk")
 include: os.path.join("rules", "Final_backmapping.smk")
 
 """Mark target rules"""
@@ -219,16 +224,25 @@ Defining the targets dictionary
 targets ={'backmapping':[]}
 
 if config['args']['sequencing'] == 'paired':
-    for sample in sample_names:
-        if N_SAMPLES <= THRESHOLD:
-            targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_index.mmi").format(sample=sample))
-            targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_bam", "done.txt").format(sample=sample))
-            targets['backmapping'].append(os.path.join(dir_reports, "backmapping_report_all_to_all.txt"))
-        else:
-            targets['backmapping'].append(os.path.join(dir_backmapping, "simka_input_list.txt"))
-            targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_cluster_50", "{sample}_backmap_samples.txt").format(sample=sample))
-            targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt").format(sample=sample))
-            targets['backmapping'].append(os.path.join(dir_reports, "backmapping_report_simka.txt"))
+    if config['args']['mode'] == 'individual':
+        for sample in sample_names:
+            if N_SAMPLES <= THRESHOLD:
+                targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_index.mmi").format(sample=sample))
+                targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_bam", "done.txt").format(sample=sample))
+                targets['backmapping'].append(os.path.join(dir_reports, "backmapping_report_all_to_all.txt"))
+            else:
+                targets['backmapping'].append(os.path.join(dir_backmapping, "simka_input_list.txt"))
+                targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_cluster_50", "{sample}_backmap_samples.txt").format(sample=sample))
+                targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt").format(sample=sample))
+                targets['backmapping'].append(os.path.join(dir_reports, "backmapping_report_simka.txt"))
+    elif config['args']['mode'] == 'concatenate':
+        targets['backmapping'].append(os.path.join(dir_backmapping, "concatenate_index.mmi"))
+        targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_bam", "done.txt"))
+        targets['backmapping'].append(os.path.join(dir_reports, "backmapping_report_all_to_concat.txt"))
+    else:
+        raise ValueError(f"Invalid mode: {config['args']['mode']}")
+else:
+    raise ValueError(f"Invalid sequencing type: {config['args']['sequencing']}")
 
 @targetRule
 rule all:

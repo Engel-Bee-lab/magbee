@@ -45,10 +45,10 @@ rule cut_up_fasta_all2all:
     conda:
         os.path.join(dir_env, "concoct.yaml")
     resources:
-        mem_mb =config['resources']['smalljob']['mem_mb'],
-        runtime = config['resources']['smalljob']['runtime']
+        mem_mb =config['resources']['small_longjob']['mem_mb'],
+        runtime = config['resources']['small_longjob']['runtime']
     threads: 
-        config['resources']['smalljob']['threads']
+        config['resources']['small_longjob']['threads']
     shell:
         """
         gzip -dc {input.assembly} > {params.dirs}/{params.sample}.contigs.fa
