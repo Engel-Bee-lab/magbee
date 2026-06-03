@@ -103,9 +103,10 @@ rule vamb_bins:
     shell:
         """
         mkdir -p {params.outdir}
+        shopt -s nullglob
+
         for sample in {params.sample}; do
-            #src_dir={params.dir_binning}/${{sample}}_vamb_bins
-            find "$src_dir"/bins -name "*.fasta" -print || true
+            src_dir={params.dir_binning}/${{sample}}_vamb_bins
 
             echo "=== SAMPLE: $sample ==="
             echo "Looking in: $src_dir"
@@ -114,15 +115,14 @@ rule vamb_bins:
                 echo "Directory missing!"
                 continue
             fi
-
-            ls "$src_dir"/bins/*.fasta 2>/dev/null
+            n=0
 
             for f in "$src_dir"/bins/bin_*.fasta; do
-                [ -e "$f" ] || continue
                 bn=$(basename "$f")
-                newname="${{sample}}_vamb_${{bn}}"
-                cp "$f" {params.outdir}/"$newname"
+                cp "$f" "{params.outdir}/${{sample}}_vamb_${{bn}}"
+                ((n++))
             done
+            echo "Copied $n bins"
         done
 
         touch {output.bins}
