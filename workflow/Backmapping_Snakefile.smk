@@ -61,12 +61,12 @@ if config['args']['sequencing'] == 'paired':
         
         # remove extension
         if name.endswith(f".{ext}"):
-            name = name[:-(len(ext) + 1)]
+            name = name[: -len(ext)].rstrip(".")
         
         # determine which pattern is at the end
-        if name.endswith(pattern_r1):
+        if pattern_r1 in name:
             sample = name.rsplit(pattern_r1, 1)[0]
-        elif name.endswith(pattern_r2):
+        elif pattern_r2 in name:
             sample = name.rsplit(pattern_r2, 1)[0]
         else:
             raise ValueError(f"File does not end with R1/R2 pattern: {filename}")
