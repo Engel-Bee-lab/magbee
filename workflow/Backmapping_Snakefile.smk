@@ -236,9 +236,10 @@ if config['args']['sequencing'] == 'paired':
                 targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt").format(sample=sample))
                 targets['backmapping'].append(os.path.join(dir_reports, "backmapping_report_simka.txt"))
     elif config['args']['mode'] == 'concatenate':
-        targets['backmapping'].append(os.path.join(dir_backmapping, "concatenate_index.mmi"))
-        targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_bam", "done.txt"))
-        targets['backmapping'].append(os.path.join(dir_reports, "backmapping_report_all_to_concat.txt"))
+        for sample in sample_names:
+            targets['backmapping'].append(os.path.join(dir_backmapping, "concatenate_index.mmi"))
+            targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_bam", "done.txt").format(sample=sample))
+            targets['backmapping'].append(os.path.join(dir_reports, "backmapping_report_all_to_concat.txt"))
     else:
         raise ValueError(f"Invalid mode: {config['args']['mode']}")
 else:
