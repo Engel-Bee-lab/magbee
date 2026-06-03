@@ -29,7 +29,7 @@ rule concatenate_assemblies:
     localrule: True
     shell:
         """
-        zcat {input} | gzip > {output}
+        cat {input} >> {output}
         """
 
 rule assembly_index:
