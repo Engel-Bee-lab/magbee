@@ -80,11 +80,12 @@ rule vamb_sep:
         bin_dir= os.path.join(dir_binning, "{sample}_vamb_bins"),
         outdir=os.path.join(dir_binning, "{sample}_vamb_bins", "bins"),
         scripts= os.path.join(dir_script, "vamb_bins_sep.py"),
+        min_size=50000
     localrule: True
     shell:
         """
         python {params.scripts} --mapping {params.binsplit} --fasta {input.contigs} \
-            --outdir {params.outdir}
+            --outdir {params.outdir} --min_size {params.min_size}
         rm -rf {params.outdir}/bin_clustername.fasta
         touch {output.bins}
         """
