@@ -47,8 +47,8 @@ if config['args']['sequencing'] == 'paired':
     pattern_r2 = config['args']['pattern_r2']
 
     # Step 1: Find files
-    r1_files = glob.glob(os.path.join(input_dir, f"*{pattern_r1}*.*{extn}"))
-    r2_files = glob.glob(os.path.join(input_dir, f"*{pattern_r2}*.*{extn}"))
+    r1_files = glob.glob(os.path.join(input_dir, f"*{pattern_r1}.*{extn}"))
+    r2_files = glob.glob(os.path.join(input_dir, f"*{pattern_r2}.*{extn}"))
 
     if not r1_files or not r2_files:
         raise ValueError("No R1 or R2 files found.")
