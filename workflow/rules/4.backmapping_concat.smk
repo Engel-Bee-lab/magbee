@@ -55,7 +55,7 @@ rule map_reads_to_assembly:
 
         minimap2 -ax sr -t {threads} {input.index} \
             {params.r1} {params.r2} \
-        | samtools view -b - \
+        | samtools view -bS - \
         | samtools sort -o {params.outdir}/{wildcards.sample}.bam
 
         samtools index {params.outdir}/{wildcards.sample}.bam
