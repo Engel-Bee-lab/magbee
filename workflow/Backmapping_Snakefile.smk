@@ -239,8 +239,8 @@ if config['args']['sequencing'] == 'paired':
                 targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_cluster_50", "done.txt").format(sample=sample))
                 targets['backmapping'].append(os.path.join(dir_reports, "backmapping_report_simka.txt"))
     elif config['args']['mode'] == 'concatenate':
-        targets['backmapping'].append(os.path.join(dir_assembly, "concatenated_assemblies.fa.gz"))
-        targets['backmapping'].append(os.path.join(dir_assembly, "concatenated_assemblies.mmi"))
+        targets['backmapping'].append(os.path.join(dir_temp, "concatenated_assemblies.fa.gz"))
+        targets['backmapping'].append(os.path.join(dir_temp, "concatenated_assemblies.mmi"))
         for sample in sample_names:
             targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_bam", "done.txt").format(sample=sample))
         targets['backmapping'].append(os.path.join(dir_reports, "backmapping_report_all_to_concat.txt"))

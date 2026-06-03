@@ -4,22 +4,39 @@ Rules to concatenate the assemblies and then map all the reads to this assembly
 import os
 import glob 
 
-rule concatenate_assemblies:
+rule rename_contigs:
     input:
-        expand(os.path.join(dir_assembly, "{sample}.megahit.contigs.fa.gz"), sample=sample_names)
+        os.path.join(dir_assembly, "{sample}.megahit.contigs.fa.gz"), sample=sample_names
     output:
-       concatenated_assembly = os.path.join(dir_assembly, "concatenated_assemblies.fa.gz")
+        os.path.join(dir_temp, "{sample}.megahit.contigs.fa.gz"), sample=sample_names
+    params:
+        sample=lambda wc: wc.sample
     localrule: True
     shell:
         """
-        cat {input} > {output}
+        zcat {input} | \
+        awk -v prefix="{wildcards.sample}" '
+            /^>/ {{print ">"prefix"_"substr($0,2); next}}
+            {{print}}
+        ' | gzip > {output}
+        """
+
+rule concatenate_assemblies:
+    input:
+        expand(os.path.join(dir_temp, "{sample}.megahit.contigs.fa.gz"), sample=sample_names)
+    output:
+       concatenated_assembly = os.path.join(dir_temp, "concatenated_assemblies.fa.gz")
+    localrule: True
+    shell:
+        """
+        zcat {input} | gzip > {output}
         """
 
 rule assembly_index:
     input:
-        assembly = os.path.join(dir_assembly, "concatenated_assemblies.fa.gz")
+        assembly = os.path.join(dir_temp, "concatenated_assemblies.fa.gz")
     output:
-        index = os.path.join(dir_assembly, "concatenated_assemblies.mmi")
+        index = os.path.join(dir_temp, "concatenated_assemblies.mmi")
     conda:
         os.path.join(dir_env, "minimap2.yaml")
     threads:
@@ -29,13 +46,13 @@ rule assembly_index:
         runtime = config['resources']['bigjob']['runtime']
     shell:
         """
-        minimap2 {input.assembly} -d {output.index}
+        minimap2 -d {output.index} {input.assembly}
         """
 
 rule map_reads_to_assembly:
     input:
-        assembly = os.path.join(dir_assembly, "concatenated_assemblies.fa.gz"),
-        index = os.path.join(dir_assembly, "concatenated_assemblies.mmi"),
+        assembly = os.path.join(dir_temp, "concatenated_assemblies.fa.gz"),
+        index = os.path.join(dir_temp, "concatenated_assemblies.mmi"),
     output:
         txt = os.path.join(dir_backmapping, "{sample}_bam", "done.txt")
     params:
