@@ -39,8 +39,9 @@ rule map_reads_to_assembly:
     output:
         txt = os.path.join(dir_backmapping, "{sample}_bam", "done.txt")
     params:
-        samples="{sample}",
-        reads=os.path.join(dir_hostcleaned)
+        r1 = lambda wildcards: os.path.join(dir_hostcleaned, f"{wildcards.sample}_R1.hostcleaned.fastq.gz"),
+        r2 = lambda wildcards: os.path.join(dir_hostcleaned, f"{wildcards.sample}_R2.hostcleaned.fastq.gz"),
+        outdir=os.path.join(dir_backmapping, "{sample}_bam")
     conda:
         os.path.join(dir_env, "minimap2.yaml")
     threads:
@@ -50,15 +51,19 @@ rule map_reads_to_assembly:
         runtime = config['resources']['smalljob']['runtime']
     shell:
         """
-        if [ -d {output.txt} ]; then
+        if [ -f {output.txt} ]; then
             echo "Mapping already done. Skipping..."
         else
-            mkdir -p {params.samples}
-            minimap2 -ax sr -t {threads} {input.index} {params.reads}/{params.samples}_R1.hostcleaned.fastq.gz {params.reads}/{params.samples}_R2.hostcleaned.fastq.gz \
-                | samtools view -bS - | samtools sort -o {params.samples}/{params.samples}.bam
-                samtools index {params.samples}/{params.samples}.bam
-            done
-            touch {output.txt}
+            mkdir -p {params.outdir}
+
+            minimap2 -ax sr -t {threads} {input.index} \
+                {params.r1} {params.r2} \
+            | samtools view -bS - \
+            | samtools sort -o {params.outdir}/{wildcards.sample}.bam
+
+            samtools index {params.outdir}/{wildcards.sample}.bam
+
+            touch {output.done}
         fi
         """
         
