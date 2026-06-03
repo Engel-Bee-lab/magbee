@@ -37,7 +37,7 @@ rule report_simka_strategy:
 
 rule report_backmapping_concatenate:
     input:
-        txt = os.path.join(dir_backmapping, "{sample}_bam", "done.txt")
+        txt = expand(os.path.join(dir_backmapping, "{sample}_bam", "done.txt"), sample=sample_names)
     output:
         os.path.join(dir_reports, "backmapping_report_all_to_concat.txt")
     params:
