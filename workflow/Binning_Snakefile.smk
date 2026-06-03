@@ -138,7 +138,7 @@ for sample in sample_names:
     targets['binning'].append(os.path.join(dir_binning, "{sample}_metabat2_bins", "done.txt").format(sample=sample))
     targets['binning'].append(os.path.join(dir_binning, "all_metabat2_bins", "done.txt"))
     targets['binning'].append(os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt").format(sample=sample))
-    #targets['binning'].append(os.path.join(dir_binning, "all_vamb_bins", "done.txt"))
+    targets['binning'].append(os.path.join(dir_binning, "all_vamb_bins", "done.txt"))
 
     #these are erroing out in buidling training models, so not including tme for now. Testig GPU support for semibin2 training and comebin
     #targets['binning'].append(os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt").format(sample=sample))
