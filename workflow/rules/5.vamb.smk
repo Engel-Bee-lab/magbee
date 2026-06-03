@@ -104,7 +104,8 @@ rule vamb_bins:
         """
         mkdir -p {params.outdir}
         for sample in {params.sample}; do
-            src_dir={params.dir_binning}/${{sample}}_vamb_bins
+            #src_dir={params.dir_binning}/${{sample}}_vamb_bins
+            find "$src_dir"/bins -name "*.fasta" -print || true
 
             echo "=== SAMPLE: $sample ==="
             echo "Looking in: $src_dir"
@@ -116,7 +117,7 @@ rule vamb_bins:
 
             ls "$src_dir"/bins/*.fasta 2>/dev/null
 
-            for f in "$src_dir"/bins/*.fasta; do
+            for f in "$src_dir"/bins/bin_*.fasta; do
                 [ -e "$f" ] || continue
                 bn=$(basename "$f")
                 newname="${{sample}}_vamb_${{bn}}"
