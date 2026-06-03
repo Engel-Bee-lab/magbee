@@ -237,7 +237,7 @@ if config['args']['sequencing'] == 'paired':
                 targets['backmapping'].append(os.path.join(dir_reports, "backmapping_report_simka.txt"))
     elif config['args']['mode'] == 'concatenate':
         for sample in sample_names:
-            targets['backmapping'].append(os.path.join(dir_backmapping, "concatenate_index.mmi"))
+            targets['backmapping'].append(os.path.join(dir_backmapping, "concatenated_assemblies.mmi"))
             targets['backmapping'].append(os.path.join(dir_backmapping, "{sample}_bam", "done.txt").format(sample=sample))
             targets['backmapping'].append(os.path.join(dir_reports, "backmapping_report_all_to_concat.txt"))
     else:
