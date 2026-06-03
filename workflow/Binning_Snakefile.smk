@@ -114,8 +114,8 @@ dir_reports = os.path.join(dir_out, 'REPORTS')
 dir_binning = os.path.join(dir_out, 'PROCESSING' ,'5_binning')
 
 """Rules"""
-#include: os.path.join("rules", "5.metabat2.smk")
-include: os.path.join("rules", "5.concoct.smk")
+include: os.path.join("rules", "5.metabat2.smk")
+#include: os.path.join("rules", "5.concoct.smk")
 include: os.path.join("rules", "5.vamb.smk")
 #include: os.path.join("rules", "5.semibin.smk")
 #include: os.path.join("rules", "5.comebin.smk")

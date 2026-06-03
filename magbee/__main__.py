@@ -223,7 +223,7 @@ def assembly(_input, extn, r1, r2, output, sequencing, temp_dir, configfile, con
 help_msg_run = """
 \b
 Backmapping EXAMPLES 
-magbee backmapping --input <input directory with reads> --extn fq --pattern_r1 <fastq.gz> --pattern_r2 <fastq.gz> --contigs <input directory with contigs> --sequencing paired --output <output directory> -k
+magbee backmapping --input <input directory with reads> --extn fq --pattern_r1 <fastq.gz> --pattern_r2 <fastq.gz> --contigs <input directory with contigs> --sequencing paired --mode concatenate --output <output directory> -k
 """
 @click.command(epilog=help_msg_run, 
     context_settings=dict(help_option_names=["-h", "--help"], ignore_unknown_options=True)
@@ -266,7 +266,7 @@ def backmapping(_input, extn, r1, r2, contigs, mode, output, sequencing, temp_di
 help_msg_run = """
 \b
 Backmapping EXAMPLES 
-magbee binning --bam_folder <input directory with bamfiles> --contigs <input directory with contigs> --mode concatenate --output <output directory> -k
+magbee binning --bam_folder <input directory with bamfiles> --contigs <input directory with contigs> --output <output directory> -k
 """
 @click.command(epilog=help_msg_run, 
     context_settings=dict(help_option_names=["-h", "--help"], ignore_unknown_options=True)
