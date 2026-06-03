@@ -39,8 +39,8 @@ rule map_reads_to_assembly:
     output:
         txt = os.path.join(dir_backmapping, "{sample}_bam", "done.txt")
     params:
-        r1=lambda wc: os.path.join(dir_reads, f"{wc.sample}_R1.hostcleaned.fastq.gz"),
-        r2=lambda wc: os.path.join(dir_reads, f"{wc.sample}_R2.hostcleaned.fastq.gz"),
+        r1=lambda wc: os.path.join(dir_hostcleaned, f"{wc.sample}_R1.hostcleaned.fastq.gz"),
+        r2=lambda wc: os.path.join(dir_hostcleaned, f"{wc.sample}_R2.hostcleaned.fastq.gz"),
         outdir=lambda wc: os.path.join(dir_backmapping, f"{wc.sample}_bam")
     conda:
         os.path.join(dir_env, "minimap2.yaml")
