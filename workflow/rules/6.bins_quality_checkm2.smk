@@ -15,10 +15,10 @@ rule bins_checkm2_metabat2:
     conda:
         os.path.join(dir_env, "checkm2.yaml")
     resources:
-        mem_mb =config['resources']['smalljob']['mem_mb'],
-        runtime = config['resources']['smalljob']['runtime']
+        mem_mb =config['resources']['long_shortjob']['mem_mb'],
+        runtime = config['resources']['long_shortjob']['runtime']
     threads: 
-        config['resources']['smalljob']['threads']
+        config['resources']['long_shortjob']['threads']
     shell:
         """
         mkdir -p {params.outdir}
@@ -49,10 +49,10 @@ rule bins_checkm2_concoct:
     conda:
         os.path.join(dir_env, "checkm2.yaml")
     resources:
-        mem_mb =config['resources']['smalljob']['mem_mb'],
-        runtime = config['resources']['smalljob']['runtime']
+        mem_mb =config['resources']['long_shortjob']['mem_mb'],
+        runtime = config['resources']['long_shortjob']['runtime']
     threads: 
-        config['resources']['smalljob']['threads']
+        config['resources']['long_shortjob']['threads']
     shell:
         """
         mkdir -p {params.outdir}
@@ -82,8 +82,8 @@ rule bins_checkm2_vamb:
     conda:
         os.path.join(dir_env, "checkm2.yaml")
     resources:
-        mem_mb =config['resources']['smalljob']['mem_mb'],
-        runtime = config['resources']['smalljob']['runtime']
+        mem_mb =config['resources']['long_shortjob']['mem_mb'],
+        runtime = config['resources']['long_shortjob']['runtime']
     threads: 
         config['resources']['smalljob']['threads']
     shell:
@@ -115,10 +115,10 @@ rule bins_checkm2_semibin:
     conda:
         os.path.join(dir_env, "checkm2.yaml")
     resources:
-        mem_mb =config['resources']['smalljob']['mem_mb'],
-        runtime = config['resources']['smalljob']['runtime']
+        mem_mb =config['resources']['long_shortjob']['mem_mb'],
+        runtime = config['resources']['long_shortjob']['runtime']
     threads: 
-        config['resources']['smalljob']['threads']
+        config['resources']['long_shortjob']['threads']
     shell:
         """
         mkdir -p {params.outdir}
