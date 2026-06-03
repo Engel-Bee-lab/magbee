@@ -101,8 +101,7 @@ rule vamb_bins:
         sample=" ".join(sample_names),
         dir_binning= os.path.join(dir_binning)
     shell:
-        executable("/bin/bash")
-        r"""
+        """
         set -euo pipefail
 
         mkdir -p magebee-binning/PROCESSING/5_binning/all_vamb_bins
