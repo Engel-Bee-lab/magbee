@@ -101,27 +101,35 @@ rule vamb_bins:
         sample=" ".join(sample_names),
         dir_binning= os.path.join(dir_binning)
     shell:
-        """
-        mkdir -p {params.outdir}
+        executable("/bin/bash")
+        r"""
+        set -euo pipefail
+
+        mkdir -p magebee-binning/PROCESSING/5_binning/all_vamb_bins
+
         for sample in {params.sample}; do
-            src_dir={params.dir_binning}/${{sample}}_vamb_bins
+            src_dir="magebee-binning/PROCESSING/5_binning/${{sample}}_vamb_bins"
 
             echo "=== SAMPLE: $sample ==="
-            echo "Looking in: $src_dir"
 
-            if [ ! -d "$src_dir" ]; then
-                echo "Directory missing!"
+            if [ ! -d "$src_dir/bins" ]; then
+                echo "Missing bins dir"
                 continue
             fi
+
             n=0
 
             for f in "$src_dir"/bins/bin_*.fasta; do
+                [ -e "$f" ] || continue
+
                 bn=$(basename "$f")
-                cp "$f" "{params.outdir}/${{sample}}_vamb_${{bn}}"
-                ((n++))
+                cp -f "$f" "magebee-binning/PROCESSING/5_binning/all_vamb_bins/${sample}_vamb_${bn}"
+
+                n=$((n+1))
             done
+
             echo "Copied $n bins"
         done
 
-        touch {output.bins}
+        touch magebee-binning/PROCESSING/5_binning/all_vamb_bins/done.txt
         """
