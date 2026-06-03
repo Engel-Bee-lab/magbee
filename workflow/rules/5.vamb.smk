@@ -104,10 +104,10 @@ rule vamb_bins:
         """
         set -euo pipefail
 
-        mkdir -p magebee-binning/PROCESSING/5_binning/all_vamb_bins
+        mkdir -p {params.outdir}
 
         for sample in {params.sample}; do
-            src_dir="magebee-binning/PROCESSING/5_binning/${{sample}}_vamb_bins"
+            src_dir="{params.dir_binning}/${{sample}}_vamb_bins"
 
             echo "=== SAMPLE: $sample ==="
 
@@ -122,7 +122,7 @@ rule vamb_bins:
                 [ -e "$f" ] || continue
 
                 bn=$(basename "$f")
-                cp -f "$f" "magebee-binning/PROCESSING/5_binning/all_vamb_bins/${sample}_vamb_${bn}"
+                cp -f "$f" "{params.dir_binning}/all_vamb_bins/${{sample}}_vamb_${{bn}}"
 
                 n=$((n+1))
             done
@@ -130,5 +130,5 @@ rule vamb_bins:
             echo "Copied $n bins"
         done
 
-        touch magebee-binning/PROCESSING/5_binning/all_vamb_bins/done.txt
+        touch {output.bins}
         """
