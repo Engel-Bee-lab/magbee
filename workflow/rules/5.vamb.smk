@@ -103,8 +103,6 @@ rule vamb_bins:
     shell:
         """
         mkdir -p {params.outdir}
-        shopt -s nullglob
-
         for sample in {params.sample}; do
             src_dir={params.dir_binning}/${{sample}}_vamb_bins
 
