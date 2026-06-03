@@ -29,7 +29,7 @@ rule assembly_index:
         runtime = config['resources']['smalljob']['runtime']
     shell:
         """
-        minimap2 -d {output.index} {input.assembly}
+        minimap2 {input.assembly} -d {output.index}
         """
 
 rule map_reads_to_assembly:
