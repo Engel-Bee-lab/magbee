@@ -76,7 +76,7 @@ if not os.path.isdir(bam_dir):
 #bam_files = glob.glob(os.path.join(bam_dir, "*_bam")) + \
 #            glob.glob(os.path.join(bam_dir, "*cluster_50")) 
 
-bam_files = glob.glob(os.path.join(bam_dir, "*_bam", "*.bam"))
+bam_files = glob.glob(os.path.join(bam_dir, "**", "*.bam"), recursive=True)
 
 if not bam_files:
     raise ValueError("No BAM files found")
