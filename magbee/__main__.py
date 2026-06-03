@@ -266,14 +266,14 @@ def backmapping(_input, extn, r1, r2, contigs, mode, output, sequencing, temp_di
 help_msg_run = """
 \b
 Backmapping EXAMPLES 
-magbee binning --bam_folder <input directory with bamfiles> --contigs <input directory with contigs> --output <output directory> -k
+magbee binning --bam_folder <input directory with bamfiles> --contigs <input directory with contigs> --mode concatenate --output <output directory> -k
 """
 @click.command(epilog=help_msg_run, 
     context_settings=dict(help_option_names=["-h", "--help"], ignore_unknown_options=True)
     )
 
 @common_options
-def binning(bam_folder, contigs, output, temp_dir, configfile, conda_frontend, **kwargs):
+def binning(bam_folder, contigs, mode, output, temp_dir, configfile, conda_frontend, **kwargs):
     """Binning magbee"""
     copy_config(configfile, system_config=snake_base(os.path.join('config', 'config.yaml')))
 
@@ -281,6 +281,7 @@ def binning(bam_folder, contigs, output, temp_dir, configfile, conda_frontend, *
         "args": {
             "bam_folder": bam_folder,
             "contigs": contigs,
+            "mode": mode,
             "output": output, 
             "configfile": configfile,
             "temp_dir": temp_dir,

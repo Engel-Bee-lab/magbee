@@ -74,3 +74,30 @@ rule collect_metabat2_bins:
         done
         touch {output.collected_dir}
         """
+
+rule metabat2_concat:
+    input:
+        assembly = os.path.join(dir_assembly, "concatenated_assemblies.fa.gz"),
+        bam = os.path.join(dir_backmapping, "{sample}_bam", "done.txt")
+    output:
+        bins_dir = os.path.join(dir_binning, "metabat2_bins_concat", "done.txt")
+    params:
+        outdir=os.path.join(dir_binning, "metabat2_bins_concat"),
+        bams=expand(
+            os.path.join(dir_backmapping, "{sample}_bam", "{sample}.bam"),
+            sample=sample_names
+        ),
+    conda:
+        os.path.join(dir_env, "metabat2.yaml")
+    resources:
+        mem_mb =config['resources']['bigjob']['mem_mb'],
+        runtime = config['resources']['bigjob']['runtime']
+    threads:
+        config['resources']['bigjob']['threads']
+    shell:
+        """
+        mkdir -p {params.outdir}
+        jgi_summarize_bam_contig_depths --outputDepth {params.outdir}/depth.txt {params.bams}
+        metabat2 -i {input.assembly} -a {params.outdir}/depth.txt -o {params.outdir} -t {threads}
+        touch {output.bins_dir}
+        """

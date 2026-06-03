@@ -132,3 +132,31 @@ rule vamb_bins:
 
         touch {output.bins}
         """
+
+rule vamb_bins_concat:
+    input:
+        contigs = os.path.join(dir_assembly, "concatenated_assemblies.fa.gz"),
+        bam = os.path.join(dir_backmapping, "{sample}_bam", "done.txt")
+    params:
+        bin_dir= os.path.join(dir_binning, "{sample}_vamb_bins_concat"),
+        bams=expand(
+            os.path.join(dir_backmapping, "{sample}_bam", "{sample}.bam"),
+            sample=sample_names
+        ),
+        min_size=100000
+    output:
+        txt = os.path.join(dir_binning, "vamb_bins_concat", "done.txt")
+    conda:
+        os.path.join(dir_env, "vamb.yaml")
+    resources:
+        mem_mb =config['resources']['long_shortjob']['mem_mb'],
+        runtime = config['resources']['long_shortjob']['runtime']
+    threads:
+        config['resources']['long_shortjob']['threads']
+    shell:
+        """
+        vamb bin default --outdir {params.bin_dir} --fasta {input.contigs} --bamdir {params.bams} \
+             --minfasta {params.min_size} -o C -m 2000 -t {threads}
+
+        touch {output.txt}
+        """
