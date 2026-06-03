@@ -99,7 +99,6 @@ for f in bam_files:
 
     bam_map[matched] = f
 
-
 # ensure completeness
 missing_bam = [s for s in sample_names if s not in bam_map]
 
@@ -140,8 +139,6 @@ for sample in sample_names:
     targets['binning'].append(os.path.join(dir_binning, "all_metabat2_bins", "done.txt"))
     targets['binning'].append(os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt").format(sample=sample))
     targets['binning'].append(os.path.join(dir_binning, "all_vamb_bins", "done.txt"))
-    targets['binning'].append(os.path.join(dir_binning, "{sample}_concoct", "bins", "done.txt").format(sample=sample))
-    targets['binning'].append(os.path.join(dir_binning, "all_conoct_bins", "renamed.txt"))
 
     #these are erroing out in buidling training models, so not including tme for now. Testig GPU support for semibin2 training and comebin
     #targets['binning'].append(os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt").format(sample=sample))
@@ -149,8 +146,11 @@ for sample in sample_names:
     #targets['binning'].append(os.path.join(dir_binning, "{sample}_comebin_bins", "done.txt").format(sample=sample))
 
     targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_Metabat2_quality_report.tsv"))
-    targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_CONCOCT_quality_report.tsv"))
     targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_VAMB_quality_report.tsv"))
+
+    #targets['binning'].append(os.path.join(dir_binning, "{sample}_concoct", "bins", "done.txt").format(sample=sample))
+    #targets['binning'].append(os.path.join(dir_binning, "all_conoct_bins", "renamed.txt"))
+    #targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_CONCOCT_quality_report.tsv"))
         
     #targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt"))
     #targets['binning'].append(os.path.join(dir_reports, "gtdbtk_bac120_summary.tsv")),
