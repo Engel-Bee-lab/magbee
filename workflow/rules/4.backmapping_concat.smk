@@ -45,10 +45,10 @@ rule map_reads_to_assembly:
     conda:
         os.path.join(dir_env, "minimap2.yaml")
     threads:
-        config['resources']['smalljob']['threads']
+        config['resources']['bigjob']['threads']
     resources:
-        mem_mb = config['resources']['smalljob']['mem_mb'],
-        runtime = config['resources']['smalljob']['runtime']
+        mem_mb = config['resources']['bigjob']['mem_mb'],
+        runtime = config['resources']['bigjob']['runtime']
     shell:
         """
         mkdir -p {params.outdir}
