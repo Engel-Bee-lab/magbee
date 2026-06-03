@@ -60,6 +60,6 @@ rule map_reads_to_assembly:
 
         samtools index {params.outdir}/{wildcards.sample}.bam
 
-        touch {output.done}
+        touch {output.txt}
         """
         
