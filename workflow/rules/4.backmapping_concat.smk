@@ -6,9 +6,9 @@ import glob
 
 rule rename_contigs:
     input:
-        os.path.join(dir_assembly, "{sample}.megahit.contigs.fa.gz"), sample=sample_names
+        os.path.join(dir_assembly, "{sample}.megahit.contigs.fa.gz")
     output:
-        os.path.join(dir_temp, "{sample}.megahit.contigs.fa.gz"), sample=sample_names
+        os.path.join(dir_temp, "{sample}.megahit.contigs.fa.gz")
     params:
         sample=lambda wc: wc.sample
     localrule: True
