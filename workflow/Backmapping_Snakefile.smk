@@ -131,6 +131,9 @@ for f in contig_files:
     name = os.path.basename(f)
     name = re.sub(r'\.(fa|fasta)(\.gz)?$', '', name)
 
+    if name == "concatenated_assemblies":
+        continue
+        
     matched = None
     for sample in sample_names:
         if name.startswith(sample):
