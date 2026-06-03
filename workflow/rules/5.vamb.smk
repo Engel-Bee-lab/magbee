@@ -80,7 +80,7 @@ rule vamb_sep:
         bin_dir= os.path.join(dir_binning, "{sample}_vamb_bins"),
         outdir=os.path.join(dir_binning, "{sample}_vamb_bins", "bins"),
         scripts= os.path.join(dir_script, "vamb_bins_sep.py"),
-        min_size=50000
+        min_size=200000
     localrule: True
     shell:
         """
