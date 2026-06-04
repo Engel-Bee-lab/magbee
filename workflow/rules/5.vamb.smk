@@ -133,16 +133,28 @@ rule vamb_bins:
         touch {output.bins}
         """
 
+rule bam_dir_make:
+    input:
+        bam_dirs=os.path.join(dir_backmapping, "{sample}_bam", "done.txt")
+    output:
+        bam_dir = os.path.join(dir_backmapping, "all_bam", "{sample}.bam")
+    params:
+        folder= os.path.join(dir_backmapping, "all_bam"),
+        bams=os.path.join(dir_backmapping, "{sample}_bam", "{sample}.bam")
+    localrule: True
+    shell:
+        """
+        mkdir -p {params.folder}
+        cp {params.bams} {output.bam_dir}
+        """
+
 rule vamb_bins_concat:
     input:
         contigs = os.path.join(dir_assembly, "concatenated_assemblies.fa.gz"),
-        bam = os.path.join(dir_backmapping, "{sample}_bam", "done.txt")
+        bam_dir = exxpand(os.path.join(dir_backmapping, "all_bam", "{sample}.bam"), sample=sample_names)
     params:
         bin_dir= os.path.join(dir_binning, "{sample}_vamb_bins_concat"),
-        bams=expand(
-            os.path.join(dir_backmapping, "{sample}_bam", "{sample}.bam"),
-            sample=sample_names
-        ),
+        bams=os.path.join(dir_backmapping, "all_bam"),
         min_size=100000
     output:
         txt = os.path.join(dir_binning, "vamb_bins_concat", "done.txt")

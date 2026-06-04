@@ -45,25 +45,37 @@ contig_files = glob.glob(os.path.join(contigs_dir, "*.fa")) + \
                glob.glob(os.path.join(contigs_dir, "*.fasta")) + \
                glob.glob(os.path.join(contigs_dir, "*.fa.gz")) + \
                glob.glob(os.path.join(contigs_dir, "*.fasta.gz"))
-
 if not contig_files:
     raise ValueError("No contig files found")
 
-# map sample -> contig file
 def get_sample_name_from_contig(filename):
-    name = os.path.basename(filename)
-    name = re.sub(r'\.(fa|fasta)(\.gz)?$', '', name)
-    return name.split(".")[0]
+        name = os.path.basename(filename)
+        name = re.sub(r'\.(fa|fasta)(\.gz)?$', '', name)
+        return name.split(".")[0]
 
-contig_map = {}
+if config['args']['mode'] == 'concatenate' and len(contig_files) > 1:
+    raise ValueError("Multiple contig files found, but mode is set to 'concatenate'. Please provide a single concatenated contig file or change the mode to 'individual'.")
+elif config['args']['mode'] == 'concatenate' and len(contig_files) == 1:
+    concat_assembly = contig_files[0]
 
-for f in contig_files:
-    sample = get_sample_name_from_contig(f)
-    if sample in contig_map:
-        raise ValueError(f"Duplicate contig file for sample: {sample}")
-    contig_map[sample] = f
+    # sample names will come from BAM files
+    sample_names = []
 
-sample_names = list(contig_map.keys())
+elif config['args']['mode'] == 'individual' and len(contig_files) == 1:
+    raise ValueError("Only one contig file found, but mode is set to 'individual'. Please provide separate contig files for each sample or change the mode to 'concatenate'.")
+
+elif config['args']['mode'] == 'individual' and len(contig_files) > 1:
+    contig_map = {}
+
+    for f in contig_files:
+        sample = get_sample_name_from_contig(f)
+        if sample in contig_map:
+            raise ValueError(f"Duplicate contig file for sample: {sample}")
+        contig_map[sample] = f
+
+    sample_names = list(contig_map.keys())
+else:
+    raise ValueError(f"Invalid mode: {config['args']['mode']}. Must be 'individual' or 'concatenate'.")
 
 """
 Check bam files
@@ -82,29 +94,59 @@ if not bam_files:
 # checking all the samples have bam files generated 
 bam_map = {}
 
-for f in bam_files:
-    name = os.path.basename(f)
+if config['args']['mode'] == 'concatenate':
+    for bam_dir_path in bam_files:
 
-    matched = None
-    for sample in sample_names:
-        # safer prefix match
-        if name.startswith(f"{sample}_"):
-            matched = sample
-            break
+        name = os.path.basename(bam_dir_path)
 
-    if not matched:
-        raise ValueError(f"Could not match BAM to any sample: {f}")
+        # sample1_bam -> sample1
+        sample = re.sub(r'_bam$', '', name)
 
-    if matched in bam_map:
-        raise ValueError(f"Duplicate BAM for sample: {matched}")
+        bam_inside = glob.glob(os.path.join(bam_dir_path, "*.bam"))
 
-    bam_map[matched] = f
+        if len(bam_inside) == 0:
+            raise ValueError(
+                f"No BAM file found in {bam_dir_path}"
+            )
 
-# ensure completeness
-missing_bam = [s for s in sample_names if s not in bam_map]
+        if len(bam_inside) > 1:
+            raise ValueError(
+                f"Multiple BAM files found in {bam_dir_path}"
+            )
 
-if missing_bam:
-    raise ValueError(f"Missing BAMs for samples: {missing_bam}")
+        bam_map[sample] = bam_inside[0]
+
+    sample_names = sorted(bam_map.keys())
+
+elif config['args']['mode'] == 'individual':
+    for f in bam_files:
+        name = os.path.basename(f)
+
+        matched = None
+        for sample in sample_names:
+            # safer prefix match
+            if name.startswith(f"{sample}_"):
+                matched = sample
+                break
+
+        if not matched:
+            raise ValueError(f"Could not match BAM to any sample: {f}")
+
+        if matched in bam_map:
+            raise ValueError(f"Duplicate BAM for sample: {matched}")
+
+        bam_map[matched] = f
+    
+    missing_bam = [
+        s for s in sample_names
+        if s not in bam_map
+    ]
+
+    if missing_bam:
+        raise ValueError(
+            f"Missing BAMs for samples: {missing_bam}"
+        )
+
 """
 Declaring other directories
 """
