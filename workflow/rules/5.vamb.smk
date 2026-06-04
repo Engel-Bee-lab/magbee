@@ -161,10 +161,10 @@ rule vamb_bins_concat:
     conda:
         os.path.join(dir_env, "vamb.yaml")
     resources:
-        mem_mb = config['resources']['bigjob']['mem_mb'],
-        runtime = config['resources']['bigjob']['runtime']
+        mem_mb = config['resources']['assemblyjob']['mem_mb'],
+        runtime = config['resources']['assemblyjob']['runtime']
     threads:
-        config['resources']['bigjob']['threads']
+        config['resources']['assemblyjob']['threads']
     shell:
         """
         mkdir -p {params.bin_dir}
