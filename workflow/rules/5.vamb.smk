@@ -167,7 +167,6 @@ rule vamb_bins_concat:
         config['resources']['assemblyjob']['threads']
     shell:
         """
-        mkdir -p {params.bin_dir}
         vamb bin default --outdir {params.bin_dir} --fasta {input.contigs} --bamdir {params.bams} \
              --minfasta {params.min_size} -o C -m 2000 -t {threads}
 
