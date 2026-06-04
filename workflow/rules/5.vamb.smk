@@ -154,7 +154,7 @@ rule vamb_bins_concat:
         bam_dir = expand(os.path.join(dir_temp, "all_bam", "{sample}.bam"), sample=sample_names)
     params:
         bin_dir= os.path.join(dir_binning, "vamb_bins_concat"),
-        bams=os.path.join(dir_backmapping, "all_bam"),
+        bams=os.path.join(dir_temp, "all_bam"),
         min_size=100000
     output:
         txt = os.path.join(dir_binning, "vamb_bins_concat", "done.txt")
@@ -167,6 +167,7 @@ rule vamb_bins_concat:
         config['resources']['assemblyjob']['threads']
     shell:
         """
+        rm -rf {params.bin_dir}
         vamb bin default --outdir {params.bin_dir} --fasta {input.contigs} --bamdir {params.bams} \
              --minfasta {params.min_size} -o C -m 2000 -t {threads}
 
