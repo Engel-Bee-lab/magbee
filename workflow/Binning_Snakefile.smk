@@ -109,16 +109,6 @@ if config['args']['mode'] == 'concatenate':
 
         bam_inside = glob.glob(os.path.join(bam_dir_path, "*.bam"))
 
-        if len(bam_inside) == 0:
-            raise ValueError(
-                f"No BAM file found in {bam_dir_path}"
-            )
-
-        if len(bam_inside) > 1:
-            raise ValueError(
-                f"Multiple BAM files found in {bam_dir_path}"
-            )
-
         bam_map[sample] = bam_inside[0]
 
     sample_names = sorted(bam_map.keys())
