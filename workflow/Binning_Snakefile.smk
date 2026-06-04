@@ -202,6 +202,9 @@ elif config['args']['mode'] == 'concatenate':
         targets['binning'].append(os.path.join(dir_binning, "vamb_bins_concat", "done.txt").format(sample=sample))
         targets['binning'].append(os.path.join(dir_binning, "metabat2_bins_concat", "done.txt").format(sample=sample))
 
+        targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all_concat", "CheckM2_Metabat2_concat_quality_report.tsv"))
+        targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all_concat", "CheckM2_VAMB_concat_quality_report.tsv"))
+
 
 @targetRule
 rule all:
