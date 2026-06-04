@@ -137,7 +137,7 @@ rule bam_dir_make:
     input:
         bam_dirs=os.path.join(dir_backmapping, "{sample}_bam", "done.txt")
     output:
-        bam_dir = os.path.join(dir_backmapping, "all_bam", "{sample}.bam")
+        bam_dir = os.path.join(dir_temp, "all_bam", "{sample}.bam")
     params:
         folder= os.path.join(dir_backmapping, "all_bam"),
         bams=os.path.join(dir_backmapping, "{sample}_bam", "{sample}.bam")
@@ -151,7 +151,7 @@ rule bam_dir_make:
 rule vamb_bins_concat:
     input:
         contigs = dir_assembly,
-        bam_dir = expand(os.path.join(dir_backmapping, "all_bam", "{sample}.bam"), sample=sample_names)
+        bam_dir = expand(os.path.join(dir_temp, "all_bam", "{sample}.bam"), sample=sample_names)
     params:
         bin_dir= os.path.join(dir_binning, "vamb_bins_concat"),
         bams=os.path.join(dir_backmapping, "all_bam"),
