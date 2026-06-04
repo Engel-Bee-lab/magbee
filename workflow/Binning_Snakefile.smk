@@ -145,7 +145,10 @@ elif config['args']['mode'] == 'individual':
 """
 Declaring other directories
 """
-dir_assembly = contigs_dir
+if config['args']['mode'] == 'concatenate':
+    dir_assembly = concat_assembly
+elif config['args']['mode'] == 'individual':
+    dir_assembly = contigs_dir
 dir_backmapping = bam_dir
 dir_reports = os.path.join(dir_out, 'REPORTS')
 dir_binning = os.path.join(dir_out, 'PROCESSING' ,'5_binning')
