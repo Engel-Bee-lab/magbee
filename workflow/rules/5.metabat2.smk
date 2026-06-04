@@ -77,7 +77,7 @@ rule collect_metabat2_bins:
 
 rule metabat2_concat:
     input:
-        assembly = os.path.join(dir_assembly, "concatenated_assemblies.fa.gz"),
+        assembly = dir_assembly,
         bam_dir = expand(os.path.join(dir_backmapping, "all_bam", "{sample}.bam"), sample=sample_names)
     output:
         bins_dir = os.path.join(dir_binning, "metabat2_bins_concat", "done.txt")
