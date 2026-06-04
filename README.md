@@ -72,7 +72,7 @@ This command runs all the steps in the whole workflow with `magbee run`.
 
 The options for this command:
 
-    ```
+    
     magbee run --help
     Usage: magbee run [OPTIONS] [SNAKE_ARGS]...
 
@@ -114,53 +114,50 @@ The options for this command:
 
     RUN EXAMPLES 
     magbee run --input <input directory with reads> --extn fq --pattern_r1 <fastq.gz> --pattern_r2 <fastq.gz> --host_seq <path to host genomes> --sequencing paired --output <output directory> -k
-    ```
+    
 
 **QC module**
 This command runs the steps for quality control using FastP, and host read removal using Minimap2,  `magbee qc`
 
-    ```
+    
     Usage: magbee qc [OPTIONS] [SNAKE_ARGS].... 
     QC EXAMPLES 
     magbee qc --input <input directory with reads> --extn fq --pattern_r1 _R1 --pattern_r2 _R2 --host_seq <path to host genomes> --sequencing paired --output <output directory> -k --profile slurm
-    ```
+    
 
 **Assembly module** 
 This command runs individual assemblies for each sample using megahit and QUAST for contig reports,  `magbee assembly`
 
-```
-Usage: magbee assembly [OPTIONS] [SNAKE_ARGS]...
+    Usage: magbee assembly [OPTIONS] [SNAKE_ARGS]...
 
-  Assembly magbee
+    Assembly magbee
 
-  Assembly EXAMPLES 
-  magbee assembly --input <input directory with reads> --extn fq --pattern_r1 <fastq.gz> --pattern_r2 <fastq.gz> --sequencing paired --output <output directory> -k --profile slurm
-```
+    Assembly EXAMPLES 
+    magbee assembly --input <input directory with reads> --extn fq --pattern_r1 <fastq.gz> --pattern_r2 <fastq.gz> --sequencing paired --output <output directory> -k --profile slurm
 
 **Backmapping module**
 This command maps the reads to the assembled contigs. There are two modes available here,
 - individual, where the reads are mapped to the contigs. If there are more than 100 samples, then simka is run to pick the 50 samples
 - concatenate, where the assemblies are pooled together, then all the reads are mapped to the pooled assembly
 
-    ```
     Usage: magbee backmapping [OPTIONS] [SNAKE_ARGS]...
 
     Backmapping magbee
 
     Backmapping EXAMPLES 
     magbee backmapping --input <input directory with reads> --extn fq --pattern_r1 <fastq.gz> --pattern_r2 <fastq.gz> --contigs <input directory with contigs> --sequencing paired --mode concatenate --output <output directory> -k
-    ```
+     
 
 **Binning module**
 This command runs Metabat2 and VAMB binning tools.
 
-    ```
+
     Usage: magbee binning [OPTIONS] [SNAKE_ARGS]...
 
     Binning magbee
 
     Backmapping EXAMPLES 
     magbee binning --bam_folder <input directory with bamfiles> --contigs <input directory with contigs> --mode concatenate --output <output directory> -k
-    ```
+
 
 #### Which mode works?
