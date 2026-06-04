@@ -153,7 +153,7 @@ rule vamb_bins_concat:
         contigs = dir_assembly,
         bam_dir = expand(os.path.join(dir_backmapping, "all_bam", "{sample}.bam"), sample=sample_names)
     params:
-        bin_dir= os.path.join(dir_binning, "{sample}_vamb_bins_concat"),
+        bin_dir= os.path.join(dir_binning, "vamb_bins_concat"),
         bams=os.path.join(dir_backmapping, "all_bam"),
         min_size=100000
     output:
@@ -161,7 +161,7 @@ rule vamb_bins_concat:
     conda:
         os.path.join(dir_env, "vamb.yaml")
     resources:
-        mem_mb =config['resources']['long_shortjob']['mem_mb'],
+        mem_mb = config['resources']['long_shortjob']['mem_mb'],
         runtime = config['resources']['long_shortjob']['runtime']
     threads:
         config['resources']['long_shortjob']['threads']
