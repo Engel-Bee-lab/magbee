@@ -140,13 +140,13 @@ This command maps the reads to the assembled contigs. There are two modes availa
 - individual, where the reads are mapped to the contigs. If there are more than 100 samples, then simka is run to pick the 50 samples
 - concatenate, where the assemblies are pooled together, then all the reads are mapped to the pooled assembly
 
-    Usage: magbee backmapping [OPTIONS] [SNAKE_ARGS]...
+        Usage: magbee backmapping [OPTIONS] [SNAKE_ARGS]...
 
-    Backmapping magbee
+        Backmapping magbee
 
-    Backmapping EXAMPLES 
-    magbee backmapping --input <input directory with reads> --extn fq --pattern_r1 <fastq.gz> --pattern_r2 <fastq.gz> --contigs <input directory with contigs> --sequencing paired --mode concatenate --output <output directory> -k
-     
+        Backmapping EXAMPLES 
+        magbee backmapping --input <input directory with reads> --extn fq --pattern_r1 <fastq.gz> --pattern_r2 <fastq.gz> --contigs <input directory with contigs> --sequencing paired --mode concatenate --output <output directory> -k
+        
 
 **Binning module**
 This command runs Metabat2 and VAMB binning tools.
