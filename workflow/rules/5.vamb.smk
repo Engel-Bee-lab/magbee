@@ -150,7 +150,7 @@ rule bam_dir_make:
 
 rule vamb_bins_concat:
     input:
-        contigs = os.path.join(dir_assembly, "concatenated_assemblies.fa.gz"),
+        contigs = dir_assembly,
         bam_dir = expand(os.path.join(dir_backmapping, "all_bam", "{sample}.bam"), sample=sample_names)
     params:
         bin_dir= os.path.join(dir_binning, "{sample}_vamb_bins_concat"),
