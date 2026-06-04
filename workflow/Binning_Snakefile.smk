@@ -35,45 +35,50 @@ dir_script = os.path.join(workflow.basedir,"scripts")
 """
 Check input contigs
 """
-contigs_dir = config['args']['contigs']
-
-if not os.path.isdir(contigs_dir):
-    raise ValueError(f"Contigs directory not found: {contigs_dir}")
-
-# find contig files (.fa / .fasta)
-contig_files = glob.glob(os.path.join(contigs_dir, "*.fa")) + \
-               glob.glob(os.path.join(contigs_dir, "*.fasta")) + \
-               glob.glob(os.path.join(contigs_dir, "*.fa.gz")) + \
-               glob.glob(os.path.join(contigs_dir, "*.fasta.gz"))
-if not contig_files:
-    raise ValueError("No contig files found")
-
 def get_sample_name_from_contig(filename):
         name = os.path.basename(filename)
         name = re.sub(r'\.(fa|fasta)(\.gz)?$', '', name)
         return name.split(".")[0]
 
-if config['args']['mode'] == 'concatenate' and len(contig_files) > 1:
-    raise ValueError("Multiple contig files found, but mode is set to 'concatenate'. Please provide a single concatenated contig file or change the mode to 'individual'.")
-elif config['args']['mode'] == 'concatenate' and len(contig_files) == 1:
-    concat_assembly = contig_files[0]
+contig_map = {}
+sample_names = None 
+concat_assembly = None
 
-    # sample names will come from BAM files
-    sample_names = []
+if config['args']['mode'] == 'concatenate':
+    concat_assembly = config['args']['contigs']
 
-elif config['args']['mode'] == 'individual' and len(contig_files) == 1:
-    raise ValueError("Only one contig file found, but mode is set to 'individual'. Please provide separate contig files for each sample or change the mode to 'concatenate'.")
+    if not os.path.isfile(concat_assembly):
+        raise ValueError(
+            f"Concatenated assembly not found: {concat_assembly}"
+        )
 
-elif config['args']['mode'] == 'individual' and len(contig_files) > 1:
-    contig_map = {}
+elif config['args']['mode'] == 'individual':
+    contigs_dir = config['args']['contigs']
 
-    for f in contig_files:
-        sample = get_sample_name_from_contig(f)
-        if sample in contig_map:
-            raise ValueError(f"Duplicate contig file for sample: {sample}")
-        contig_map[sample] = f
+    if not os.path.isdir(contigs_dir):
+        raise ValueError(f"Contigs directory not found: {contigs_dir}")
 
-    sample_names = list(contig_map.keys())
+    # find contig files (.fa / .fasta)
+    contig_files = glob.glob(os.path.join(contigs_dir, "*.fa")) + \
+                glob.glob(os.path.join(contigs_dir, "*.fasta")) + \
+                glob.glob(os.path.join(contigs_dir, "*.fa.gz")) + \
+                glob.glob(os.path.join(contigs_dir, "*.fasta.gz"))
+
+    if not contig_files:
+        raise ValueError("No contig files found")
+
+        contig_map = {}
+
+        for f in contig_files:
+            sample = get_sample_name_from_contig(f)
+            
+            if sample in contig_map:
+                raise ValueError(f"Duplicate contig file for sample: {sample}")
+            
+            contig_map[sample] = f
+
+        sample_names = list(contig_map.keys())
+
 else:
     raise ValueError(f"Invalid mode: {config['args']['mode']}. Must be 'individual' or 'concatenate'.")
 
