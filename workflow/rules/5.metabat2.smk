@@ -86,10 +86,10 @@ rule metabat2_concat:
     conda:
         os.path.join(dir_env, "metabat2.yaml")
     resources:
-        mem_mb =config['resources']['bigjob']['mem_mb'],
-        runtime = config['resources']['bigjob']['runtime']
+        mem_mb =config['resources']['long_shortjob']['mem_mb'],
+        runtime = config['resources']['long_shortjob']['runtime']
     threads:
-        config['resources']['bigjob']['threads']
+        config['resources']['long_shortjob']['threads']
     shell:
         """
         mkdir -p {params.outdir}
