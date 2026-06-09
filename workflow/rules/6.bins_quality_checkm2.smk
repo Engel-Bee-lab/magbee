@@ -126,7 +126,7 @@ rule bins_checkm2_vamb_concat:
         export CHECKM2_DB_PATH={params.database}
         if ls {params.bins}/*.fasta 1> /dev/null 2>&1; then
             checkm2 predict -i {params.bins} -o {params.outdir} --database_path {params.database}/uniref100.KO.1.dmnd \
-                -x fasta --force --threads {threads}
+                -x fna --force --threads {threads}
             if [ -f {params.outdir}/checkm2_assessment.tsv ]; then
                 cp {params.outdir}/checkm2_assessment.tsv {output.checkm2_dir}
             else
