@@ -110,7 +110,7 @@ rule bins_checkm2_vamb_concat:
     output:
         checkm2_dir = os.path.join(dir_reports, "checkm2_all_concat", "CheckM2_VAMB_concat_quality_report.tsv")
     params:
-        bins=os.path.join(dir_binning, "vamb_bins_concat"),
+        bins=os.path.join(dir_binning, "vamb_bins_concat", "bins"),
         outdir=os.path.join(dir_binning, "checkm2_output_vamb_concat"),
         database = config["databases"]["checkm2_db"]
     conda:
