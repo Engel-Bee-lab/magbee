@@ -159,8 +159,9 @@ include: os.path.join("rules", "5.metabat2.smk")
 include: os.path.join("rules", "5.vamb.smk")
 #include: os.path.join("rules", "5.semibin.smk")
 #include: os.path.join("rules", "5.comebin.smk")
+include: os.path.join("rules", "6.dastool.smk")
 
-include: os.path.join("rules", "6.bins_quality_checkm2.smk")
+include: os.path.join("rules", "7.bins_quality_checkm2.smk")
 
 """Mark target rules"""
 target_rules = []
@@ -182,11 +183,8 @@ if config['args']['mode'] == 'individual':
         targets['binning'].append(os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt").format(sample=sample))
         targets['binning'].append(os.path.join(dir_binning, "all_vamb_bins", "done.txt"))
 
-        #these are erroing out in buidling training models, so not including tme for now. Testig GPU support for semibin2 training and comebin
-        #targets['binning'].append(os.path.join(dir_binning, "{sample}_semibin_bins", "done.txt").format(sample=sample))
-        #targets['binning'].append(os.path.join(dir_binning, "all_semibin_bins", "done.txt"))
-        #targets['binning'].append(os.path.join(dir_binning, "{sample}_comebin_bins", "done.txt").format(sample=sample))
-
+        targets['binning'].append(os.path.join(dir_binning, "das_tool", "DASTool_summary.tsv"))
+        
         targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_Metabat2_quality_report.tsv"))
         targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_VAMB_quality_report.tsv"))
 
@@ -196,6 +194,8 @@ if config['args']['mode'] == 'individual':
             
         #targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt"))
         #targets['binning'].append(os.path.join(dir_reports, "gtdbtk_bac120_summary.tsv")),
+
+
 
 elif config['args']['mode'] == 'concatenate':
     for sample in sample_names:

@@ -1,14 +1,49 @@
 """
 Rules to evaluate DAS Tool for building the non-redundant set of bins from the output of the binning tools.
 """
+from glob import glob
 
-rule run_DAS_tool:
+rule contigs2bin_individual:
     input:
-        
+        metabat2_bins = os.path.join(dir_binning, "all_metabat2_bins", "done.txt"),
+        vamb_bins = os.path.join(dir_binning, "all_vamb_bins", "done.txt")
+    params:
+        metabat2_bins = os.path.join(dir_binning, "all_metabat2_bins"),
+        vamb_bins = os.path.join(dir_binning, "all_vamb_bins"),
+    conda:
+        os.path.join(dir_env, "dasttool.yaml")
     output:
-        
+        metabat2= os.path.join(dir_binning, "das_tool", "scaffolds2bin", "metabat2_scaffolds2bin.tsv"),
+        vamb= os.path.join(dir_binning, "das_tool", "scaffolds2bin", "vamb_scaffolds2bin.tsv")
+    shell:
+        """
+        Fasta_to_Contig2Bin.sh \
+            -i {params.metabat2_bins}/* \
+            -e fa > {output.metabat2}
+
+        Fasta_to_Contig2Bin.sh \
+            -i {params.vamb_bins}/* \
+            -e fasta > {output.vamb}
+        """
+
+rule run_DAS_tool_individual:
+    input:
+        metabat2= os.path.join(dir_binning, "das_tool", "scaffolds2bin", "metabat2_scaffolds2bin.tsv"),
+        vamb= os.path.join(dir_binning, "das_tool", "scaffolds2bin", "vamb_scaffolds2bin.tsv")
+        contigs= expand(os.path.join(dir_assembly,"{sample}.megahit.contigs.fa.gz"), sample=sample_names)
+    params:
+        basename= "dastool",
+        temp= os.path.join(dir_binning, "das_tool", "temp")
+    conda:
+        os.path.join(dir_env, "dasttool.yaml")
+    output:
+        out=os.path.join(dir_binning, "das_tool", "DASTool_summary.tsv")
     threads: 4
     shell:
         """
-        DAS_Tool -i {input.binning_output} -c {input.contigs} -o {output.das_tool_output} --threads {threads} {params.das_tool_params}
+        cat {input.contigs} > {params.temp}.contigs.fa
+
+        DAS_Tool -i {input.metabat2},{input.vamb} \
+            -c {params.temp}.contigs.fa -o {params.basename} --threads {threads} \
+            --labels metabat2,vamb  --write_bin_evals --write_bins
         """
