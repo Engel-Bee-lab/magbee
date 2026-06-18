@@ -152,13 +152,14 @@ This command maps the reads to the assembled contigs. There are two modes availa
 **Binning module**
 This command runs Metabat2 and VAMB binning tools.
 
-
+```
     Usage: magbee binning [OPTIONS] [SNAKE_ARGS]...
 
     Binning magbee
 
     Backmapping EXAMPLES 
     magbee binning --bam_folder <input directory with bamfiles> --contigs <input directory with contigs> --mode concatenate --output <output directory> -k
-
+```
+Note: change --mode 
 
 #### Which mode works?
