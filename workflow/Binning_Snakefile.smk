@@ -164,7 +164,7 @@ include: os.path.join("rules", "5.metabat2.smk")
 include: os.path.join("rules", "5.vamb.smk")
 #include: os.path.join("rules", "5.semibin.smk")
 #include: os.path.join("rules", "5.comebin.smk")
-include: os.path.join("rules", "6.dastool.smk")
+include: os.path.join("rules", "6.dastools.smk")
 
 include: os.path.join("rules", "7.bins_quality_checkm2.smk")
 
