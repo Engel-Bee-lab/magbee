@@ -12,6 +12,7 @@ rule contigs2bin_individual:
         vamb_bin_folder = os.path.join(dir_binning, "all_vamb_bins"),
     conda:
         os.path.join(dir_env, "dasttool.yaml")
+    localrule: True
     output:
         metabat2= os.path.join(dir_binning, "das_tool", "scaffolds2bin", "metabat2_scaffolds2bin.tsv"),
         vamb= os.path.join(dir_binning, "das_tool", "scaffolds2bin", "vamb_scaffolds2bin.tsv")
