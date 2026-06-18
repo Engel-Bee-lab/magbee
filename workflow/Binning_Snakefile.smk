@@ -36,12 +36,12 @@ dir_script = os.path.join(workflow.basedir,"scripts")
 Check input contigs
 """
 def get_sample_name_from_contig(filename):
-        name = os.path.basename(filename)
-        name = re.sub(r'\.(fa|fasta)(\.gz)?$', '', name)
-        return name.split(".")[0]
+    name = os.path.basename(filename)
+    name = re.sub(r'\.(fa|fasta)(\.gz)?$', '', name)
+    return name.split(".")[0]
 
 contig_map = {}
-sample_names = None 
+sample_names = None
 concat_assembly = None
 
 if config['args']['mode'] == 'concatenate':
@@ -58,31 +58,34 @@ elif config['args']['mode'] == 'individual':
     if not os.path.isdir(contigs_dir):
         raise ValueError(f"Contigs directory not found: {contigs_dir}")
 
-    # find contig files (.fa / .fasta)
-    contig_files = glob.glob(os.path.join(contigs_dir, "*.fa")) + \
-                glob.glob(os.path.join(contigs_dir, "*.fasta")) + \
-                glob.glob(os.path.join(contigs_dir, "*.fa.gz")) + \
-                glob.glob(os.path.join(contigs_dir, "*.fasta.gz"))
+    # find contig files
+    contig_files = (
+        glob.glob(os.path.join(contigs_dir, "*.fa")) +
+        glob.glob(os.path.join(contigs_dir, "*.fasta")) +
+        glob.glob(os.path.join(contigs_dir, "*.fa.gz")) +
+        glob.glob(os.path.join(contigs_dir, "*.fasta.gz"))
+    )
 
     if not contig_files:
         raise ValueError("No contig files found")
 
-        contig_map = {}
+    # IMPORTANT FIX: this must NOT be inside the previous if-block
+    contig_map = {}
 
-        for f in contig_files:
-            sample = get_sample_name_from_contig(f)
-            
-            if sample in contig_map:
-                raise ValueError(f"Duplicate contig file for sample: {sample}")
-            
-            contig_map[sample] = f
+    for f in contig_files:
+        sample = get_sample_name_from_contig(f)
 
-        sample_names = list(contig_map.keys())
+        if sample in contig_map:
+            raise ValueError(f"Duplicate contig file for sample: {sample}")
+
+        contig_map[sample] = f
+
+    sample_names = sorted(contig_map.keys())
 
 else:
-    raise ValueError(f"Invalid mode: {config['args']['mode']}. Must be 'individual' or 'concatenate'.")
-print("sample_names =", sample_names)
-print("contig_map =", contig_map)
+    raise ValueError(
+        f"Invalid mode: {config['args']['mode']}. Must be 'individual' or 'concatenate'."
+    )
 
 """
 Check bam files
