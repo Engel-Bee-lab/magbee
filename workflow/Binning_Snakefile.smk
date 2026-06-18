@@ -81,7 +81,8 @@ elif config['args']['mode'] == 'individual':
 
 else:
     raise ValueError(f"Invalid mode: {config['args']['mode']}. Must be 'individual' or 'concatenate'.")
-print (sample_names)
+print("sample_names =", sample_names)
+print("contig_map =", contig_map)
 
 """
 Check bam files
