@@ -81,6 +81,7 @@ elif config['args']['mode'] == 'individual':
 
 else:
     raise ValueError(f"Invalid mode: {config['args']['mode']}. Must be 'individual' or 'concatenate'.")
+print (sample_names)
 
 """
 Check bam files
@@ -184,7 +185,7 @@ if config['args']['mode'] == 'individual':
         targets['binning'].append(os.path.join(dir_binning, "all_vamb_bins", "done.txt"))
 
         targets['binning'].append(os.path.join(dir_binning, "das_tool", "DASTool_summary.tsv"))
-        
+
         targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_Metabat2_quality_report.tsv"))
         targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_VAMB_quality_report.tsv"))
 
