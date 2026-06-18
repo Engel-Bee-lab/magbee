@@ -8,8 +8,8 @@ rule contigs2bin_individual:
         metabat2_bins = os.path.join(dir_binning, "all_metabat2_bins", "done.txt"),
         vamb_bins = os.path.join(dir_binning, "all_vamb_bins", "done.txt")
     params:
-        metabat2_bins = os.path.join(dir_binning, "all_metabat2_bins"),
-        vamb_bins = os.path.join(dir_binning, "all_vamb_bins"),
+        metabat2_bin_folder = os.path.join(dir_binning, "all_metabat2_bins"),
+        vamb_bin_folder = os.path.join(dir_binning, "all_vamb_bins"),
     conda:
         os.path.join(dir_env, "dasttool.yaml")
     output:
@@ -18,18 +18,18 @@ rule contigs2bin_individual:
     shell:
         """
         Fasta_to_Contig2Bin.sh \
-            -i {params.metabat2_bins}/* \
+            -i {params.metabat2_bin_folder}/* \
             -e fa > {output.metabat2}
 
         Fasta_to_Contig2Bin.sh \
-            -i {params.vamb_bins}/* \
+            -i {params.vamb_bin_folder}/* \
             -e fasta > {output.vamb}
         """
 
 rule run_DAS_tool_individual:
     input:
         metabat2= os.path.join(dir_binning, "das_tool", "scaffolds2bin", "metabat2_scaffolds2bin.tsv"),
-        vamb= os.path.join(dir_binning, "das_tool", "scaffolds2bin", "vamb_scaffolds2bin.tsv")
+        vamb= os.path.join(dir_binning, "das_tool", "scaffolds2bin", "vamb_scaffolds2bin.tsv"),
         contigs= expand(os.path.join(dir_assembly,"{sample}.megahit.contigs.fa.gz"), sample=sample_names)
     params:
         basename= "dastool",
