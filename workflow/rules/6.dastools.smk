@@ -20,63 +20,21 @@ rule contigs2bin_individual:
     shell:
         """
         mkdir -p {params.mk}
-        set +e
-        Fasta_to_Contig2Bin.sh -i {params.metabat2_bin_folder}/* -e fa > {output.metabat2}
-
-        Fasta_to_Contig2Bin.sh -i {params.vamb_bin_folder}/* -e fasta > {output.vamb}
+        SAMPLE={wildcards.sample}
         
-        # Post-process to add sample names from bin filenames
-        metabat2_file="{output.metabat2}"
-        vamb_file="{output.vamb}"
-        
-        python3 << 'EOFPYTHON'
-import os
-import re
+        # Generate TSV and add sample prefix to contig names
+        Fasta_to_Contig2Bin.sh -i {params.metabat2_bin_folder}/* -e fa | \
+            awk -v sample="$SAMPLE" '{{print sample"_"$1"\t"$2}}' > {output.metabat2}
 
-def process_scaffolds2bin(tsv_file):
-    # Process scaffolds2bin file to keep sample name prefix in bin names
-    if not os.path.exists(tsv_file):
-        return
-    
-    with open(tsv_file, 'r') as f:
-        lines = f.readlines()
-    
-    processed_lines = []
-    for line in lines:
-        parts = line.strip().split('\t')
-        if len(parts) >= 2:
-            contig = parts[0]
-            bin_name = parts[1]
-            
-            # Extract sample name from bin name
-            # Assuming bin names are like: sample_bin.1, sample_bin.2, etc.
-            match = re.match(r'([^_]+)_(.+)', bin_name)
-            if match:
-                sample_name = match.group(1)
-                bin_id = match.group(2)
-                new_bin_name = f"{sample_name}_{bin_id}"
-            else:
-                new_bin_name = bin_name
-            
-            processed_lines.append(f"{contig}\t{new_bin_name}\n")
-        else:
-            processed_lines.append(line)
-    
-    with open(tsv_file, 'w') as f:
-        f.writelines(processed_lines)
-
-process_scaffolds2bin(os.environ['METABAT2_FILE'])
-process_scaffolds2bin(os.environ['VAMB_FILE'])
-EOFPYTHON
-        
-        export METABAT2_FILE="$metabat2_file"
-        export VAMB_FILE="$vamb_file"
+        Fasta_to_Contig2Bin.sh -i {params.vamb_bin_folder}/* -e fasta | \
+            awk -v sample="$SAMPLE" '{{print sample"_"$1"\t"$2}}' > {output.vamb}
         """
 
 rule run_DAS_tool_individual:
     input:
         metabat2= os.path.join(dir_binning, "das_tool", "scaffolds2bin", "metabat2_scaffolds2bin.tsv"),
         vamb= os.path.join(dir_binning, "das_tool", "scaffolds2bin", "vamb_scaffolds2bin.tsv"),
+        contigs= expand(os.path.join(dir_assembly,"{sample}.megahit.contigs.fa.gz"), sample=sample_names)
     params:
         basename= "dastool",
         temp_contigs = os.path.join(dir_binning, "das_tool", "temp", "combined.contigs.fa"),
