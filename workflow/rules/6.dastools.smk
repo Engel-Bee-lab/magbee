@@ -10,6 +10,7 @@ rule contigs2bin_individual:
     params:
         metabat2_bin_folder = os.path.join(dir_binning, "all_metabat2_bins"),
         vamb_bin_folder = os.path.join(dir_binning, "all_vamb_bins"),
+        mk = os.path.join(dir_binning,"das_tool", "scaffolds2bin")
     conda:
         os.path.join(dir_env, "dasttool.yaml")
     localrule: True
@@ -18,6 +19,7 @@ rule contigs2bin_individual:
         vamb= os.path.join(dir_binning, "das_tool", "scaffolds2bin", "vamb_scaffolds2bin.tsv")
     shell:
         """
+        mkdir {params.mk}
         Fasta_to_Contig2Bin.sh \
             -i {params.metabat2_bin_folder}/* \
             -e fa > {output.metabat2}
@@ -34,17 +36,21 @@ rule run_DAS_tool_individual:
         contigs= expand(os.path.join(dir_assembly,"{sample}.megahit.contigs.fa.gz"), sample=sample_names)
     params:
         basename= "dastool",
-        temp= os.path.join(dir_binning, "das_tool", "temp")
+        temp= os.path.join(dir_binning, "das_tool", "temp"),
+        bins_dir= os.path.join(dir_binning, "das_tool", "dastool_DASTool_bins")
     conda:
         os.path.join(dir_env, "dasttool.yaml")
     output:
-        out=os.path.join(dir_binning, "das_tool", "DASTool_summary.tsv")
+        out=os.path.join(dir_binning, "das_tool", "dastool_DASTool_summary.txt"),
+        bins_done=os.path.join(dir_binning, "das_tool", "dastool_DASTool_bins.done")
     threads: 4
     shell:
         """
-        cat {input.contigs} > {params.temp}.contigs.fa
+        zcat {input.contigs} > {params.temp}.contigs.fa
 
         DAS_Tool -i {input.metabat2},{input.vamb} \
             -c {params.temp}.contigs.fa -o {params.basename} --threads {threads} \
             --labels metabat2,vamb  --write_bin_evals --write_bins
+
+        touch {output.bins_done}
         """
