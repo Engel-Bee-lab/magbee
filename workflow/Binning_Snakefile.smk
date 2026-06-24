@@ -183,9 +183,9 @@ targets ={'binning':[], 'binning_qual':[]}
 if config['args']['mode'] == 'individual':
     for sample in sample_names:
         #binning nightmare targets
-        #targets['binning'].append(os.path.join(dir_binning, "{sample}_metabat2_bins", "done.txt").format(sample=sample))
+        targets['binning'].append(os.path.join(dir_binning, "{sample}_metabat2_bins", "done.txt").format(sample=sample))
         targets['binning'].append(os.path.join(dir_binning, "all_metabat2_bins", "done.txt"))
-        #targets['binning'].append(os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt").format(sample=sample))
+        targets['binning'].append(os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt").format(sample=sample))
         targets['binning'].append(os.path.join(dir_binning, "all_vamb_bins", "done.txt"))
 
         targets['binning'].append(os.path.join(dir_binning, "das_tool", "DASTool_summary.tsv"))
