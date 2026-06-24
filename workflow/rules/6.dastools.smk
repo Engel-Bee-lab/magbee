@@ -46,8 +46,12 @@ rule run_DAS_tool_individual:
         """
         mkdir -p {params.outdir}/temp
         
-        # Combine and rename contigs from all samples
-        zcat {input.contigs} | sed '/^>/s/>/&sample_/' > {params.temp_contigs}
+        # Combine contigs from all samples, prefixing each with its sample name
+        > {params.temp_contigs}
+        for contig_file in {input.contigs}; do
+            sample_name=$(basename "$contig_file" .megahit.contigs.fa.gz)
+            zcat "$contig_file" | sed "/^>/s/>/>${{sample_name}}_/" >> {params.temp_contigs}
+        done
 
         cd {params.outdir}
         DAS_Tool -i {input.metabat2},{input.vamb} \
