@@ -27,47 +27,44 @@ rule contigs2bin_individual:
         
         # Post-process to add sample names from bin filenames to first column
         python3 << 'EOF'
-        import os
-        import re
+import os
+import re
 
-        def process_scaffolds2bin(tsv_file):
-            """
-            Process scaffolds2bin file to prepend sample name to bin names in first column.
-            Extracts sample name from bin names (assumed format: sample_binXX).
-            """
-            if not os.path.exists(tsv_file):
-                return
+def process_scaffolds2bin(tsv_file):
+    # Process scaffolds2bin file to keep sample name prefix in bin names
+    if not os.path.exists(tsv_file):
+        return
+    
+    with open(tsv_file, 'r') as f:
+        lines = f.readlines()
+    
+    processed_lines = []
+    for line in lines:
+        parts = line.strip().split('\t')
+        if len(parts) >= 2:
+            contig = parts[0]
+            bin_name = parts[1]
             
-            with open(tsv_file, 'r') as f:
-                lines = f.readlines()
+            # Extract sample name from bin name
+            # Assuming bin names are like: sample_bin.1, sample_bin.2, etc.
+            match = re.match(r'([^_]+)_(.+)', bin_name)
+            if match:
+                sample_name = match.group(1)
+                bin_id = match.group(2)
+                new_bin_name = f"{sample_name}_{bin_id}"
+            else:
+                new_bin_name = bin_name
             
-            processed_lines = []
-            for line in lines:
-                parts = line.strip().split('\t')
-                if len(parts) >= 2:
-                    contig = parts[0]
-                    bin_name = parts[1]
-                    
-                    # Extract sample name from bin name
-                    # Assuming bin names are like: sample_bin.1, sample_bin.2, etc.
-                    match = re.match(r'([^_]+)_(.+)', bin_name)
-                    if match:
-                        sample_name = match.group(1)
-                        bin_id = match.group(2)
-                        new_bin_name = f"{sample_name}_{bin_id}"
-                    else:
-                        new_bin_name = bin_name
-                    
-                    processed_lines.append(f"{contig}\t{new_bin_name}\n")
-                else:
-                    processed_lines.append(line)
-            
-            with open(tsv_file, 'w') as f:
-                f.writelines(processed_lines)
+            processed_lines.append(f"{contig}\t{new_bin_name}\n")
+        else:
+            processed_lines.append(line)
+    
+    with open(tsv_file, 'w') as f:
+        f.writelines(processed_lines)
 
-        process_scaffolds2bin("{output.metabat2}")
-        process_scaffolds2bin("{output.vamb}")
-        EOF
+process_scaffolds2bin("{output.metabat2}")
+process_scaffolds2bin("{output.vamb}")
+EOF
         """
 
 rule run_DAS_tool_individual:
