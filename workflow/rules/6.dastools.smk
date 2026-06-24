@@ -33,7 +33,7 @@ rule run_DAS_tool_individual:
         contigs= expand(os.path.join(dir_assembly,"{sample}.megahit.contigs.fa.gz"), sample=sample_names)
     params:
         basename= "dastool",
-        samples=" ".join(sample_names),
+        samples="{sample}",
         temp= os.path.join(dir_binning, "das_tool", "temp"),
         bins_dir= os.path.join(dir_binning, "das_tool", "dastool_DASTool_bins")
     conda:
