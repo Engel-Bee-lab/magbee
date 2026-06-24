@@ -28,49 +28,49 @@ rule filter_dastool_hq_mq_bins:
         mkdir -p {params.output_dir}
         
         python3 << 'EOF'
-import pandas as pd
-import os
-import shutil
+        import pandas as pd
+        import os
+        import shutil
 
-checkm2_file = "{params.checkm2_report}"
-source_dir = "{params.source_bins}"
-output_dir = "{params.output_dir}"
+        checkm2_file = "{params.checkm2_report}"
+        source_dir = "{params.source_bins}"
+        output_dir = "{params.output_dir}"
 
-# Check if CheckM2 report exists
-if not os.path.exists(checkm2_file):
-    print(f"CheckM2 report not found: {checkm2_file}")
-    exit(0)
+        # Check if CheckM2 report exists
+        if not os.path.exists(checkm2_file):
+            print(f"CheckM2 report not found: {checkm2_file}")
+            exit(0)
 
-try:
-    df = pd.read_csv(checkm2_file, sep='\t')
-except Exception as e:
-    print(f"Error reading CheckM2 report: {e}")
-    exit(0)
+        try:
+            df = pd.read_csv(checkm2_file, sep='\t')
+        except Exception as e:
+            print(f"Error reading CheckM2 report: {e}")
+            exit(0)
 
-count = 0
-for idx, row in df.iterrows():
-    try:
-        completeness = float(row['Completeness'])
-        contamination = float(row['Contamination'])
-        bin_id = row['Name']
-        
-        # Filter for high quality (>=90% complete, <=5% contamination) 
-        # or medium quality (>=50% complete, <=10% contamination)
-        if (completeness >= 90 and contamination <= 5) or (completeness >= 50 and contamination <= 10):
-            # Find matching bin file
-            for ext in ['.fa', '.fasta', '.fna']:
-                source_file = os.path.join(source_dir, bin_id + ext)
-                if os.path.exists(source_file):
-                    target_file = os.path.join(output_dir, bin_id + ext)
-                    shutil.copy2(source_file, target_file)
-                    count += 1
-                    break
-    except Exception as e:
-        print(f"Error processing bin {bin_id}: {e}")
+        count = 0
+        for idx, row in df.iterrows():
+            try:
+                completeness = float(row['Completeness'])
+                contamination = float(row['Contamination'])
+                bin_id = row['Name']
+                
+                # Filter for high quality (>=90% complete, <=5% contamination) 
+                # or medium quality (>=50% complete, <=10% contamination)
+                if (completeness >= 90 and contamination <= 5) or (completeness >= 50 and contamination <= 10):
+                    # Find matching bin file
+                    for ext in ['.fa', '.fasta', '.fna']:
+                        source_file = os.path.join(source_dir, bin_id + ext)
+                        if os.path.exists(source_file):
+                            target_file = os.path.join(output_dir, bin_id + ext)
+                            shutil.copy2(source_file, target_file)
+                            count += 1
+                            break
+            except Exception as e:
+                print(f"Error processing bin {bin_id}: {e}")
 
-print(f"Filtered {count} HQ/MQ bins for GTDB-Tk analysis")
+        print(f"Filtered {count} HQ/MQ bins for GTDB-Tk analysis")
 
-EOF
+        EOF
         
         touch {output.filtered_done}
         """

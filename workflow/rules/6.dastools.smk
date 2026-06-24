@@ -2,6 +2,7 @@
 Rules to evaluate DAS Tool for building the non-redundant set of bins from the output of the binning tools.
 """
 from glob import glob
+sample_names = [s for s in config["sample_names"].keys() if s != "*"]
 
 rule contigs2bin_individual:
     input:
@@ -33,7 +34,7 @@ rule run_DAS_tool_individual:
         contigs= expand(os.path.join(dir_assembly,"{sample}.megahit.contigs.fa.gz"), sample=sample_names)
     params:
         basename= "dastool",
-        sample= "{sample}",
+        samples= "{sample}",
         temp= os.path.join(dir_binning, "das_tool", "temp"),
         bins_dir= os.path.join(dir_binning, "das_tool", "dastool_DASTool_bins")
     conda:
@@ -44,7 +45,7 @@ rule run_DAS_tool_individual:
     threads: 4
     shell:
         """
-        zcat {input.contigs} | sed '/^>/s/>/>{params.sample}_/'  > {params.temp}.contigs.fa
+        zcat {input.contigs} | sed '/^>/s/>/>{params.samples}_/'  > {params.temp}.contigs.fa
 
         DAS_Tool -i {input.metabat2},{input.vamb} \
             -c {params.temp}.contigs.fa -o {params.basename} --threads {threads} \
