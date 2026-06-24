@@ -10,7 +10,7 @@ rule contigs2bin_individual:
     params:
         metabat2_bin_folder = os.path.join(dir_binning, "all_metabat2_bins"),
         vamb_bin_folder = os.path.join(dir_binning, "all_vamb_bins"),
-        mk = os.path.join(dir_binning,"das_tool", "scaffolds2bin")
+        mk = os.path.join(dir_binning, "das_tool", "scaffolds2bin")
     conda:
         os.path.join(dir_env, "dasttool.yaml")
     localrule: True
@@ -20,13 +20,10 @@ rule contigs2bin_individual:
     shell:
         """
         mkdir -p {params.mk}
-        Fasta_to_Contig2Bin.sh \
-            -i {params.metabat2_bin_folder}/* \
-            -e fa > {output.metabat2}
+        set +e
+        Fasta_to_Contig2Bin.sh -i {params.metabat2_bin_folder}/* -e fa > {output.metabat2}
 
-        Fasta_to_Contig2Bin.sh \
-            -i {params.vamb_bin_folder}/* \
-            -e fasta > {output.vamb}
+        Fasta_to_Contig2Bin.sh -i {params.vamb_bin_folder}/* -e fasta > {output.vamb}
         """
 
 rule run_DAS_tool_individual:
