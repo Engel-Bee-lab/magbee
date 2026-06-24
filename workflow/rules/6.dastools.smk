@@ -19,7 +19,7 @@ rule contigs2bin_individual:
         vamb= os.path.join(dir_binning, "das_tool", "scaffolds2bin", "vamb_scaffolds2bin.tsv")
     shell:
         """
-        mkdir {params.mk}
+        mkdir -p {params.mk}
         Fasta_to_Contig2Bin.sh \
             -i {params.metabat2_bin_folder}/* \
             -e fa > {output.metabat2}
