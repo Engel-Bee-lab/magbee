@@ -33,7 +33,8 @@ rule run_DAS_tool_individual:
         contigs= expand(os.path.join(dir_assembly,"{sample}.megahit.contigs.fa.gz"), sample=sample_names)
     params:
         basename= "dastool",
-        temp= os.path.join(dir_binning, "das_tool", "temp"),
+        temp_contigs = os.path.join(dir_binning, "das_tool", "temp", "combined.contigs.fa"),
+        outdir = os.path.join(dir_binning, "das_tool"),
         bins_dir= os.path.join(dir_binning, "das_tool", "dastool_DASTool_bins")
     conda:
         os.path.join(dir_env, "dasttool.yaml")
@@ -43,10 +44,14 @@ rule run_DAS_tool_individual:
     threads: 4
     shell:
         """
-        zcat {input.contigs} | sed '/^>/s/>/>{wildcards.sample}_/'  > {params.temp}.contigs.fa
+        mkdir -p {params.outdir}/temp
+        
+        # Combine and rename contigs from all samples
+        zcat {input.contigs} | sed '/^>/s/>/&sample_/' > {params.temp_contigs}
 
+        cd {params.outdir}
         DAS_Tool -i {input.metabat2},{input.vamb} \
-            -c {params.temp}.contigs.fa -o {params.basename} --threads {threads} \
+            -c {params.temp_contigs} -o {params.basename} --threads {threads} \
             --labels metabat2,vamb  --write_bin_evals --write_bins
 
         touch {output.bins_done}
