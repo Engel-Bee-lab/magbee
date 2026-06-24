@@ -25,8 +25,11 @@ rule contigs2bin_individual:
 
         Fasta_to_Contig2Bin.sh -i {params.vamb_bin_folder}/* -e fasta > {output.vamb}
         
-        # Post-process to add sample names from bin filenames to first column
-        python3 << 'EOF'
+        # Post-process to add sample names from bin filenames
+        metabat2_file="{output.metabat2}"
+        vamb_file="{output.vamb}"
+        
+        python3 << 'EOFPYTHON'
 import os
 import re
 
@@ -62,9 +65,12 @@ def process_scaffolds2bin(tsv_file):
     with open(tsv_file, 'w') as f:
         f.writelines(processed_lines)
 
-process_scaffolds2bin("{output.metabat2}")
-process_scaffolds2bin("{output.vamb}")
-EOF
+process_scaffolds2bin(os.environ['METABAT2_FILE'])
+process_scaffolds2bin(os.environ['VAMB_FILE'])
+EOFPYTHON
+        
+        export METABAT2_FILE="$metabat2_file"
+        export VAMB_FILE="$vamb_file"
         """
 
 rule run_DAS_tool_individual:
