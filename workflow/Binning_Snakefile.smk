@@ -190,8 +190,8 @@ if config['args']['mode'] == 'individual':
 
         targets['binning'].append(os.path.join(dir_binning, "das_tool", "DASTool_summary.tsv"))
 
-        targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_Metabat2_quality_report.tsv"))
-        targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_VAMB_quality_report.tsv"))
+        #targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_Metabat2_quality_report.tsv"))
+        #targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_VAMB_quality_report.tsv"))
 
         #targets['binning'].append(os.path.join(dir_binning, "{sample}_concoct", "bins", "done.txt").format(sample=sample))
         #targets['binning'].append(os.path.join(dir_binning, "all_conoct_bins", "renamed.txt"))
@@ -199,8 +199,6 @@ if config['args']['mode'] == 'individual':
             
         #targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt"))
         #targets['binning'].append(os.path.join(dir_reports, "gtdbtk_bac120_summary.tsv")),
-
-
 
 elif config['args']['mode'] == 'concatenate':
     for sample in sample_names:
