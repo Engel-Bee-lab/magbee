@@ -43,7 +43,7 @@ rule run_DAS_tool_individual:
     threads: 4
     shell:
         """
-        zcat {input.contigs} | sed '/^>/s/>/>{{wildcards.sample}}_/'  > {params.temp}.contigs.fa
+        zcat {input.contigs} | sed '/^>/s/>/>{wildcards.sample}_/'  > {params.temp}.contigs.fa
 
         DAS_Tool -i {input.metabat2},{input.vamb} \
             -c {params.temp}.contigs.fa -o {params.basename} --threads {threads} \
