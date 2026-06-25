@@ -67,54 +67,6 @@ Commands:
 ```
 
 ### Workflow example commands 
-**run option**
-This command runs all the steps in the whole workflow with `magbee run`.
-
-The options for this command:
-
-    
-    magbee run --help
-    Usage: magbee run [OPTIONS] [SNAKE_ARGS]...
-
-    Run magbee
-
-    Options:
-    --sequencing [paired|longread]  sequencing method  [default: paired]
-    --input PATH                    Directory of reads  [default:
-                                    testReads/paired]
-    --extn PATH                     Reads extension; fastq, fq, fastq.gz
-                                    [default: fastq]
-    --host_seq PATH                 Path to host genome index for host read
-                                    removal
-    --pattern_r1 TEXT               Pattern to identify R1 reads (for paired-end
-                                    data)  [default: _R1]
-    --pattern_r2 TEXT               Pattern to identify R2 reads (for paired-end
-                                    data)  [default: _R2]
-    --contigs PATH                  Assembled contigs
-    --mode [individual|concatenate]
-                                    Backmapping mode: "individual" or
-                                    "concatenate"  [default: concatenate]
-    --bam_folder PATH               Directory of bam files for binning
-    --output PATH                   Output directory  [default: output]
-    --configfile TEXT               Custom config file [default: config.yaml]
-    --threads INTEGER               Number of threads to use  [default: 1]
-    --profile TEXT                  Snakemake profile
-    --db_dir PATH                   Custom database directory
-    --temp-dir TEXT                 Temp directory
-    --snake-default TEXT            Customise Snakemake runtime args  [default:
-                                    --rerun-incomplete, --printshellcmds,
-                                    --nolock, --show-failed-logs]
-    --use-conda BOOLEAN             Use conda for Snakemake rules  [default:
-                                    True]
-    --conda-frontend TEXT           Use mamba for Snakemake rules  [default:
-                                    mamba]
-    --conda-prefix PATH             Custom conda env directory  [default:
-                                    /scratch/bnalaga1/magbee/workflow/conda]
-    -h, --help                      Show this message and exit.
-
-    RUN EXAMPLES 
-    magbee run --input <input directory with reads> --extn fq --pattern_r1 <fastq.gz> --pattern_r2 <fastq.gz> --host_seq <path to host genomes> --sequencing paired --output <output directory> -k
-    
 
 **QC module**
 This command runs the steps for quality control using FastP, and host read removal using Minimap2,  `magbee qc`

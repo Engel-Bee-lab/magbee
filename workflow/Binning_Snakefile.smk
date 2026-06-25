@@ -188,7 +188,7 @@ if config['args']['mode'] == 'individual':
         targets['binning'].append(os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt").format(sample=sample))
         targets['binning'].append(os.path.join(dir_binning, "all_vamb_bins", "done.txt"))
 
-        targets['binning'].append(os.path.join(dir_binning, "das_tool", "dastool_DASTool_summary.txt"))
+        targets['binning_qual'].append(os.path.join(dir_binning, "das_tool", "dastool_DASTool_summary.txt"))
         targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_DASTool_quality_report.tsv"))
 
         #targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_Metabat2_quality_report.tsv"))
@@ -214,4 +214,9 @@ elif config['args']['mode'] == 'concatenate':
 rule all:
     input: 
         targets['binning'],
+        targets['binning_qual']
+
+@targetRule
+rule binning_qual_only:
+    input:
         targets['binning_qual']
