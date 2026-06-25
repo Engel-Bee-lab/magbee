@@ -20,14 +20,10 @@ rule contigs2bin_individual:
     shell:
         """
         mkdir -p {params.mk}
-        SAMPLE={wildcards.sample}
-        
         # Generate TSV and add sample prefix to contig names
-        Fasta_to_Contig2Bin.sh -i {params.metabat2_bin_folder}/* -e fa | \
-            awk -v sample="$SAMPLE" '{{print sample"_"$1"\t"$2}}' > {output.metabat2}
+        Fasta_to_Contig2Bin.sh -i {params.metabat2_bin_folder}/* -e fa > {output.metabat2}
 
-        Fasta_to_Contig2Bin.sh -i {params.vamb_bin_folder}/* -e fasta | \
-            awk -v sample="$SAMPLE" '{{print sample"_"$1"\t"$2}}' > {output.vamb}
+        Fasta_to_Contig2Bin.sh -i {params.vamb_bin_folder}/* -e fasta  > {output.vamb}
         """
 
 rule run_DAS_tool_individual:

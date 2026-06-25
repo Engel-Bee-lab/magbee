@@ -40,6 +40,9 @@ rule one_dir_contigs:
     shell:
         """
         mkdir -p {params.dirs}
-        cp {input.assembly} {params.dirs}/.
+
+        # Add sample name to contig headers and save to temp file
+        awk -v sample="{wildcards.sample}" '/^>/ {{print ">"sample"_"substr($0,2); next}} {{print}}' {input.assembly} > {params.unzip}
+
         gzip {params.unzip}
         """
