@@ -110,6 +110,9 @@ This command runs Metabat2 and VAMB binning tools.
     Binning magbee
 
     Backmapping EXAMPLES 
-    magbee binning --bam_folder <input directory with bamfiles> --contigs <input directory with contigs> --mode concatenate --output <output directory> -k
+    magbee binning --bam_folder <input directory with bamfiles> --contigs <input directory with contigs> --mode individual --output <output directory> -k
 ```
 Note: change --mode individual #for bees, or maybe low richness samples this works best
+
+
+**Binning module**

@@ -169,8 +169,6 @@ include: os.path.join("rules", "7.bins_quality_checkm2.smk")
 include: os.path.join("rules", "7.bin_quality_gtdbtk.smk")
 include: os.path.join("rules", "Final_binning.smk")
 
-
-
 """Mark target rules"""
 target_rules = []
 def targetRule(fn):

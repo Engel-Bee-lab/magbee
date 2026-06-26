@@ -1,0 +1,5 @@
+name: instrain
+channels:
+    - bioconda
+dependencies:
+    - instrain>=1.10.0

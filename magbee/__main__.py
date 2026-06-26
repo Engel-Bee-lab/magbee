@@ -56,6 +56,7 @@ def common_options(func):
         click.option('--contigs', 'contigs', help='Assembled contigs', type=click.Path(), required=False, show_default=True),
         click.option('--mode', 'mode', help='Backmapping mode: "individual" or "concatenate"', type=click.Choice(['individual', 'concatenate']), default='concatenate', show_default=True),
         click.option('--bam_folder', 'bam_folder', help='Directory of bam files for binning', type=click.Path(), required=False, show_default=True),
+        click.option('--bins', 'bins', help='Directory of bins', type=click.Path(), required=False, show_default=True),
         click.option('--output', 'output', help='Output directory', type=click.Path(),
                      default='output', show_default=True),
         click.option("--configfile", default="config.yaml", show_default=False, callback=default_to_output,
@@ -265,7 +266,7 @@ def backmapping(_input, extn, r1, r2, contigs, mode, output, sequencing, temp_di
 
 help_msg_run = """
 \b
-Backmapping EXAMPLES 
+Binning EXAMPLES 
 magbee binning --bam_folder <input directory with bamfiles> --contigs <input directory with contigs> --mode concatenate --output <output directory> -k
 """
 @click.command(epilog=help_msg_run, 
@@ -301,6 +302,47 @@ def binning(bam_folder, contigs, mode, output, temp_dir, configfile, conda_front
         **kwargs
     )
 
+help_msg_run = """
+\b
+Species variation EXAMPLES 
+magbee speciesvar --input <input directory with reads> --extn fq --pattern_r1 <fastq.gz> --pattern_r2 <fastq.gz> --sequencing paired --bins <bins> --output <output directory> -k
+"""
+@click.command(epilog=help_msg_run, 
+    context_settings=dict(help_option_names=["-h", "--help"], ignore_unknown_options=True)
+    )
+
+@common_options
+def speciesvar(_input, extn, r1, r2, bins, sequencing, output, temp_dir, configfile, conda_frontend, **kwargs):
+    """Binning magbee"""
+    copy_config(configfile, system_config=snake_base(os.path.join('config', 'config.yaml')))
+
+    merge_config = {
+        "args": {
+            "input": _input, 
+            "bins": bins, 
+            "extn": extn,
+            "pattern_r1": r1,
+            "pattern_r2": r2,
+            "sequencing": sequencing,
+            "output": output, 
+            "configfile": configfile,
+            "temp_dir": temp_dir,
+        }
+    }
+
+    snake_default = list(kwargs.get('snake_default', []))
+    if conda_frontend and not any('--conda-frontend' in str(arg) for arg in snake_default):
+        snake_default.extend(['--conda-frontend', conda_frontend])
+    kwargs['snake_default'] = tuple(snake_default)
+
+    # run!
+    run_snakemake(
+        snakefile_path=snake_base(os.path.join('workflow', 'SpeciesVariation_Snakefile.smk')),
+        configfile=configfile,
+        merge_config=merge_config,
+        **kwargs
+    )
+
 
 @click.command()
 @click.option('--configfile', default='config.yaml', help='Copy template config to file', show_default=True)
@@ -320,6 +362,7 @@ cli.add_command(qc)
 cli.add_command(assembly)
 cli.add_command(backmapping)
 cli.add_command(binning)
+cli.add_command(speciesvar)
 cli.add_command(config)
 cli.add_command(citation)
 
