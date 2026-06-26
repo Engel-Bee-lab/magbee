@@ -36,9 +36,7 @@ rule quality_mags:
     localrule: True
     shell:
         """
-        python {scripts}/filter_bins.py -i {params.checkm2_dir} -o {params.quality_mags} \
-            --hq_comp 95 --hq_cont 5 \
-            --mq_comp_min 50 --mq_comp_max 90 --mq_cont 10
+        python {scripts}/filter_bins.py -i {params.checkm2_dir} -o {params.quality_mags} -s {params.outdir} --ext .fa
         
         touch {output.quality}
         """

@@ -1,73 +1,71 @@
 import argparse
 import pandas as pd
 from pathlib import Path
+import shutil
+
+
+def copy_bins(names, src_dir, dest_dir, ext=".fa"):
+    dest_dir.mkdir(parents=True, exist_ok=True)
+
+    for name in names:
+        src_file = src_dir / f"{name}{ext}"
+
+        if src_file.exists():
+            shutil.copy2(src_file, dest_dir / src_file.name)
+        else:
+            print(f"[WARN] Missing file: {src_file}")
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Filter bins into HQ, MQ, and ALL based on completeness and contamination"
+        description="Filter bins and copy FASTA files into ALL / HQ / MQ folders"
     )
 
-    parser.add_argument("-i", "--input", required=True, help="Input TSV file (quality_report.tsv)")
-    parser.add_argument("-o", "--outdir", default="filtered_bins", help="Output directory")
-
-    parser.add_argument("--hq_comp", type=float, default=90.0)
-    parser.add_argument("--hq_cont", type=float, default=5.0)
-
-    parser.add_argument("--mq_comp_min", type=float, default=50.0)
-    parser.add_argument("--mq_comp_max", type=float, default=90.0)
-    parser.add_argument("--mq_cont", type=float, default=10.0)
+    parser.add_argument("-i", "--input", required=True, help="quality_report.tsv")
+    parser.add_argument("-o", "--outdir", default="filtered_bins")
+    parser.add_argument("-s", "--src", required=True, help="Directory with bin FASTA files")
+    parser.add_argument("--ext", default=".fa", help="FASTA extension (default .fa)")
 
     args = parser.parse_args()
 
     df = pd.read_csv(args.input, sep="\t")
 
-    # ALL bins (full copy of table)
-    all_bins = df.copy()
-
-    # HQ
-    hq = df[
-        (df["Completeness"] > args.hq_comp) &
-        (df["Contamination"] < args.hq_cont)
-    ].copy()
-
-    # MQ
-    mq = df[
-        (df["Completeness"] >= args.mq_comp_min) &
-        (df["Completeness"] <= args.mq_comp_max) &
-        (df["Contamination"] < args.mq_cont)
-    ].copy()
-
-    # remove HQ from MQ
-    mq = mq.drop(hq.index, errors="ignore")
-
+    src_dir = Path(args.src)
     outdir = Path(args.outdir)
 
+    # ALL / HQ / MQ logic
+    all_bins = df.copy()
+
+    hq = df[(df["Completeness"] > 90) & (df["Contamination"] < 5)].copy()
+
+    mq = df[
+        (df["Completeness"] >= 50) &
+        (df["Completeness"] <= 90) &
+        (df["Contamination"] < 10)
+    ].copy()
+
+    mq = mq.drop(hq.index, errors="ignore")
+
+    # folders
     all_dir = outdir / "ALL"
     hq_dir = outdir / "HQ"
     mq_dir = outdir / "MQ"
 
-    all_dir.mkdir(parents=True, exist_ok=True)
-    hq_dir.mkdir(parents=True, exist_ok=True)
-    mq_dir.mkdir(parents=True, exist_ok=True)
+    # copy files
+    copy_bins(all_bins["Name"], src_dir, all_dir, args.ext)
+    copy_bins(hq["Name"], src_dir, hq_dir, args.ext)
+    copy_bins(mq["Name"], src_dir, mq_dir, args.ext)
 
-    # write full outputs
+    # also write TSV summaries
     all_bins.to_csv(all_dir / "all_bins.tsv", sep="\t", index=False)
-
-    # write filtered outputs
     hq.to_csv(hq_dir / "HQ_bins.tsv", sep="\t", index=False)
     mq.to_csv(mq_dir / "MQ_bins.tsv", sep="\t", index=False)
 
-    # write name lists (useful for downstream processing)
-    all_bins["Name"].to_csv(all_dir / "all_bin_names.txt", index=False, header=False)
-    hq["Name"].to_csv(hq_dir / "HQ_bin_names.txt", index=False, header=False)
-    mq["Name"].to_csv(mq_dir / "MQ_bin_names.txt", index=False, header=False)
-
     print(f"Done:")
-    print(f"  ALL: {len(all_bins)} bins")
-    print(f"  HQ : {len(hq)} bins")
-    print(f"  MQ : {len(mq)} bins")
-    print(f"Output written to: {outdir}")
+    print(f"  ALL bins: {len(all_bins)}")
+    print(f"  HQ bins : {len(hq)}")
+    print(f"  MQ bins : {len(mq)}")
+    print(f"Output: {outdir}")
 
 
 if __name__ == "__main__":
