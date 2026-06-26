@@ -18,26 +18,24 @@ def copy_bins(names, src_dir, dest_dir, ext=".fa"):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Filter bins and copy FASTA files into ALL / HQ / MQ folders"
+        description="Filter bins into HQ, MQ and ALL (HQ+MQ only) and copy FASTA files"
     )
 
-    parser.add_argument("-i", "--input", required=True, help="quality_report.tsv")
+    parser.add_argument("-i", "--input", required=True)
     parser.add_argument("-o", "--outdir", default="filtered_bins")
-    parser.add_argument("-s", "--src", required=True, help="Directory with bin FASTA files")
-    parser.add_argument("--ext", default=".fa", help="FASTA extension (default .fa)")
+    parser.add_argument("-s", "--src", required=True)
+    parser.add_argument("--ext", default=".fa")
 
     args = parser.parse_args()
 
     df = pd.read_csv(args.input, sep="\t")
-
     src_dir = Path(args.src)
     outdir = Path(args.outdir)
 
-    # ALL / HQ / MQ logic
-    all_bins = df.copy()
-
+    # HQ
     hq = df[(df["Completeness"] > 90) & (df["Contamination"] < 5)].copy()
 
+    # MQ
     mq = df[
         (df["Completeness"] >= 50) &
         (df["Completeness"] <= 90) &
@@ -46,25 +44,28 @@ def main():
 
     mq = mq.drop(hq.index, errors="ignore")
 
+    # ALL = union of HQ + MQ ONLY
+    all_bins = pd.concat([hq, mq]).drop_duplicates()
+
     # folders
     all_dir = outdir / "ALL"
     hq_dir = outdir / "HQ"
     mq_dir = outdir / "MQ"
 
-    # copy files
-    copy_bins(all_bins["Name"], src_dir, all_dir, args.ext)
+    # copy FASTAs
     copy_bins(hq["Name"], src_dir, hq_dir, args.ext)
     copy_bins(mq["Name"], src_dir, mq_dir, args.ext)
+    copy_bins(all_bins["Name"], src_dir, all_dir, args.ext)
 
-    # also write TSV summaries
-    all_bins.to_csv(all_dir / "all_bins.tsv", sep="\t", index=False)
+    # write TSVs
     hq.to_csv(hq_dir / "HQ_bins.tsv", sep="\t", index=False)
     mq.to_csv(mq_dir / "MQ_bins.tsv", sep="\t", index=False)
+    all_bins.to_csv(all_dir / "ALL_bins.tsv", sep="\t", index=False)
 
-    print(f"Done:")
-    print(f"  ALL bins: {len(all_bins)}")
-    print(f"  HQ bins : {len(hq)}")
-    print(f"  MQ bins : {len(mq)}")
+    print("Done:")
+    print(f"  HQ : {len(hq)}")
+    print(f"  MQ : {len(mq)}")
+    print(f"  ALL (HQ+MQ): {len(all_bins)}")
     print(f"Output: {outdir}")
 
 
