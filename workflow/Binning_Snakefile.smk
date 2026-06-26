@@ -165,8 +165,11 @@ include: os.path.join("rules", "5.vamb.smk")
 #include: os.path.join("rules", "5.semibin.smk")
 #include: os.path.join("rules", "5.comebin.smk")
 include: os.path.join("rules", "6.dastools.smk")
-
 include: os.path.join("rules", "7.bins_quality_checkm2.smk")
+include: os.path.join("rules", "7.bin_quality_gtdbtk.smk")
+include: os.path.join("rules", "Final_binning.smk")
+
+
 
 """Mark target rules"""
 target_rules = []
@@ -188,18 +191,12 @@ if config['args']['mode'] == 'individual':
         targets['binning'].append(os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt").format(sample=sample))
         targets['binning'].append(os.path.join(dir_binning, "all_vamb_bins", "done.txt"))
 
-        targets['binning_qual'].append(os.path.join(dir_binning, "das_tool", "dastool_DASTool_summary.txt"))
-        #targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_DASTool_quality_report.tsv"))
-
-        #targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_Metabat2_quality_report.tsv"))
-        #targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_VAMB_quality_report.tsv"))
-
-        #targets['binning'].append(os.path.join(dir_binning, "{sample}_concoct", "bins", "done.txt").format(sample=sample))
-        #targets['binning'].append(os.path.join(dir_binning, "all_conoct_bins", "renamed.txt"))
-        #targets['binning_qual'].append(os.path.join(dir_reports, "checkm2_all", "CheckM2_CONCOCT_quality_report.tsv"))
-            
-        #targets['binning'].append(os.path.join(dir_binning, "gtdbtk_output", "done.txt"))
-        #targets['binning'].append(os.path.join(dir_reports, "gtdbtk_bac120_summary.tsv")),
+        targets['binning_qual'].append(os.path.join(dir_binning, "das_tool", "dastool_DASTool_summary.tsv"))
+        targets['binning_qual'].append(os.path.join(dir_reports, "CheckM2_DASTool_quality_report.tsv"))
+        targets['binning_qual'].append(os.path.join(dir_reports, "gtdbtk_dastools_bac120_summary.tsv"))
+        targets['binning_qual'].append(os.path.join(dir_reports, "gtdbtk_dastools_ar53_summary.tsv"))
+        targets['binning_qual'].append(os.path.join(dir_reports, "bins.done"))
+        targets['binning_qual'].append(os.path.join(dir_reports, "quality_mags.done"))
 
 elif config['args']['mode'] == 'concatenate':
     for sample in sample_names:
