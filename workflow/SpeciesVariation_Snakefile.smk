@@ -93,6 +93,7 @@ if config['args']['sequencing'] == 'paired':
 
     config["sample_names"] = paired_samples
     sample_names = list(paired_samples.keys())
+    print(f"[DEBUG] sample names: {sample_names}")
     #print(f"Sample inputs: {paired_samples}")
 
 """
@@ -119,6 +120,7 @@ def extract_mag_name(bin_file):
     return name
 
 mags = sorted({extract_mag_name(f) for f in bin_files})
+print(f"[DEBUG] mags: {mags}")
 
 
 dir_reports = os.path.join(dir_out, 'REPORTS')
