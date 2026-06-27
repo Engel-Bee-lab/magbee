@@ -138,6 +138,14 @@ dir_species = os.path.join(dir_out, 'PROCESSING' ,'6_species_variation')
 include: os.path.join("rules", "8.drep.smk")
 include: os.path.join("rules", "9.instrain.smk")
 
+"""Mark target rules"""
+target_rules = []
+
+def targetRule(fn):
+    assert fn.__name__.startswith('__')
+    target_rules.append(fn.__name__[2:])
+    return fn
+
 """
 Defining the targets dictionary
 """
