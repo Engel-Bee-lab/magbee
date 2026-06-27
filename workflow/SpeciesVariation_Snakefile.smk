@@ -31,6 +31,7 @@ else:
 #declaring some the base directories
 dir_env = os.path.join(workflow.basedir,"envs")
 dir_script = os.path.join(workflow.basedir,"scripts")
+dir_hostcleaned = config['args']['input']
 
 """
 Check input read files (same approach as Assembly_Snakefile)
@@ -136,15 +137,6 @@ dir_species = os.path.join(dir_out, 'PROCESSING' ,'6_species_variation')
 """Rules"""
 include: os.path.join("rules", "8.drep.smk")
 include: os.path.join("rules", "9.instrain.smk")
-
-"""
-Declaring directories for each step
-"""
-#making directories for each step
-#Saving most of the files to PROCESSING, sine they are intermediate files
-#dir_assembly = os.path.join(dir_out, 'PROCESSING' ,'3_coassembly')
-dir_hostcleaned= input_dir
-dir_species = os.path.join(dir_out, 'PROCESSING' ,'6_species_variation')
 
 """
 Defining the targets dictionary
