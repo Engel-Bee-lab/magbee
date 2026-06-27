@@ -7,7 +7,6 @@ rule drep_dastool_bins:
         quality=os.path.join(dir_reports, "quality_mags.done")
     output:
         drep_dir = os.path.join(dir_species, "drep_dastool", "done.txt"),
-        samples= os.path.join(dir_species, "{mag}_bams", "{sample}.bam"),
     params:
         quality_mags=os.path.join(dir_reports, "quality_mags"),
         genomes_dir = os.path.join(dir_species, "drep_dastools"),
