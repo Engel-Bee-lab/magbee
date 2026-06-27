@@ -12,7 +12,7 @@ wildcard_constraints:
 
 rule map_reads2mags:
     input:
-        drep_dir = os.path.join(dir_species, "drep_dastool", "done.txt"),
+        drep_dir = os.path.join(dir_species, "drep_dastools", "done.txt"),
         r1 = os.path.join(dir_hostcleaned,"{sample}_R1.hostcleaned.fastq.gz"),
         r2 = os.path.join(dir_hostcleaned,"{sample}_R2.hostcleaned.fastq.gz")
     params:

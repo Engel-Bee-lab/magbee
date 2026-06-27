@@ -6,7 +6,7 @@ rule drep_dastool_bins:
     input:
         bins=bin_files
     output:
-        drep_dir = os.path.join(dir_species, "drep_dastool", "done.txt"),
+        drep_dir = os.path.join(dir_species, "drep_dastools", "done.txt"),
     params:
         genomes_dir = os.path.join(dir_species, "drep_dastools"),
     conda:

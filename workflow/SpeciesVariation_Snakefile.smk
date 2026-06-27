@@ -151,7 +151,7 @@ def targetRule(fn):
 Defining the targets dictionary
 """
 targets ={'derep':[], 'speciesVar':[]}
-targets['derep'].append(os.path.join(dir_species, "drep_dastool", "done.txt"))
+targets['derep'].append(os.path.join(dir_species, "drep_dastools", "done.txt"))
 
 @targetRule
 rule all:
