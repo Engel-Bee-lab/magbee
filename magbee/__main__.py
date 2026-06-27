@@ -310,10 +310,11 @@ magbee speciesvar --input <input directory with reads> --extn fq --pattern_r1 <f
 @click.command(epilog=help_msg_run, 
     context_settings=dict(help_option_names=["-h", "--help"], ignore_unknown_options=True)
     )
+@click.option('--sequencing', 'sequencing', help="sequencing method", default='paired', show_default=True, type=click.Choice(['paired', 'longread']))
 
 @common_options
 def speciesvar(_input, extn, r1, r2, bins, sequencing, output, temp_dir, configfile, conda_frontend, **kwargs):
-    """Binning magbee"""
+    """Species variation in MAGS magbee"""
     copy_config(configfile, system_config=snake_base(os.path.join('config', 'config.yaml')))
 
     merge_config = {
