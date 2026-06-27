@@ -135,6 +135,7 @@ dir_reports = os.path.join(dir_out, 'REPORTS')
 dir_species = os.path.join(dir_out, 'PROCESSING' ,'6_species_variation')
 
 """Rules"""
+include: os.path.join("rules", "Final_binning.smk")
 include: os.path.join("rules", "8.drep.smk")
 include: os.path.join("rules", "9.instrain.smk")
 
