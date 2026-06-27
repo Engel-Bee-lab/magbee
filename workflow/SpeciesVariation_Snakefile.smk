@@ -36,56 +36,64 @@ dir_script = os.path.join(workflow.basedir,"scripts")
 Check input read files (same approach as Assembly_Snakefile)
 """
 input_dir = config['args']['input']
-extn = config['args']['extn']
 
-sample = []
+# List of file paths matching the pattern
+#replace R1 to 1 for SRA reads
+extn=config['args']['extn']
 
 if config['args']['sequencing'] == 'paired':
 
     pattern_r1 = config['args']['pattern_r1']
     pattern_r2 = config['args']['pattern_r2']
 
+    # Step 1: Find files
     r1_files = glob.glob(os.path.join(input_dir, f"*{pattern_r1}*.{extn}"))
     r2_files = glob.glob(os.path.join(input_dir, f"*{pattern_r2}*.{extn}"))
 
     if not r1_files or not r2_files:
         raise ValueError("No R1 or R2 files found.")
 
+    # Step 2: Build mapping
     sample_inputs = {}
 
     def extract_sample_name(filename, ext, pattern_r1, pattern_r2):
         name = os.path.basename(filename)
-
+        
+        # remove extension
         if name.endswith(f".{ext}"):
             name = name[:-(len(ext) + 1)]
-
+        
+        # determine which pattern is at the end
         if name.endswith(pattern_r1):
-            sample_name = name.rsplit(pattern_r1, 1)[0]
+            sample = name.rsplit(pattern_r1, 1)[0]
         elif name.endswith(pattern_r2):
-            sample_name = name.rsplit(pattern_r2, 1)[0]
+            sample = name.rsplit(pattern_r2, 1)[0]
         else:
             raise ValueError(f"File does not end with R1/R2 pattern: {filename}")
-
-        return sample_name
-
+        
+        return sample
+            
     for f in r1_files:
-        sample_name = extract_sample_name(f, extn, pattern_r1, pattern_r2)
-        sample_inputs.setdefault(sample_name, {})["r1"] = f
+        sample = extract_sample_name(f, extn, pattern_r1, pattern_r2)
+        sample_inputs.setdefault(sample, {})["r1"] = f
 
     for f in r2_files:
-        sample_name = extract_sample_name(f, extn, pattern_r1, pattern_r2)
-        sample_inputs.setdefault(sample_name, {})["r2"] = f
+        sample = extract_sample_name(f, extn, pattern_r1, pattern_r2)
+        sample_inputs.setdefault(sample, {})["r2"] = f
 
+    # Step 3: Validate pairs
     paired_samples = {}
 
-    for sample_name, reads in sample_inputs.items():
+    for sample, reads in sample_inputs.items():
+        print (sample, reads)
         if "r1" in reads and "r2" in reads:
-            paired_samples[sample_name] = reads
+            paired_samples[sample] = reads
         else:
-            raise ValueError(f"Missing pair for sample {sample_name}")
+            raise ValueError(f"Missing pair for sample {sample}")
 
     config["sample_names"] = paired_samples
-    sample = sorted(paired_samples.keys())
+    sample_names = list(paired_samples.keys())
+    #print(f"Sample inputs: {paired_samples}")
 
 """
 Check bins and collect MAG names
@@ -124,7 +132,6 @@ include: os.path.join("rules", "9.instrain.smk")
 Defining the targets dictionary
 """
 targets ={'derep':[], 'speciesVar':[]}
-
 targets['derep'].append(os.path.join(dir_species, "drep_dastool", "done.txt"))
 
 
