@@ -58,10 +58,17 @@ if config['args']['sequencing'] == 'paired':
 
     def extract_sample_name(filename, ext, pattern_r1, pattern_r2):
         name = os.path.basename(filename)
-        
-        # remove extension
-        if name.endswith(f".{ext}"):
-            name = name[:-(len(ext) + 1)]
+
+        # remove common read suffixes before matching the read pattern
+        suffixes = [f".{ext}", ".fastq", ".fq", ".hostcleaned", ".trimmed"]
+        changed = True
+        while changed:
+            changed = False
+            for suffix in suffixes:
+                if name.endswith(suffix):
+                    name = name[: -len(suffix)]
+                    changed = True
+                    break
         
         # determine which pattern is at the end
         if name.endswith(pattern_r1):
