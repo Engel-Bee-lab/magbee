@@ -49,5 +49,5 @@ args:
 
 databases:
   checkm2_db: /work/FAC/FBM/DMF/pengel/general_data/common_databases/checkm2/CheckM2_database
-  gtdbtk_db: /work/FAC/FBM/DMF/pengel/general_data/common_databases/gtdb/release226
+  gtdbtk_db: /work/FAC/FBM/DMF/pengel/general_data/common_databases/gtdb/release232
   checkm_db: /work/FAC/FBM/DMF/pengel/general_data/common_databases/checkm
