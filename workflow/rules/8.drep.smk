@@ -4,7 +4,7 @@ DRep dereplication of metabat2 bins
 """
 rule drep_dastool_bins:
     input:
-        bins=bin_files
+        bins=bins_dir
     output:
         drep_dir = os.path.join(dir_species, "drep_dastools", "done.txt"),
     params:
@@ -21,6 +21,6 @@ rule drep_dastool_bins:
         set -euo pipefail
         mkdir -p {params.genomes_dir}
         # run dRep on the copied genomes
-        dRep dereplicate {params.genomes_dir} -g {params.genomes_dir} -comp 0 -con 1000 --clusterAlg average -p {threads}
+        dRep dereplicate {params.genomes_dir} -g {input.bins} -comp 0 -con 1000 --clusterAlg average -p {threads}
         touch {output.drep_dir}
         """

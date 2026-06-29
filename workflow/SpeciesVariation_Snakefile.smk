@@ -112,34 +112,6 @@ Check bins and collect MAG names
 """
 bins_dir = config['args']['bins']
 
-if not bins_dir or not os.path.isdir(bins_dir):
-    raise ValueError(f"Bins directory not found: {bins_dir}")
-
-bin_files = (
-    glob.glob(os.path.join(bins_dir, "*.fa")) +
-    glob.glob(os.path.join(bins_dir, "*.fasta")) +
-    glob.glob(os.path.join(bins_dir, "*.fa.gz")) +
-    glob.glob(os.path.join(bins_dir, "*.fasta.gz"))
-)
-
-if not bin_files:
-    raise ValueError(f"No bin files found in: {bins_dir}")
-
-def extract_mag_name(bin_file):
-    name = os.path.basename(bin_file)
-    name = re.sub(r'\.(fa|fasta)(\.gz)?$', '', name)
-    return name
-
-drep_genomes_dir = os.path.join(dir_species, "drep_dastools", "dereplicated_genomes")
-drep_bin_files = (
-    glob.glob(os.path.join(drep_genomes_dir, "*.fa")) +
-    glob.glob(os.path.join(drep_genomes_dir, "*.fasta")) +
-    glob.glob(os.path.join(drep_genomes_dir, "*.fa.gz")) +
-    glob.glob(os.path.join(drep_genomes_dir, "*.fasta.gz"))
-)
-
-mags = sorted({extract_mag_name(f) for f in drep_bin_files})
-print(f"[DEBUG] mags: {mags}")
 
 """Rules"""
 include: os.path.join("rules", "8.drep.smk")
