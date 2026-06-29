@@ -32,6 +32,9 @@ else:
 dir_env = os.path.join(workflow.basedir,"envs")
 dir_script = os.path.join(workflow.basedir,"scripts")
 dir_hostcleaned = config['args']['input']
+dir_reports = os.path.join(dir_out, 'REPORTS')
+dir_species = os.path.join(dir_out, 'PROCESSING' ,'6_species_variation')
+dir_binning = os.path.join(dir_out, 'PROCESSING' ,'5_binning')
 
 """
 Check input read files (same approach as Assembly_Snakefile)
@@ -101,7 +104,7 @@ if config['args']['sequencing'] == 'paired':
 
     config["sample_names"] = paired_samples
     sample_names = list(paired_samples.keys())
-    print(f"[DEBUG] sample names: {sample_names}")
+    #print(f"[DEBUG] sample names: {sample_names}")
     #print(f"Sample inputs: {paired_samples}")
 
 """
@@ -127,17 +130,20 @@ def extract_mag_name(bin_file):
     name = re.sub(r'\.(fa|fasta)(\.gz)?$', '', name)
     return name
 
-mags = sorted({extract_mag_name(f) for f in bin_files})
+drep_genomes_dir = os.path.join(dir_species, "drep_dastools", "dereplicated_genomes")
+drep_bin_files = (
+    glob.glob(os.path.join(drep_genomes_dir, "*.fa")) +
+    glob.glob(os.path.join(drep_genomes_dir, "*.fasta")) +
+    glob.glob(os.path.join(drep_genomes_dir, "*.fa.gz")) +
+    glob.glob(os.path.join(drep_genomes_dir, "*.fasta.gz"))
+)
+
+mags = sorted({extract_mag_name(f) for f in drep_bin_files})
 print(f"[DEBUG] mags: {mags}")
-
-
-dir_reports = os.path.join(dir_out, 'REPORTS')
-dir_species = os.path.join(dir_out, 'PROCESSING' ,'6_species_variation')
-dir_binning = os.path.join(dir_out, 'PROCESSING' ,'5_binning')
 
 """Rules"""
 include: os.path.join("rules", "8.drep.smk")
-include: os.path.join("rules", "9.instrain.smk")
+#include: os.path.join("rules", "9.instrain.smk")
 
 """Mark target rules"""
 target_rules = []
