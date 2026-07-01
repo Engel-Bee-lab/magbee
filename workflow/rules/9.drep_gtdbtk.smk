@@ -1,6 +1,8 @@
 """
-This rule is in progress. 
-My idea is to add this in once I have a output I am happy with. 
+Moved gtdbtk here after dereplication to avoid running gtdbtk on redundant bins. Also pplacer 
+doesnt scale well with many bins, so this is a good way to reduce the number of bins that need to be placed.
+
+This rule does run bins in batches if there are more than 100 bins even after derep 
 """
 import os
 import glob
@@ -12,32 +14,68 @@ import math
 
 BATCH_SIZE = 100
 
-dastool_bins_dir = os.path.join(dir_binning, "das_tool", "dastool_DASTool_bins")
+derep_bins_dir = os.path.join(dir_species, "drep_dastools", "dereplicated_genomes")
 
 # Computed once, at parse time, from whatever is on disk right now.
 # If dastool_bins_dir doesn't exist yet, this falls back to 1 batch so the
 # DAG can still build -- you'll need to re-run snakemake after das_tool
 # finishes to pick up the real file count.
-if os.path.isdir(dastool_bins_dir):
-    _fa_files = sorted(glob.glob(os.path.join(dastool_bins_dir, "*.fa")))
+if os.path.isdir(derep_bins_dir):
+    _fa_files = sorted(glob.glob(os.path.join(derep_bins_dir, "*.fa*")))
     NUM_BATCHES = max(1, math.ceil(len(_fa_files) / BATCH_SIZE))
 else:
     NUM_BATCHES = 1
 
 def get_batch_files(batch_num, batch_size=BATCH_SIZE):
-    fa_files = sorted(glob.glob(os.path.join(dastool_bins_dir, "*.fa")))
+    fa_files = sorted(glob.glob(os.path.join(dastool_bins_dir, "*.fa*")))
     start = batch_num * batch_size
     return fa_files[start:start + batch_size]
 
 
+rule format_extn:
+    input:
+        summary = os.path.join(dir_species, "drep_dastools", "done.txt"),
+    output:
+        formatted = os.path.join(dir_temp, "reformatted_dastool_bin_extn.txt")
+    params:
+        derep_bins_dir = os.path.join(dir_species, "drep_dastools", "dereplicated_genomes")
+    localrule: True
+    shell:
+        """
+        set -euo pipefail
+
+        for f in {params.derep_bins_dir}/*; do
+            case "$f" in
+                *.fasta.gz)
+                    newname="${{f%.fasta.gz}}.fa"
+                    gunzip -c "$f" > "$newname"
+                    rm "$f"
+                    ;;
+                *.fa.gz)
+                    newname="${{f%.fa.gz}}.fa"
+                    gunzip -c "$f" > "$newname"
+                    rm "$f"
+                    ;;
+                *.fasta)
+                    mv "$f" "${{f%.fasta}}.fa"
+                    ;;
+                *.fa)
+                    : # already correct
+                    ;;
+            esac
+        done
+
+        touch {output.formatted}
+        """
+
 rule gtdbtk_dastool_batch:
     input:
-        summary = os.path.join(dir_binning, "das_tool", "dastool_DASTool_summary.tsv"),
+        summary = os.path.join(dir_species, "drep_dastools", "done.txt"),
     output:
-        bac_summary = os.path.join(dir_binning, "gtdbtk_output_dastool", "batch_{batch_num}", "classify", "gtdbtk.bac120.summary.tsv"),
-        ar_summary  = os.path.join(dir_binning, "gtdbtk_output_dastool", "batch_{batch_num}", "classify", "gtdbtk.ar53.summary.tsv"),
+        bac_summary = os.path.join(dir_species, "gtdbtk_output_derep", "batch_{batch_num}", "classify", "gtdbtk.bac120.summary.tsv"),
+        ar_summary  = os.path.join(dir_species, "gtdbtk_output_derep", "batch_{batch_num}", "classify", "gtdbtk.ar53.summary.tsv"),
     params:
-        outdir      = lambda wc: os.path.join(dir_binning, "gtdbtk_output_dastool", f"batch_{wc.batch_num}"),
+        outdir      = lambda wc: os.path.join(dir_species, "gtdbtk_output_derep", f"batch_{wc.batch_num}"),
         database    = config["databases"]["gtdbtk_db"],
         batch_files = lambda wc: get_batch_files(int(wc.batch_num)),
     conda:
@@ -73,17 +111,16 @@ rule gtdbtk_dastool_batch:
 rule combine_gtdbtk_results:
     input:
         bac_summaries = expand(
-            os.path.join(dir_binning, "gtdbtk_output_dastool", "batch_{batch_num}", "classify", "gtdbtk.bac120.summary.tsv"),
+            os.path.join(dir_species, "gtdbtk_output_derep", "batch_{batch_num}", "classify", "gtdbtk.bac120.summary.tsv"),
             batch_num=range(NUM_BATCHES),
         ),
         ar_summaries = expand(
-            os.path.join(dir_binning, "gtdbtk_output_dastool", "batch_{batch_num}", "classify", "gtdbtk.ar53.summary.tsv"),
+            os.path.join(dir_species, "gtdbtk_output_derep", "batch_{batch_num}", "classify", "gtdbtk.ar53.summary.tsv"),
             batch_num=range(NUM_BATCHES),
         ),
     output:
-        combined_bac = os.path.join(dir_binning, "gtdbtk_output_dastool", "gtdbtk.bac120.summary.tsv"),
-        combined_ar  = os.path.join(dir_binning, "gtdbtk_output_dastool", "gtdbtk.ar53.summary.tsv"),
-        done         = os.path.join(dir_binning, "gtdbtk_output_dastool", "done.txt"),
+        combined_bac = os.path.join(dir_reports, "gtdbtk_output_derep", "gtdbtk.bac120.summary.tsv"),
+        combined_ar = os.path.join(dir_reports, "gtdbtk_output_derep", "gtdbtk.ar53.summary.tsv"),
     run:
         def merge(files, out_path):
             with open(out_path, "w") as out_f:

@@ -166,7 +166,6 @@ include: os.path.join("rules", "5.vamb.smk")
 #include: os.path.join("rules", "5.comebin.smk")
 include: os.path.join("rules", "6.dastools.smk")
 include: os.path.join("rules", "7.bins_quality_checkm2.smk")
-include: os.path.join("rules", "7.bin_quality_gtdbtk.smk")
 include: os.path.join("rules", "Final_binning.smk")
 
 """Mark target rules"""
@@ -191,8 +190,7 @@ if config['args']['mode'] == 'individual':
 
         targets['binning_qual'].append(os.path.join(dir_binning, "das_tool", "dastool_DASTool_summary.tsv"))
         targets['binning_qual'].append(os.path.join(dir_reports, "CheckM2_DASTool_quality_report.tsv"))
-        targets['binning_qual'].append(os.path.join(dir_reports, "gtdbtk_dastools_bac120_summary.tsv"))
-        targets['binning_qual'].append(os.path.join(dir_reports, "gtdbtk_dastools_ar53_summary.tsv"))
+
         targets['binning_qual'].append(os.path.join(dir_reports, "bins.done"))
         targets['binning_qual'].append(os.path.join(dir_reports, "quality_mags.done"))
 
