@@ -131,8 +131,8 @@ Defining the targets dictionary
 """
 targets ={'derep':[], 'speciesVar':[]}
 targets['derep'].append(os.path.join(dir_species, "drep_dastools", "done.txt"))
-targets['derep'].append(os.path.join(dir_reports, "gtdbtk_output_derep", "gtdbtk_derep_bac120_summary.tsv"))
-targets['derep'].append(os.path.join(dir_reports, "gtdbtk_output_derep", "gtdbtk_derep_bac120_summary.tsv"))
+targets['derep'].append(os.path.join(dir_reports, "gtdbtk_output_derep", "gtdbtk.bac120.summary.tsv"))
+targets['derep'].append(os.path.join(dir_reports, "gtdbtk_output_derep", "ggtdbtk.ar53.summary.tsv"))
 
 @targetRule
 rule all:
