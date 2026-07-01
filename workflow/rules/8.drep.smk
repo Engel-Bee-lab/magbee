@@ -24,3 +24,4 @@ rule drep_dastool_bins:
         dRep dereplicate {params.genomes_dir} -g {input.bins}/* -comp 0 -con 1000 --clusterAlg average -p {threads}
         touch {output.drep_dir}
         """
+        
