@@ -12,10 +12,10 @@ rule drep_dastool_bins:
     conda:
         os.path.join(dir_env, "drep.yaml")
     resources:
-        mem_mb  = config['resources']['bigjob']['mem_mb'],
-        runtime = config['resources']['bigjob']['runtime']
+        mem_mb  = config['resources']['big_longjob']['mem_mb'],
+        runtime = config['resources']['big_longjob']['runtime']
     threads:
-        config['resources']['bigjob']['threads']
+        config['resources']['big_longjob']['threads']
     shell:
         """
         set -euo pipefail
