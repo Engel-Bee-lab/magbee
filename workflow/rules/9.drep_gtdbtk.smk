@@ -17,7 +17,7 @@ BATCH_SIZE = 100
 derep_bins_dir = os.path.join(dir_species, "drep_dastools", "dereplicated_genomes")
 
 # Computed once, at parse time, from whatever is on disk right now.
-# If dastool_bins_dir doesn't exist yet, this falls back to 1 batch so the
+# If derep_bins_dir doesn't exist yet, this falls back to 1 batch so the
 # DAG can still build -- you'll need to re-run snakemake after das_tool
 # finishes to pick up the real file count.
 if os.path.isdir(derep_bins_dir):
@@ -27,7 +27,7 @@ else:
     NUM_BATCHES = 1
 
 def get_batch_files(batch_num, batch_size=BATCH_SIZE):
-    fa_files = sorted(glob.glob(os.path.join(dastool_bins_dir, "*.fa*")))
+    fa_files = sorted(glob.glob(os.path.join(derep_bins_dir, "*.fa*")))
     start = batch_num * batch_size
     return fa_files[start:start + batch_size]
 
@@ -73,15 +73,15 @@ rule gtdbtk_dastool_batch:
         summary = os.path.join(dir_species, "drep_dastools", "done.txt"),
     output:
         bac_summary = os.path.join(dir_species, "gtdbtk_output_derep", "batch_{batch_num}", "classify", "gtdbtk.bac120.summary.tsv"),
-        ar_summary  = os.path.join(dir_species, "gtdbtk_output_derep", "batch_{batch_num}", "classify", "gtdbtk.ar53.summary.tsv"),
+        ar_summary = os.path.join(dir_species, "gtdbtk_output_derep", "batch_{batch_num}", "classify", "gtdbtk.ar53.summary.tsv"),
     params:
-        outdir      = lambda wc: os.path.join(dir_species, "gtdbtk_output_derep", f"batch_{wc.batch_num}"),
-        database    = config["databases"]["gtdbtk_db"],
+        outdir = lambda wc: os.path.join(dir_species, "gtdbtk_output_derep", f"batch_{wc.batch_num}"),
+        database = config["databases"]["gtdbtk_db"],
         batch_files = lambda wc: get_batch_files(int(wc.batch_num)),
     conda:
         os.path.join(dir_env, "gtdbtk.yaml")
     resources:
-        mem_mb  = config['resources']['assemblyjob']['mem_mb'],
+        mem_mb = config['resources']['assemblyjob']['mem_mb'],
         runtime = config['resources']['assemblyjob']['runtime'],
     threads:
         config['resources']['assemblyjob']['threads']
