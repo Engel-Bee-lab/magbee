@@ -33,8 +33,8 @@ dir_env = os.path.join(workflow.basedir,"envs")
 dir_script = os.path.join(workflow.basedir,"scripts")
 dir_hostcleaned = config['args']['input']
 dir_reports = os.path.join(dir_out, 'REPORTS')
-dir_species = os.path.join(dir_out, 'PROCESSING' ,'6_species_variation')
 dir_binning = os.path.join(dir_out, 'PROCESSING' ,'5_binning')
+dir_species = os.path.join(dir_out, 'PROCESSING' ,'6_species_variation')
 
 """
 Check input read files (same approach as Assembly_Snakefile)
@@ -115,6 +115,7 @@ bins_dir = config['args']['bins']
 
 """Rules"""
 include: os.path.join("rules", "8.drep.smk")
+include: os.path.join("rules", "9.drep_gtdbtk.smk")
 #include: os.path.join("rules", "9.instrain.smk")
 
 """Mark target rules"""
