@@ -21,7 +21,8 @@ rule drep_dastool_bins:
         set -euo pipefail
         mkdir -p {params.genomes_dir}
         # run dRep on the copied genomes
-        dRep dereplicate {params.genomes_dir} -g {input.bins}/* -comp 0 -con 1000 --clusterAlg average -p {threads}
+        # --ignoreGenomeQuality: ignore the quality of the genomes and cluster them anywaw since Checkm2 was already run
+        dRep dereplicate {params.genomes_dir} -g {input.bins}/* --ignoreGenomeQuality --clusterAlg average -p {threads}
         touch {output.drep_dir}
         """
         
