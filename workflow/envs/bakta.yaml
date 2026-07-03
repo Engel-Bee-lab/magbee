@@ -1,0 +1,5 @@
+name: bakta
+channels:
+    - bioconda
+dependencies:
+    - bakta>=1.12.0

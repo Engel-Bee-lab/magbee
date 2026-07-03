@@ -116,6 +116,7 @@ bins_dir = config['args']['bins']
 """Rules"""
 include: os.path.join("rules", "8.drep.smk")
 include: os.path.join("rules", "9.drep_gtdbtk.smk")
+include: os.path.join("rules", "10.bakta.smk")
 #include: os.path.join("rules", "9.instrain.smk")
 
 """Mark target rules"""
@@ -133,6 +134,7 @@ targets ={'derep':[], 'speciesVar':[]}
 targets['derep'].append(os.path.join(dir_species, "drep_dastools", "done.txt"))
 targets['derep'].append(os.path.join(dir_reports, "gtdbtk_output_derep", "gtdbtk.bac120.summary.tsv"))
 targets['derep'].append(os.path.join(dir_reports, "gtdbtk_output_derep", "gtdbtk.ar53.summary.tsv"))
+targets['speciesVar'].append(os.path.join(dir_species, "bakta", "done.txt"))
 
 @targetRule
 rule all:
