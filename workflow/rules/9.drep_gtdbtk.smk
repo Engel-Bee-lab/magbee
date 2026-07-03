@@ -68,24 +68,39 @@ rule gtdbtk_dastool_batch:
         gtdbtk classify --genome_dir "$BATCHDIR" --out_dir {params.outdir}/classify --cpus {threads} -x fasta -f --align_dir {params.outdir}/align
 
         #rm -rf "$BATCHDIR"
+
+        touch {output.bac_summary}
+        touch {output.ar_summary}
         """
 
 
 rule combine_gtdbtk_results:
     input:
-        bac_summaries = expand(
-            os.path.join(dir_species, "gtdbtk_output_derep", "batch_{batch_num}", "classify", "gtdbtk.bac120.summary.tsv"),
-            batch_num=range(NUM_BATCHES),
-        ),
-        ar_summaries = expand(
-            os.path.join(dir_species, "gtdbtk_output_derep", "batch_{batch_num}", "classify", "gtdbtk.ar53.summary.tsv"),
-            batch_num=range(NUM_BATCHES),
-        ),
+        summary = os.path.join(dir_species, "drep_dastools", "done.txt"),
     output:
         combined_bac = os.path.join(dir_reports, "gtdbtk_output_derep", "gtdbtk.bac120.summary.tsv"),
         combined_ar = os.path.join(dir_reports, "gtdbtk_output_derep", "gtdbtk.ar53.summary.tsv"),
+        done = os.path.join(dir_species, "gtdbtk_output_derep", "done.txt"),
     run:
+        # gather existing batch result files (if any) and merge only those
+        bac_pattern = os.path.join(dir_species, "gtdbtk_output_derep", "batch_*", "classify", "gtdbtk.bac120.summary.tsv")
+        ar_pattern = os.path.join(dir_species, "gtdbtk_output_derep", "batch_*", "classify", "gtdbtk.ar53.summary.tsv")
+
+        bac_files = sorted(glob.glob(bac_pattern))
+        ar_files = sorted(glob.glob(ar_pattern))
+
+        # filter out zero-length files so the merge uses a real header source
+        bac_files = [f for f in bac_files if os.path.getsize(f) > 0]
+        ar_files = [f for f in ar_files if os.path.getsize(f) > 0]
+
         def merge(files, out_path):
+            if not files:
+                # create an empty file if no batch outputs exist
+                os.makedirs(os.path.dirname(out_path), exist_ok=True)
+                with open(out_path, "w") as out_f:
+                    out_f.write("")
+                return
+
             with open(out_path, "w") as out_f:
                 with open(files[0]) as f:
                     out_f.write(f.read())
@@ -94,9 +109,10 @@ rule combine_gtdbtk_results:
                         next(f, None)  # skip header
                         out_f.writelines(f)
 
-        merge(list(input.bac_summaries), output.combined_bac)
-        merge(list(input.ar_summaries), output.combined_ar)
+        merge(bac_files, output.combined_bac)
+        merge(ar_files, output.combined_ar)
 
+        os.makedirs(os.path.dirname(output.done), exist_ok=True)
         with open(output.done, "w") as f:
             f.write("done\n")
 
