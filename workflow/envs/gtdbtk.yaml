@@ -3,4 +3,4 @@ channels:
     - bioconda
 dependencies:
     - gtdbtk>=2.7.2
-    - python=3.11
+    - python=3.10

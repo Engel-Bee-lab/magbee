@@ -67,7 +67,7 @@ rule gtdbtk_dastool_batch:
         gtdbtk align --identify_dir {params.outdir}/identify --out_dir {params.outdir}/align --cpus {threads}
         gtdbtk classify --genome_dir "$BATCHDIR" --out_dir {params.outdir}/classify --cpus {threads} -x fasta -f --align_dir {params.outdir}/align
 
-        rm -rf "$BATCHDIR"
+        #rm -rf "$BATCHDIR"
         """
 
 
