@@ -100,9 +100,9 @@ rule gtdbtk_dastool_batch:
         mkdir -p {params.outdir}
         export GTDBTK_DATA_PATH={params.database}
 
-        gtdbtk identify --genome_dir "$BATCHDIR" --cpus {threads} --out_dir {params.outdir}/identify -x fa
-        gtdbtk align     --identify_dir {params.outdir}/identify --out_dir {params.outdir}/align --cpus {threads}
-        gtdbtk classify  --genome_dir "$BATCHDIR" --out_dir {params.outdir}/classify --cpus {threads} -x fa -f --align_dir {params.outdir}/align
+        gtdbtk identify --genome_dir "$BATCHDIR" --cpus {threads} --out_dir {params.outdir}/identify -x fasta
+        gtdbtk align --identify_dir {params.outdir}/identify --out_dir {params.outdir}/align --cpus {threads}
+        gtdbtk classify --genome_dir "$BATCHDIR" --out_dir {params.outdir}/classify --cpus {threads} -x fasta -f --align_dir {params.outdir}/align
 
         rm -rf "$BATCHDIR"
         """
