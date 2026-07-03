@@ -4,14 +4,30 @@ Rule for running bakta on dereplicated genomes
 
 derep_bins_dir = os.path.join(dir_species, "drep_dastools", "dereplicated_genomes")
 
+def get_derep_bin_files():
+    return sorted(glob.glob(os.path.join(derep_bins_dir, "*.fa*")))
+
+def _strip_derep_suffixes(filename):
+    basename = os.path.basename(filename)
+    for suffix in (".gz", ".fasta", ".fa", ".fna"):
+        if basename.endswith(suffix):
+            basename = basename[: -len(suffix)]
+    return basename
+
+
+def get_derep_bin_names():
+    return [_strip_derep_suffixes(path) for path in get_derep_bin_files()]
+
 rule bakta:
     input:
-        summary = os.path.join(dir_species, "drep_dastools", "done.txt"),
+        genome = lambda wc: next(
+            path for path in get_derep_bin_files()
+            if _strip_derep_suffixes(path) == wc.genome
+        ),
     output:
-        done = os.path.join(dir_species, "bakta", "done.txt")
+        done = os.path.join(dir_species, "bakta", "{genome}.done")
     params:
-        genome_files = lambda wc: sorted(glob.glob(os.path.join(derep_bins_dir, "*.fa*"))),
-        outdir = os.path.join(dir_species, "bakta"),
+        outdir = lambda wc: os.path.join(dir_species, "bakta", wc.genome),
         db = config["databases"]["bakta_db"]
     conda:
         os.path.join(dir_env, "bakta.yaml")
@@ -25,24 +41,10 @@ rule bakta:
         set -euo pipefail
         mkdir -p {params.outdir}
 
-        set -- {params.genome_files}
-        if [ "$#" -eq 0 ]; then
-            echo "No dereplicated genomes found in {derep_bins_dir}" >&2
-            exit 1
-        fi
+        echo "Running bakta on {wildcards.genome}"
 
-        for genome in "$@"; do
-            genome_name=$(basename "$genome")
-            genome_name=${{genome_name%.gz}}
-            genome_name=${{genome_name%.fa}}
-            genome_name=${{genome_name%.fna}}
-            genome_name=${{genome_name%.fasta}}
-
-            echo "Running bakta on $genome_name"
-
-            bakta --db {params.db} --output {params.outdir} --prefix "$genome_name" --force --threads {threads} \
-                "$genome"
-        done
+        bakta --db {params.db} --output {params.outdir} --prefix {wildcards.genome} --force --threads {threads} \
+            {input.genome}
 
         touch {output.done}
         """

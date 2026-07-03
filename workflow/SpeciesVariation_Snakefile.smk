@@ -134,7 +134,12 @@ targets ={'derep':[], 'speciesVar':[]}
 targets['derep'].append(os.path.join(dir_species, "drep_dastools", "done.txt"))
 targets['derep'].append(os.path.join(dir_reports, "gtdbtk_output_derep", "gtdbtk.bac120.summary.tsv"))
 targets['derep'].append(os.path.join(dir_reports, "gtdbtk_output_derep", "gtdbtk.ar53.summary.tsv"))
-targets['speciesVar'].append(os.path.join(dir_species, "bakta", "done.txt"))
+targets['speciesVar'].extend(
+    expand(
+        os.path.join(dir_species, "bakta", "{genome}.done"),
+        genome=get_derep_bin_names(),
+    )
+)
 
 @targetRule
 rule all:
