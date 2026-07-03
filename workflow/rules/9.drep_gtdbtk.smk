@@ -31,43 +31,6 @@ def get_batch_files(batch_num, batch_size=BATCH_SIZE):
     start = batch_num * batch_size
     return fa_files[start:start + batch_size]
 
-
-rule format_extn:
-    input:
-        summary = os.path.join(dir_species, "drep_dastools", "done.txt"),
-    output:
-        formatted = os.path.join(dir_temp, "reformatted_dastool_bin_extn.txt")
-    params:
-        derep_bins_dir = os.path.join(dir_species, "drep_dastools", "dereplicated_genomes")
-    localrule: True
-    shell:
-        """
-        set -euo pipefail
-
-        for f in {params.derep_bins_dir}/*; do
-            case "$f" in
-                *.fasta.gz)
-                    newname="${{f%.fasta.gz}}.fa"
-                    gunzip -c "$f" > "$newname"
-                    rm "$f"
-                    ;;
-                *.fa.gz)
-                    newname="${{f%.fa.gz}}.fa"
-                    gunzip -c "$f" > "$newname"
-                    rm "$f"
-                    ;;
-                *.fasta)
-                    mv "$f" "${{f%.fasta}}.fa"
-                    ;;
-                *.fa)
-                    : # already correct
-                    ;;
-            esac
-        done
-
-        touch {output.formatted}
-        """
-
 rule gtdbtk_dastool_batch:
     input:
         summary = os.path.join(dir_species, "drep_dastools", "done.txt"),
