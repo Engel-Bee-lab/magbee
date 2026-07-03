@@ -38,8 +38,10 @@ rule bakta:
             genome_name=${{genome_name%.fna}}
             genome_name=${{genome_name%.fasta}}
 
-            bakta --db {params.db} --output {params.outdir}/"$genome_name" --threads {threads} \
-                "$genome" --prefix "$genome_name" --force
+            echo "Running bakta on $genome_name"
+
+            bakta --db {params.db} --output {params.outdir} --prefix "$genome_name" --force --threads {threads} \
+                "$genome"
         done
 
         touch {output.done}
