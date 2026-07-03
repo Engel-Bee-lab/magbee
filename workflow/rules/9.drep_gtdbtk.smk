@@ -12,7 +12,7 @@ import os
 import glob
 import math
 
-BATCH_SIZE = 100
+BATCH_SIZE = 50
 
 derep_bins_dir = os.path.join(dir_species, "drep_dastools", "dereplicated_genomes")
 
