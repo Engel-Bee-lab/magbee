@@ -12,7 +12,7 @@ rule bakta:
     params:
         genome_files = lambda wc: sorted(glob.glob(os.path.join(derep_bins_dir, "*.fa*"))),
         outdir = os.path.join(dir_species, "bakta"),
-        atabase = config["databases"]["bakta_db"]
+        db = config["databases"]["bakta_db"]
     conda:
         os.path.join(dir_env, "bakta.yaml")
     resources:
