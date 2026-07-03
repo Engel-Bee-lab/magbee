@@ -136,8 +136,8 @@ targets['derep'].append(os.path.join(dir_reports, "gtdbtk_output_derep", "gtdbtk
 targets['derep'].append(os.path.join(dir_reports, "gtdbtk_output_derep", "gtdbtk.ar53.summary.tsv"))
 targets['speciesVar'].extend(
     expand(
-        os.path.join(dir_species, "bakta", "{genome}.done"),
-        genome=get_derep_bin_names(),
+        os.path.join(dir_species, "bakta", "{derep_genome}.done"),
+        derep_genome=get_derep_bin_names(),
     )
 )
 

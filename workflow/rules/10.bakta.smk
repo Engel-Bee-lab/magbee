@@ -20,14 +20,14 @@ def get_derep_bin_names():
 
 rule bakta:
     input:
-        genome = lambda wc: next(
+        derep_genome = lambda wc: next(
             path for path in get_derep_bin_files()
-            if _strip_derep_suffixes(path) == wc.genome
+            if _strip_derep_suffixes(path) == wc.derep_genome
         ),
     output:
-        done = os.path.join(dir_species, "bakta", "{genome}.done")
+        done = os.path.join(dir_species, "bakta", "{derep_genome}.done")
     params:
-        outdir = lambda wc: os.path.join(dir_species, "bakta", wc.genome),
+        outdir = lambda wc: os.path.join(dir_species, "bakta", wc.derep_genome),
         db = config["databases"]["bakta_db"]
     conda:
         os.path.join(dir_env, "bakta.yaml")
@@ -41,10 +41,10 @@ rule bakta:
         set -euo pipefail
         mkdir -p {params.outdir}
 
-        echo "Running bakta on {wildcards.genome}"
+        echo "Running bakta on {wildcards.derep_genome}"
 
-        bakta --db {params.db} --output {params.outdir} --prefix {wildcards.genome} --force --threads {threads} \
-            {input.genome}
+        bakta --db {params.db} --output {params.outdir} --prefix {wildcards.derep_genome} --force --threads {threads} \
+            {input.derep_genome}
 
         touch {output.done}
         """
