@@ -76,22 +76,22 @@ rule gtdbtk_dastool_batch:
 
 rule combine_gtdbtk_results:
     input:
-        summary = os.path.join(dir_species, "drep_dastools", "done.txt"),
+        bac_summaries = expand(
+            os.path.join(dir_species, "gtdbtk_output_derep", "batch_{batch_num}", "classify", "gtdbtk.bac120.summary.tsv"),
+            batch_num=range(NUM_BATCHES),
+        ),
+        ar_summaries = expand(
+            os.path.join(dir_species, "gtdbtk_output_derep", "batch_{batch_num}", "classify", "gtdbtk.ar53.summary.tsv"),
+            batch_num=range(NUM_BATCHES),
+        ),
     output:
         combined_bac = os.path.join(dir_reports, "gtdbtk_output_derep", "gtdbtk.bac120.summary.tsv"),
         combined_ar = os.path.join(dir_reports, "gtdbtk_output_derep", "gtdbtk.ar53.summary.tsv"),
         done = os.path.join(dir_species, "gtdbtk_output_derep", "done.txt"),
     run:
-        # gather existing batch result files (if any) and merge only those
-        bac_pattern = os.path.join(dir_species, "gtdbtk_output_derep", "batch_*", "classify", "gtdbtk.bac120.summary.tsv")
-        ar_pattern = os.path.join(dir_species, "gtdbtk_output_derep", "batch_*", "classify", "gtdbtk.ar53.summary.tsv")
-
-        bac_files = sorted(glob.glob(bac_pattern))
-        ar_files = sorted(glob.glob(ar_pattern))
-
         # filter out zero-length files so the merge uses a real header source
-        bac_files = [f for f in bac_files if os.path.getsize(f) > 0]
-        ar_files = [f for f in ar_files if os.path.getsize(f) > 0]
+        bac_files = [f for f in input.bac_summaries if os.path.getsize(f) > 0]
+        ar_files = [f for f in input.ar_summaries if os.path.getsize(f) > 0]
 
         def merge(files, out_path):
             if not files:
