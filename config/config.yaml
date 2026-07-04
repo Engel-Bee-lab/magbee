@@ -5,7 +5,7 @@ resources:
     runtime: 240
   highmemjob:
     threads: 4
-    mem_mb: 500000
+    mem_mb: 250000
     runtime: 480
   assemblyjob:
     threads: 16
