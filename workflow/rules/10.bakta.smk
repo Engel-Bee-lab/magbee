@@ -32,10 +32,10 @@ rule bakta:
     conda:
         os.path.join(dir_env, "bakta.yaml")
     resources:
-        mem_mb = config['resources']['highmemjob']['mem_mb'],
-        runtime = config['resources']['highmemjob']['runtime']
+        mem_mb = config['resources']['smalljob']['mem_mb'],
+        runtime = config['resources']['smalljob']['runtime']
     threads:
-        config['resources']['highmemjob']['threads']
+        config['resources']['smalljob']['threads']
     shell:
         """
         set -euo pipefail
