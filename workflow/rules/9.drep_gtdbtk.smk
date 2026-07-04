@@ -44,10 +44,10 @@ rule gtdbtk_dastool_batch:
     conda:
         os.path.join(dir_env, "gtdbtk.yaml")
     resources:
-        mem_mb = config['resources']['assemblyjob']['mem_mb'],
-        runtime = config['resources']['assemblyjob']['runtime'],
+        mem_mb = config['resources']['highmemjob']['mem_mb'],
+        runtime = config['resources']['highmemjob']['runtime'],
     threads:
-        config['resources']['assemblyjob']['threads']
+        config['resources']['highmemjob']['threads']
     shell:
         """
         set -euo pipefail
@@ -65,7 +65,9 @@ rule gtdbtk_dastool_batch:
 
         gtdbtk identify --genome_dir "$BATCHDIR" --cpus {threads} --out_dir {params.outdir}/identify -x fasta
         gtdbtk align --identify_dir {params.outdir}/identify --out_dir {params.outdir}/align --cpus {threads}
-        gtdbtk classify --genome_dir "$BATCHDIR" --out_dir {params.outdir}/classify --cpus {threads} -x fasta -f --align_dir {params.outdir}/align
+        gtdbtk classify --genome_dir "$BATCHDIR" --out_dir {params.outdir}/classify --cpus {threads} -x fasta \
+            -f --align_dir {params.outdir}/align --debug
+
 
         #rm -rf "$BATCHDIR"
 

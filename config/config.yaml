@@ -3,6 +3,10 @@ resources:
     threads: 2
     mem_mb: 16000
     runtime: 240
+  highmemjob:
+    threads: 4
+    mem_mb: 500000
+    runtime: 480
   assemblyjob:
     threads: 16
     mem_mb: 250000
