@@ -44,7 +44,7 @@ rule bakta:
         echo "Running bakta on {wildcards.derep_genome}"
 
         bakta --db {params.db} --output {params.outdir} --prefix {wildcards.derep_genome} --force \
-            --threads {threads} {input.derep_genome} --debug
+            --skip-sorf --threads {threads} {input.derep_genome} --debug
 
         touch {output.done}
         """
