@@ -140,14 +140,14 @@ targets['speciesVar'].extend(
         derep_genome=get_derep_bin_names(),
     )
 )
-#targets['speciesVar'].extend(
-#    expand(
-#        os.path.join(dir_species, "inStrain", "02_instrain_profile_db_mode", "{sample}_profile_db_mode.done"),
-#        sample=sample_names,
-#    )
-#)
-#if sample_names:
-#    targets['speciesVar'].append(os.path.join(dir_species, "inStrain", "03_instrain_compare", "all_compared.done"))
+targets['speciesVar'].extend(
+    expand(
+        os.path.join(dir_species, "inStrain", "02_instrain_profile_db_mode", "{sample}_profile_db_mode.done"),
+        sample=sample_names,
+    )
+)
+if sample_names:
+    targets['speciesVar'].append(os.path.join(dir_species, "inStrain", "03_instrain_compare", "all_compared.done"))
 
 @targetRule
 rule all:
