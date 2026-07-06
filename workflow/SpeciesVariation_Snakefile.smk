@@ -114,7 +114,7 @@ bins_dir = config['args']['bins']
 
 
 """Rules"""
-include: os.path.join("rules", "8.drep.smk")
+#include: os.path.join("rules", "8.drep.smk")
 include: os.path.join("rules", "9.drep_gtdbtk.smk")
 include: os.path.join("rules", "9.instrain.smk")
 include: os.path.join("rules", "10.bakta.smk")
