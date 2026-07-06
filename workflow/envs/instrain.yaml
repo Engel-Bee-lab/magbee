@@ -2,5 +2,5 @@ name: instrain
 channels:
     - bioconda
 dependencies:
-    - python=3.9
+    - python=3.8
     - instrain=1.10.0
