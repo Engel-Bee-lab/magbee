@@ -91,6 +91,7 @@ rule map_to_rep_MAGs_minimap2:
         set -euo pipefail
         if [ -d {params.outdir} ]; then
             rm -rf {params.outdir}
+            mkdir -p {params.outdir}
         else
             mkdir -p {params.outdir}
         fi
