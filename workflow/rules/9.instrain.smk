@@ -65,8 +65,7 @@ rule minimp2_magDB_index:
     shell:
         """
         set -euo pipefail
-        minimap2 -d {input.mag_rep_database}.mmi {input.mag_rep_database}
-        touch {output.index_done}
+        minimap2 -d {output.index_done} {input.mag_rep_database}
         """
 rule map_to_rep_MAGs_minimap2:
     input:
