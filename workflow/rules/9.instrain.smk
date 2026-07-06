@@ -29,7 +29,7 @@ rule make_mag_rep_database:
         """
         set -euo pipefail
         mkdir -p $(dirname {output.mag_rep_database})
-        cat {params.rep_dir}/*.fa* > {output.mag_rep_database}
+        cat {params.rep_dir}/*.fa > {output.mag_rep_database}
         """
 
 rule make_scaffold_to_bin_file:
@@ -64,7 +64,6 @@ rule minimp2_magDB_index:
         config['resources']['smalljob']['threads']
     shell:
         """
-        set -euo pipefail
         minimap2 -d {output.index_done} {input.mag_rep_database}
         """
 rule map_to_rep_MAGs_minimap2:
