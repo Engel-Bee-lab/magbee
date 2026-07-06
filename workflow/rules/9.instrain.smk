@@ -81,7 +81,7 @@ rule instrain_profile_db_mode:
         mag_rep_database = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database.fa"),
         scaffold_to_bin_file = os.path.join(dir_species, "inStrain", "prepare_mags", "scaffold_to_bin_file.tsv"),
     output:
-        marker = touch(os.path.join(dir_species, "inStrain", "instrain_profile_db_mode", "{sample}_profile_db_mode.done")),
+        marker = os.path.join(dir_species, "inStrain", "instrain_profile_db_mode", "{sample}_profile_db_mode.done"),
     params:
         outdir = os.path.join(dir_species, "inStrain", "instrain_profile_db_mode", "{sample}"),
     conda:
