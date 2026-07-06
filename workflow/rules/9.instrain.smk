@@ -90,7 +90,11 @@ rule map_to_rep_MAGs_minimap2:
     shell:
         """
         set -euo pipefail
-        mkdir {params.outdir}
+        if [ -d {params.outdir} ]; then
+            rm -rf {params.outdir}
+        else
+            mkdir -p {params.outdir}
+        fi
         minimap2 -ax sr -t {threads} {input.index_done} {input.reads1} {input.reads2} \
             | samtools view -bh - | samtools sort - > {output.bam}
         samtools flagstat {output.bam} > {output.flagstat}
