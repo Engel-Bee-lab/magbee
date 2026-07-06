@@ -3,4 +3,4 @@ channels:
     - bioconda
 dependencies:
     - python=3.9
-    - instrain=1.10.6
+    - instrain=1.10.0
