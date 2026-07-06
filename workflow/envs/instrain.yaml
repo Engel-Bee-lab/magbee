@@ -3,6 +3,11 @@ channels:
     - bioconda
     - hcc
 dependencies:
-    - python=3.8
-    - instrain=1.10.0
+    - python
+    - instrain
     - samtools
+    - biopython=1.74
+    - bcftools
+    - prodigal
+    - numpy
+    - pysam
