@@ -1,6 +1,8 @@
 name: instrain
 channels:
     - bioconda
+    - hcc
 dependencies:
     - python=3.8
     - instrain=1.10.0
+    - samtools
