@@ -50,12 +50,31 @@ rule make_scaffold_to_bin_file:
                             scaffold = line[1:].strip().split()[0]
                             out_f.write(f"{scaffold}\t{mag_name}\n")
 
-
+rule minimp2_magDB_index:
+    input:
+        mag_rep_database = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database.fa"),
+    output:
+        index_done = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database_minimap2.mmi"),
+    conda:
+        os.path.join(dir_env, "minimap2.yaml")
+    resources:
+        mem_mb = config['resources']['smalljob']['mem_mb'],
+        runtime = config['resources']['smalljob']['runtime']
+    threads:
+        config['resources']['smalljob']['threads']
+    shell:
+        """
+        set -euo pipefail
+        minimap2 -d {input.mag_rep_database}.mmi {input.mag_rep_database}
+        touch {output.index_done}
+        """
 rule map_to_rep_MAGs_minimap2:
     input:
         reads1 = lambda wildcards: os.path.join(dir_hostcleaned, f"{wildcards.sample}_R1.hostcleaned.fastq.gz"),
         reads2 = lambda wildcards: os.path.join(dir_hostcleaned, f"{wildcards.sample}_R2.hostcleaned.fastq.gz"),
         mag_rep_database = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database.fa"),
+        index_done = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database_minimap2.mmi"),
+    conda:
     output:
         bam = os.path.join(dir_species, "inStrain", "mapping", "{sample}", "{sample}_bowtie.bam"),
         flagstat = os.path.join(dir_species, "inStrain", "mapping", "{sample}", "{sample}_bowtie_flagstat.tsv"),
@@ -72,7 +91,7 @@ rule map_to_rep_MAGs_minimap2:
         """
         set -euo pipefail
         mkdir {params.outdir}
-        minimap2 -ax sr -t {threads} {input.mag_rep_database} {input.reads1} {input.reads2} \
+        minimap2 -ax sr -t {threads} {input.index_done} {input.reads1} {input.reads2} \
             | samtools view -bh - | samtools sort - > {output.bam}
         samtools flagstat {output.bam} > {output.flagstat}
         """
