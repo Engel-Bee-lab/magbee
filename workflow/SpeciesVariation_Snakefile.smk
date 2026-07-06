@@ -116,8 +116,8 @@ bins_dir = config['args']['bins']
 """Rules"""
 include: os.path.join("rules", "8.drep.smk")
 include: os.path.join("rules", "9.drep_gtdbtk.smk")
+include: os.path.join("rules", "9.instrain.smk")
 include: os.path.join("rules", "10.bakta.smk")
-#include: os.path.join("rules", "9.instrain.smk")
 
 """Mark target rules"""
 target_rules = []
@@ -140,6 +140,14 @@ targets['speciesVar'].extend(
         derep_genome=get_derep_bin_names(),
     )
 )
+#targets['speciesVar'].extend(
+#    expand(
+#        os.path.join(dir_species, "inStrain", "02_instrain_profile_db_mode", "{sample}_profile_db_mode.done"),
+#        sample=sample_names,
+#    )
+#)
+#if sample_names:
+#    targets['speciesVar'].append(os.path.join(dir_species, "inStrain", "03_instrain_compare", "all_compared.done"))
 
 @targetRule
 rule all:
