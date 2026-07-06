@@ -96,7 +96,7 @@ if config['args']['sequencing'] == 'paired':
     paired_samples = {}
 
     for sample, reads in sample_inputs.items():
-        print ("samples and reads found")
+        #print ("samples and reads found")
         #print (sample, reads)
         if "r1" in reads and "r2" in reads:
             paired_samples[sample] = reads
@@ -143,12 +143,12 @@ targets['speciesVar'].extend(
 )
 targets['speciesVar'].extend(
     expand(
-        os.path.join(dir_species, "inStrain", "02_instrain_profile_db_mode", "{sample}_profile_db_mode.done"),
+        os.path.join(dir_species, "inStrain", "instrain_profile_db_mode", "{sample}_profile_db_mode.done"),
         sample=sample_names,
     )
 )
 if sample_names:
-    targets['speciesVar'].append(os.path.join(dir_species, "inStrain", "03_instrain_compare", "all_compared.done"))
+    targets['speciesVar'].append(os.path.join(dir_species, "inStrain", "instrain_compare", "all_compared.done"))
 
 @targetRule
 rule all:
