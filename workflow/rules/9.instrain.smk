@@ -59,6 +59,8 @@ rule map_to_rep_MAGs_minimap2:
     output:
         bam = os.path.join(dir_species, "inStrain", "mapping", "{sample}", "{sample}_bowtie.bam"),
         flagstat = os.path.join(dir_species, "inStrain", "mapping", "{sample}", "{sample}_bowtie_flagstat.tsv"),
+    params:
+        outdir = os.path.join(dir_species, "inStrain", "mapping", "{sample}"),
     conda:
         os.path.join(dir_env, "minimap2.yaml")
     resources:
@@ -69,8 +71,9 @@ rule map_to_rep_MAGs_minimap2:
     shell:
         """
         set -euo pipefail
-        mkdir -p $(dirname {output.bam})
-        minimap2 -ax sr -t {threads} {input.mag_rep_database} {input.reads1} {input.reads2} | samtools view -bh - | samtools sort - > {output.bam}
+        mkdir {params.outdir}
+        minimap2 -ax sr -t {threads} {input.mag_rep_database} {input.reads1} {input.reads2} \
+            | samtools view -bh - | samtools sort - > {output.bam}
         samtools flagstat {output.bam} > {output.flagstat}
         """
 
@@ -87,10 +90,10 @@ rule instrain_profile_db_mode:
     conda:
         os.path.join(dir_env, "instrain.yaml")
     resources:
-        mem_mb = config['resources']['highmemjob']['mem_mb'],
-        runtime = config['resources']['highmemjob']['runtime']
+        mem_mb = config['resources']['medium']['mem_mb'],
+        runtime = config['resources']['medium']['runtime']
     threads:
-        config['resources']['highmemjob']['threads']
+        config['resources']['medium']['threads']
     shell:
         """
         set -euo pipefail

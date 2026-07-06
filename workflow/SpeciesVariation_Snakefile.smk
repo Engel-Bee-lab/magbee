@@ -147,8 +147,8 @@ targets['speciesVar'].extend(
         sample=sample_names,
     )
 )
-if sample_names:
-    targets['speciesVar'].append(os.path.join(dir_species, "inStrain", "instrain_compare", "all_compared.done"))
+#if sample_names:
+#    targets['speciesVar'].append(os.path.join(dir_species, "inStrain", "instrain_compare", "all_compared.done"))
 
 @targetRule
 rule all:
