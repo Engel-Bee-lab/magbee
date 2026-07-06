@@ -74,6 +74,7 @@ rule map_to_rep_MAGs_minimap2:
         mag_rep_database = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database.fa"),
         index_done = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database_minimap2.mmi"),
     conda:
+        os.path.join(dir_env, "minimap2.yaml")
     output:
         bam = os.path.join(dir_species, "inStrain", "mapping", "{sample}", "{sample}_bowtie.bam"),
         flagstat = os.path.join(dir_species, "inStrain", "mapping", "{sample}", "{sample}_bowtie_flagstat.tsv"),
