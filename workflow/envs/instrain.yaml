@@ -1,8 +1,7 @@
 name: instrain
 channels:
-    - conda-forge
     - bioconda
-    - defaults
+    - conda-forge
 dependencies:
-    - instrain=1.10.1
+    - instrain
     - dataclasses
