@@ -119,7 +119,6 @@ rule instrain_profile_db_mode:
     shell:
         """
         set -euo pipefail
-        module load samtools
         mkdir -p {params.outdir}
         inStrain profile {input.bam} {input.mag_rep_database} -o {params.outdir} \
             -p {threads} --database_mode -s {input.scaffold_to_bin_file}
