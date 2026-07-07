@@ -109,8 +109,8 @@ rule instrain_profile_db_mode:
         marker = os.path.join(dir_species, "inStrain", "instrain_profile_db_mode", "{sample}_profile_db_mode.done"),
     params:
         outdir = os.path.join(dir_species, "inStrain", "instrain_profile_db_mode", "{sample}"),
-    container:
-        "docker pull fischbachlab/instrain:1.10.0"
+    conda:
+        os.path.join(dir_env, "instrain.yaml")
     resources:
         mem_mb = config['resources']['medium']['mem_mb'],
         runtime = config['resources']['medium']['runtime']
@@ -138,8 +138,8 @@ if sample_names:
         params:
             outdir = os.path.join(dir_species, "inStrain", "instrain_compare", "MAGs_rep_db"),
             profiles = [os.path.join(dir_species, "inStrain", "instrain_profile_db_mode", sample) for sample in sample_names],
-        container:
-            "docker pull fischbachlab/instrain:1.10.0"
+        conda:
+            os.path.join(dir_env, "instrain.yaml")
         resources:
             mem_mb = config['resources']['highmemjob']['mem_mb'],
             runtime = config['resources']['highmemjob']['runtime']
