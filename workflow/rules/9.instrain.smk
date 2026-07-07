@@ -66,6 +66,7 @@ rule minimp2_magDB_index:
         """
         minimap2 -d {output.index_done} {input.mag_rep_database}
         """
+
 rule map_to_rep_MAGs_minimap2:
     input:
         reads1 = lambda wildcards: os.path.join(dir_hostcleaned, f"{wildcards.sample}_R1.hostcleaned.fastq.gz"),
@@ -78,9 +79,7 @@ rule map_to_rep_MAGs_minimap2:
         bam = os.path.join(dir_species, "inStrain", "mapping", "{sample}", "{sample}_bowtie.bam"),
         flagstat = os.path.join(dir_species, "inStrain", "mapping", "{sample}", "{sample}_bowtie_flagstat.tsv"),
     params:
-        outdir = os.path.join(dir_species, "inStrain", "mapping", "{sample}"),
-    conda:
-        os.path.join(dir_env, "minimap2.yaml")
+        outdir = os.path.join(dir_species, "inStrain", "mapping", "{sample}")
     resources:
         mem_mb = config['resources']['smalljob']['mem_mb'],
         runtime = config['resources']['smalljob']['runtime']
@@ -110,8 +109,8 @@ rule instrain_profile_db_mode:
         marker = os.path.join(dir_species, "inStrain", "instrain_profile_db_mode", "{sample}_profile_db_mode.done"),
     params:
         outdir = os.path.join(dir_species, "inStrain", "instrain_profile_db_mode", "{sample}"),
-    conda:
-        os.path.join(dir_env, "instrain.yaml")
+    container:
+        "docker pull fischbachlab/instrain:1.10.0"
     resources:
         mem_mb = config['resources']['medium']['mem_mb'],
         runtime = config['resources']['medium']['runtime']
@@ -139,8 +138,8 @@ if sample_names:
         params:
             outdir = os.path.join(dir_species, "inStrain", "instrain_compare", "MAGs_rep_db"),
             profiles = [os.path.join(dir_species, "inStrain", "instrain_profile_db_mode", sample) for sample in sample_names],
-        conda:
-            os.path.join(dir_env, "instrain.yaml")
+        container:
+            "docker pull fischbachlab/instrain:1.10.0"
         resources:
             mem_mb = config['resources']['highmemjob']['mem_mb'],
             runtime = config['resources']['highmemjob']['runtime']
