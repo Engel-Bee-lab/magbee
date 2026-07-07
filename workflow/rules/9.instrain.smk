@@ -29,7 +29,7 @@ rule make_mag_rep_database:
         """
         set -euo pipefail
         mkdir -p $(dirname {output.mag_rep_database})
-        cat {params.rep_dir}/*.fa > {output.mag_rep_database}
+        cat {params.rep_dir}/*.fa* > {output.mag_rep_database}
         """
 
 rule make_scaffold_to_bin_file:
