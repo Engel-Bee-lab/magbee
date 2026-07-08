@@ -192,10 +192,10 @@ if sample_names:
         conda:
             os.path.join(dir_env, "instrain.yaml")
         resources:
-            mem_mb = config['resources']['small_longjob']['mem_mb'],
-            runtime = config['resources']['small_longjob']['runtime']
+            mem_mb = config['resources']['small_moremem_job']['mem_mb'],
+            runtime = config['resources']['small_moremem_job']['runtime']
         threads:
-            config['resources']['small_longjob']['threads']
+            config['resources']['small_moremem_job']['threads']
         shell:
             """
             set -euo pipefail
