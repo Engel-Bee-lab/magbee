@@ -5,6 +5,57 @@ InStrain workflow for dereplicated MAGs
 import glob
 import os
 
+def write_wrapped_fasta(source_paths, output_path, line_width=60):
+    valid_bases = set("ACGTNacgtn")
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+    with open(output_path, "w") as out_fh:
+        for source_path in source_paths:
+            header = None
+            sequence_chunks = []
+
+            with open(source_path) as fasta_fh:
+                for line_number, raw_line in enumerate(fasta_fh, start=1):
+                    line = raw_line.strip()
+                    if not line:
+                        continue
+                    if line.startswith(">"):
+                        if header is not None:
+                            if not sequence_chunks:
+                                raise ValueError(
+                                    f"{source_path}: header '{header}' has no sequence"
+                                )
+                            out_fh.write(f">{header}\n")
+                            sequence = "".join(sequence_chunks)
+                            for start in range(0, len(sequence), line_width):
+                                out_fh.write(sequence[start:start + line_width] + "\n")
+                        header = line[1:].strip()
+                        if not header:
+                            raise ValueError(f"{source_path}: empty FASTA header on line {line_number}")
+                        sequence_chunks = []
+                        continue
+
+                    if header is None:
+                        raise ValueError(
+                            f"{source_path}: sequence data found before the first header on line {line_number}"
+                        )
+                    invalid_characters = set(line) - valid_bases
+                    if invalid_characters:
+                        invalid = "".join(sorted(invalid_characters))
+                        raise ValueError(
+                            f"{source_path}: invalid character(s) '{invalid}' on line {line_number}"
+                        )
+                    sequence_chunks.append(line)
+
+            if header is None:
+                raise ValueError(f"{source_path}: no FASTA records found")
+            if not sequence_chunks:
+                raise ValueError(f"{source_path}: header '{header}' has no sequence")
+            out_fh.write(f">{header}\n")
+            sequence = "".join(sequence_chunks)
+            for start in range(0, len(sequence), line_width):
+                out_fh.write(sequence[start:start + line_width] + "\n")
+
 sample_names = list(config.get("sample_names", {}).keys())
 derep_bins_dir = os.path.join(dir_species, "drep_dastools", "dereplicated_genomes")
 
@@ -25,12 +76,11 @@ rule make_mag_rep_database:
         mag_rep_database = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database.fa"),
     params:
         rep_dir = derep_bins_dir,
-    shell:
-        """
-        set -euo pipefail
-        mkdir -p $(dirname {output.mag_rep_database})
-        cat {params.rep_dir}/*.fa* > {output.mag_rep_database}
-        """
+    run:
+        source_paths = sorted(glob.glob(os.path.join(params.rep_dir, "*.fa*")))
+        if not source_paths:
+            raise ValueError(f"No FASTA files found in {params.rep_dir}")
+        write_wrapped_fasta(source_paths, output.mag_rep_database)
 
 rule make_scaffold_to_bin_file:
     input:
@@ -53,6 +103,7 @@ rule make_scaffold_to_bin_file:
 rule minimp2_magDB_index:
     input:
         mag_rep_database = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database.fa"),
+        validation_done = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database.validated"),
     output:
         index_done = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database_minimap2.mmi"),
     conda:
@@ -104,6 +155,7 @@ rule instrain_profile_db_mode:
     input:
         bam = os.path.join(dir_species, "inStrain", "mapping", "{sample}", "{sample}_bowtie.bam"),
         mag_rep_database = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database.fa"),
+        validation_done = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database.validated"),
         scaffold_to_bin_file = os.path.join(dir_species, "inStrain", "prepare_mags", "scaffold_to_bin_file.tsv"),
     output:
         marker = os.path.join(dir_species, "inStrain", "instrain_profile_db_mode", "{sample}_profile_db_mode.done"),
