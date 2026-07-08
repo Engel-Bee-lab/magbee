@@ -164,10 +164,10 @@ rule instrain_profile_db_mode:
     conda:
         os.path.join(dir_env, "instrain.yaml")
     resources:
-        mem_mb = config['resources']['medium']['mem_mb'],
-        runtime = config['resources']['medium']['runtime']
+        mem_mb = config['resources']['smalljob']['mem_mb'],
+        runtime = config['resources']['smalljob']['runtime']
     threads:
-        config['resources']['medium']['threads']
+        config['resources']['smalljob']['threads']
     shell:
         """
         set -euo pipefail
@@ -192,10 +192,10 @@ if sample_names:
         conda:
             os.path.join(dir_env, "instrain.yaml")
         resources:
-            mem_mb = config['resources']['highmemjob']['mem_mb'],
-            runtime = config['resources']['highmemjob']['runtime']
+            mem_mb = config['resources']['medium']['mem_mb'],
+            runtime = config['resources']['medium']['runtime']
         threads:
-            config['resources']['highmemjob']['threads']
+            config['resources']['medium']['threads']
         shell:
             """
             set -euo pipefail
