@@ -34,7 +34,7 @@ resources:
   small_moremem_job:
     threads: 2
     mem_mb: 150000
-    runtime: 240
+    runtime: 1440
   medium:
     threads: 8
     mem_mb: 32000
