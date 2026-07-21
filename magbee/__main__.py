@@ -344,6 +344,48 @@ def speciesvar(_input, extn, r1, r2, bins, sequencing, output, temp_dir, configf
         **kwargs
     )
 
+help_msg_run = """
+\b
+Taxanomics annotation of the reads with bin info
+magbee taxa --input <input directory with reads> --extn fq --pattern_r1 <fastq.gz> --pattern_r2 <fastq.gz> --sequencing paired --bins <bins> --contigs <contigs.fasta> --output <output directory> -k
+"""
+@click.command(epilog=help_msg_run, 
+    context_settings=dict(help_option_names=["-h", "--help"], ignore_unknown_options=True)
+    )
+@click.option('--sequencing', 'sequencing', help="sequencing method", default='paired', show_default=True, type=click.Choice(['paired', 'longread']))
+
+@common_options
+def taxa(_input, extn, r1, r2, bins, contigs, sequencing, output, temp_dir, configfile, conda_frontend, **kwargs):
+    """Species variation in MAGS magbee"""
+    copy_config(configfile, system_config=snake_base(os.path.join('config', 'config.yaml')))
+
+    merge_config = {
+        "args": {
+            "input": _input, 
+            "bins": bins, 
+            "contigs": contigs,
+            "extn": extn,
+            "pattern_r1": r1,
+            "pattern_r2": r2,
+            "sequencing": sequencing,
+            "output": output, 
+            "configfile": configfile,
+            "temp_dir": temp_dir,
+        }
+    }
+
+    snake_default = list(kwargs.get('snake_default', []))
+    if conda_frontend and not any('--conda-frontend' in str(arg) for arg in snake_default):
+        snake_default.extend(['--conda-frontend', conda_frontend])
+    kwargs['snake_default'] = tuple(snake_default)
+
+    # run!
+    run_snakemake(
+        snakefile_path=snake_base(os.path.join('workflow', 'Reads_taxonomy.smk')),
+        configfile=configfile,
+        merge_config=merge_config,
+        **kwargs
+    )
 
 @click.command()
 @click.option('--configfile', default='config.yaml', help='Copy template config to file', show_default=True)
@@ -364,6 +406,7 @@ cli.add_command(assembly)
 cli.add_command(backmapping)
 cli.add_command(binning)
 cli.add_command(speciesvar)
+cli.add_command(taxa)
 cli.add_command(config)
 cli.add_command(citation)
 
