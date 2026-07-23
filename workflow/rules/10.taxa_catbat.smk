@@ -21,8 +21,10 @@ rule rat:
         contigs = config["args"]["contigs"],
         bins = config["args"]["bins"],
     output:
+        abundance = os.path.join(dir_taxa, "{sample}", "rat.read2classification.abundance.txt"),
         done = os.path.join(dir_taxa, "{sample}", "done.txt"),
     params:
+        outdir = lambda wc: os.path.join(dir_taxa, wc.sample),
         out_prefix = lambda wc: os.path.join(dir_taxa, wc.sample, "rat"),
         db_dir = rat_db_dir,
         tax_dir = rat_tax_dir,
@@ -34,7 +36,7 @@ rule rat:
         """
         set -euo pipefail
 
-        mkdir -p {params.out_prefix}
+        mkdir -p {params.outdir}
 
         CAT_pack reads --mode mcr \
             -b {input.bins} \
@@ -45,5 +47,6 @@ rule rat:
             -t {params.tax_dir} \
             -o {params.out_prefix}
 
+        test -s {output.abundance}
         touch {output.done}
         """
