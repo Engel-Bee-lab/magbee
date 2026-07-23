@@ -186,3 +186,21 @@ def cleanup_logs():
         oldLogs = filter(re.compile(r'.*.log').match, os.listdir(dir["log"]))
         for logfile in oldLogs:
             os.unlink(os.path.join(dir["log"], logfile))
+
+"""Rules"""
+include: os.path.join("rules", "10.taxa_kraken2.smk")
+include: os.path.join("rules", "10.taxa_catbat.smk")
+include: os.path.join("rules", "11.taxa_merged.smk")
+
+"""Targets"""
+rule all:
+    input:
+        # Kraken2 targets
+        expand(os.path.join(dir_taxa, "{sample}", "{sample}.kraken2.report.txt"), sample=sample_names),
+        expand(os.path.join(dir_taxa, "{sample}", "{sample}.kraken2.classifications.tsv"), sample=sample_names),
+        # RAT targets
+        expand(os.path.join(dir_taxa, "{sample}", "done.txt"), sample=sample_names),
+        # Merged Kraken2 + RAT targets
+        expand(os.path.join(dir_taxa, "{sample}", "{sample}.merged_taxa.tsv"), sample=sample_names)
+        
+

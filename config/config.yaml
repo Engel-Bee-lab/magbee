@@ -64,3 +64,5 @@ databases:
   gtdbtk_db: /work/FAC/FBM/DMF/pengel/general_data/common_databases/gtdb/release232
   checkm_db: /work/FAC/FBM/DMF/pengel/general_data/common_databases/checkm
   bakta_db: /work/FAC/FBM/DMF/pengel/general_data/common_databases/bakta_download/db
+  kraken_db: /work/FAC/FBM/DMF/pengel/general_data/common_databases/kraken/PlusPFP
+  rat_db_dir: /users/bnalaga1/scratch/reference_db/catbatrat

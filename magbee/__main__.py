@@ -183,7 +183,7 @@ def qc(_input, extn, r1, r2, host_seq, output, sequencing, temp_dir, configfile,
 help_msg_run = """
 \b
 Assembly EXAMPLES 
-magbee assembly --input <input directory with reads> --extn fq --pattern_r1 <fastq.gz> --pattern_r2 <fastq.gz> --sequencing paired --output <output directory> -k
+magbee assembly --input <input directory with reads> --extn hostcleaned.fastq.gz --pattern_r1 _R1 --pattern_r2 _R2 --sequencing paired --output <output directory> -k
 """
 @click.command(epilog=help_msg_run, 
     context_settings=dict(help_option_names=["-h", "--help"], ignore_unknown_options=True)
@@ -224,7 +224,7 @@ def assembly(_input, extn, r1, r2, output, sequencing, temp_dir, configfile, con
 help_msg_run = """
 \b
 Backmapping EXAMPLES 
-magbee backmapping --input <input directory with reads> --extn fq --pattern_r1 <fastq.gz> --pattern_r2 <fastq.gz> --contigs <input directory with contigs> --sequencing paired --mode concatenate --output <output directory> -k
+magbee backmapping --input <input directory with reads> --extn hostcleaned.fastq.gz --pattern_r1 _R1 --pattern_r2 _R2--contigs <input directory with contigs> --sequencing paired --mode concatenate --output <output directory> -k
 """
 @click.command(epilog=help_msg_run, 
     context_settings=dict(help_option_names=["-h", "--help"], ignore_unknown_options=True)
@@ -305,7 +305,7 @@ def binning(bam_folder, contigs, mode, output, temp_dir, configfile, conda_front
 help_msg_run = """
 \b
 Species variation EXAMPLES 
-magbee speciesvar --input <input directory with reads> --extn fq --pattern_r1 <fastq.gz> --pattern_r2 <fastq.gz> --sequencing paired --bins <bins> --output <output directory> -k
+magbee speciesvar --input <input directory with reads> --extn hostcleaned.fastq.gz --pattern_r1 _R1 --pattern_r2 _R2 --sequencing paired --bins <bins> --output <output directory> -k
 """
 @click.command(epilog=help_msg_run, 
     context_settings=dict(help_option_names=["-h", "--help"], ignore_unknown_options=True)
@@ -347,7 +347,7 @@ def speciesvar(_input, extn, r1, r2, bins, sequencing, output, temp_dir, configf
 help_msg_run = """
 \b
 Taxanomics annotation of the reads with bin info
-magbee taxa --input <input directory with reads> --extn fq --pattern_r1 <fastq.gz> --pattern_r2 <fastq.gz> --sequencing paired --bins <bins> --contigs <contigs.fasta> --output <output directory> -k
+magbee taxa --input <input directory with reads> hostcleaned.fastq.gz --pattern_r1 _R1 --pattern_r2 _R2 --sequencing paired --bins <bins> --contigs <contigs.fasta> --output <output directory> -k
 """
 @click.command(epilog=help_msg_run, 
     context_settings=dict(help_option_names=["-h", "--help"], ignore_unknown_options=True)
@@ -364,6 +364,7 @@ def taxa(_input, extn, r1, r2, bins, contigs, sequencing, output, temp_dir, conf
             "input": _input, 
             "bins": bins, 
             "contigs": contigs,
+            "db_dir": kwargs.get("db_dir"),
             "extn": extn,
             "pattern_r1": r1,
             "pattern_r2": r2,
