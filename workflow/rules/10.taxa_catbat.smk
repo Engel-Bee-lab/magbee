@@ -14,10 +14,6 @@ if not rat_db_root:
 rat_db_dir = os.path.join(rat_db_root, "db")
 rat_tax_dir = os.path.join(rat_db_root, "tax")
 
-rule all:
-    input:
-        expand(os.path.join(dir_taxa, "{sample}", "done.txt"), sample=sample_names)
-
 rule rat:
     input:
         r1 = lambda wc: config["sample_names"][wc.sample]["r1"],

@@ -14,10 +14,6 @@ if not kraken_db:
 if not os.path.isdir(kraken_db):
 	raise ValueError(f"Kraken2 database not found: {kraken_db}")
 
-rule all:
-	input:
-		expand(os.path.join(dir_taxa, "{sample}", "kraken2.done"), sample=sample_names)
-
 rule kraken2_reads:
 	input:
 		r1=lambda wc: config["sample_names"][wc.sample]["r1"],
