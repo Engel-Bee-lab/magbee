@@ -76,7 +76,7 @@ rule merged_bracken_output:
 		merged=os.path.join(dir_reports, "taxa_all_bracken_species.tsv"),
 	params:
 		outdir=dir_reports,
-		samples=config["sample_names"].keys(),
+		samples=expand(config["sample_names"].keys()),
 	conda:
 		os.path.join(dir_env, "kraken2.yaml")
 	resources:
