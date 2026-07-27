@@ -76,7 +76,7 @@ rule merged_bracken_output:
 		merged=os.path.join(dir_reports, "taxa_all_bracken_species.tsv"),
 	params:
 		outdir=dir_reports,
-		samples=expand(config["sample_names"].keys()),
+		names=lambda wc: ",".join(config["sample_names"].keys())
 	conda:
 		os.path.join(dir_env, "kraken2.yaml")
 	resources:
@@ -87,7 +87,7 @@ rule merged_bracken_output:
 	shell:
 		"""
 		set -euo pipefail
-		combine_bracken_outputs.py --files {input.bracken} --names {params.samples} -o {output.merged} 
+		combine_bracken_outputs.py --files {input.bracken} --names {params.names} -o {output.merged} 
 
 		touch {output.merged}
 		"""
