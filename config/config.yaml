@@ -65,4 +65,4 @@ databases:
   checkm_db: /work/FAC/FBM/DMF/pengel/general_data/common_databases/checkm
   bakta_db: /work/FAC/FBM/DMF/pengel/general_data/common_databases/bakta_download/db
   kraken_db: /work/FAC/FBM/DMF/pengel/general_data/common_databases/kraken/PlusPFP
-  rat_db_dir: /users/bnalaga1/scratch/reference_db/catbatrat
+  #rat_db_dir: /users/bnalaga1/scratch/reference_db/catbatrat #taking forever to download, so not using it for now

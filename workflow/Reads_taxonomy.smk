@@ -189,8 +189,8 @@ def cleanup_logs():
 
 """Rules"""
 include: os.path.join("rules", "10.taxa_kraken2.smk")
-include: os.path.join("rules", "10.taxa_catbat.smk")
-include: os.path.join("rules", "11.taxa_merged.smk")
+#include: os.path.join("rules", "10.taxa_catbat.smk")
+#include: os.path.join("rules", "11.taxa_merged.smk")
 
 """Targets"""
 rule all:
@@ -198,9 +198,10 @@ rule all:
         # Kraken2 targets
         expand(os.path.join(dir_taxa, "{sample}", "{sample}.kraken2.report.txt"), sample=sample_names),
         expand(os.path.join(dir_taxa, "{sample}", "{sample}.kraken2.classifications.tsv"), sample=sample_names),
+        
         # RAT targets
-        expand(os.path.join(dir_taxa, "{sample}", "done.txt"), sample=sample_names),
+        #expand(os.path.join(dir_taxa, "{sample}", "done.txt"), sample=sample_names),
         # Merged Kraken2 + RAT targets
-        expand(os.path.join(dir_taxa, "{sample}", "{sample}.merged_taxa.tsv"), sample=sample_names)
+        #expand(os.path.join(dir_taxa, "{sample}", "{sample}.merged_taxa.tsv"), sample=sample_names)
         
 
