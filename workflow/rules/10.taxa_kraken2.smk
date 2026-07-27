@@ -25,8 +25,11 @@ rule kraken2_reads:
 	params:
 		db=kraken_db,
 		outdir=lambda wc: os.path.join(dir_taxa, wc.sample),
-	threads:
-		1
+	resources:
+        mem_mb = config['resources']['smalljob']['mem_mb'],
+        runtime = config['resources']['smalljob']['runtime']
+    threads:
+        config['resources']['smalljob']['threads']
 	conda:
 		os.path.join(dir_env, "kraken2.yaml")
 	shell:
