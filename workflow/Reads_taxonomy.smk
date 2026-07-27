@@ -198,6 +198,7 @@ rule all:
         # Kraken2 targets
         expand(os.path.join(dir_taxa, "{sample}", "{sample}.kraken2.report.txt"), sample=sample_names),
         expand(os.path.join(dir_taxa, "{sample}", "{sample}.kraken2.classifications.tsv"), sample=sample_names),
+        expand(os.path.join(dir_taxa, "{sample}", "{sample}.bracken.tsv"), sample=sample_names),
         
         # RAT targets
         #expand(os.path.join(dir_taxa, "{sample}", "done.txt"), sample=sample_names),

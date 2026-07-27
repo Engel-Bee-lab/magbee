@@ -44,3 +44,27 @@ rule kraken2_reads:
 
 		touch {output.done}
 		"""
+
+rule bracken_paired:
+	input:
+		report=os.path.join(dir_taxa, "{sample}", "{sample}.kraken2.report.txt"),
+	output:
+		bracken=os.path.join(dir_taxa, "{sample}", "{sample}.bracken.tsv"),
+		done=os.path.join(dir_taxa, "{sample}", "bracken.done"),
+	params:
+		db=kraken_db,
+		outdir=lambda wc: os.path.join(dir_taxa, "{sample}"),
+	conda:
+		os.path.join(dir_env, "kraken2.yaml")
+	resources:
+		mem_mb=config['resources']['highmemjob']['mem_mb'],
+		runtime=config['resources']['highmemjob']['runtime']
+	threads:
+		config['resources']['highmemjob']['threads']
+	shell:
+		"""
+		set -euo pipefail
+		bracken -d {params.db} -i {input.report} -o {output.bracken} -r 150 -l S
+
+		touch {output.done}
+		"""	
