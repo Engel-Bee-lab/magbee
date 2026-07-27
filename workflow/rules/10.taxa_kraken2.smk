@@ -68,3 +68,24 @@ rule bracken_paired:
 
 		touch {output.done}
 		"""	
+
+rule merged_bracken_output:
+	input:
+		bracken=expand(os.path.join(dir_taxa, "{sample}", "{sample}.bracken.tsv"), sample=config["sample_names"].keys())
+	output:
+		merged=os.path.join(dir_taxa, "merged_bracken.tsv"),
+	params:
+		outdir=dir_taxa,
+	conda=os.path.join(dir_env, "kraken2.yaml")
+	resources:
+		mem_mb=config['resources']['highmemjob']['mem_mb'],
+		runtime=config['resources']['highmemjob']['runtime']
+	threads:
+		config['resources']['highmemjob']['threads']
+	shell:
+		"""
+		set -euo pipefail
+		bracken -d {kraken_db} -i {input.bracken} -o {output.merged} -r 150 -l S --merge
+
+		touch {output.merged}
+		"""
