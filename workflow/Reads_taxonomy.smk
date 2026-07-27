@@ -199,7 +199,7 @@ rule all:
         expand(os.path.join(dir_taxa, "{sample}", "{sample}.kraken2.report.txt"), sample=sample_names),
         expand(os.path.join(dir_taxa, "{sample}", "{sample}.kraken2.classifications.tsv"), sample=sample_names),
         expand(os.path.join(dir_taxa, "{sample}", "{sample}.bracken.tsv"), sample=sample_names),
-        os.path.join(dir_taxa, "merged_bracken.tsv"),
+        os.path.join(dir_reports, "taxa_all_bracken_species.tsv"),
         
         # RAT targets
         #expand(os.path.join(dir_taxa, "{sample}", "done.txt"), sample=sample_names),
