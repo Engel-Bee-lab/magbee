@@ -76,17 +76,18 @@ rule merged_bracken_output:
 		merged=os.path.join(dir_reports, "taxa_all_bracken_species.tsv"),
 	params:
 		outdir=dir_reports,
+		samples=config["sample_names"].keys(),
 	conda:
 		os.path.join(dir_env, "kraken2.yaml")
 	resources:
-		mem_mb=config['resources']['highmemjob']['mem_mb'],
-		runtime=config['resources']['highmemjob']['runtime']
+		mem_mb=config['resources']['smalljob']['mem_mb'],
+		runtime=config['resources']['smalljob']['runtime']
 	threads:
-		config['resources']['highmemjob']['threads']
+		config['resources']['smalljob']['threads']
 	shell:
 		"""
 		set -euo pipefail
-		bracken -d {kraken_db} -i {input.bracken} -o {output.merged} -r 150 -l S --merge
+		combine_bracken_outputs.py --files {input.bracken} --names {params.samples} -o {output.merged} 
 
 		touch {output.merged}
 		"""
