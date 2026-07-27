@@ -25,25 +25,21 @@ rule kraken2_reads:
 	params:
 		db=kraken_db,
 		outdir=lambda wc: os.path.join(dir_taxa, wc.sample),
+	conda:
+		os.path.join(dir_env, "kraken2.yaml")
 	resources:
 		mem_mb = config['resources']['smalljob']['mem_mb'],
 		runtime = config['resources']['smalljob']['runtime']
     threads:
 		config['resources']['smalljob']['threads']
-	conda:
-		os.path.join(dir_env, "kraken2.yaml")
 	shell:
 		"""
 		set -euo pipefail
 
 		mkdir -p {params.outdir}
 
-		kraken2 \
-			--db {params.db} \
-			--paired \
-			--threads {threads} \
-			--report {output.report} \
-			--output {output.classification} \
+		kraken2 --db {params.db} --paired --threads {threads} \
+			--report {output.report} --output {output.classification} \
 			{input.r1} {input.r2}
 
 		touch {output.done}
