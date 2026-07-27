@@ -30,7 +30,7 @@ rule kraken2_reads:
 	resources:
 		mem_mb=config['resources']['smalljob']['mem_mb'],
 		runtime=config['resources']['smalljob']['runtime']
-    threads:
+	threads:
 		config['resources']['smalljob']['threads']
 	shell:
 		"""
