@@ -95,7 +95,7 @@ rule merged_bracken_output:
 
 rule unclassified_kraken: 
 	input:
-		report=os.path.join(dir_taxa, "{sample}", "{sample}.kraken2.report.txt"),
+		report=expand(os.path.join(dir_taxa, "{sample}", "{sample}.kraken2.report.txt"), sample=config["sample_names"].keys())
 	output:
 		unclassified=os.path.join(dir_reports, "all_kraken2_unclassified.txt"),
 	conda:
@@ -104,5 +104,7 @@ rule unclassified_kraken:
 	shell:
 		"""
 		set -euo pipefail
-		awk '$4=="U" && $6=="unclassified" {print FILENAME "\t" $0}' {input.report} >> {output.unclassified}
+		for f in {input.report}; do
+			awk '$4=="U" && $6=="unclassified" {{print FILENAME "\t" $0}}' $f >> {output.unclassified}
+		done
 		"""
