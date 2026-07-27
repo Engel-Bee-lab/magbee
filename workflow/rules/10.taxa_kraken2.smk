@@ -88,6 +88,19 @@ rule merged_bracken_output:
 		"""
 		set -euo pipefail
 		combine_bracken_outputs.py --files {input.bracken} --names {params.names} -o {output.merged} 
-
 		touch {output.merged}
+		"""
+
+rule unclassified_kraken: 
+	input:
+		report=os.path.join(dir_taxa, "{sample}", "{sample}.kraken2.report.txt"),
+	output:
+		unclassified=os.path.join(dir_reports, "all.kraken2.unclassified.txt"),
+	conda:
+		os.path.join(dir_env, "kraken2.yaml")
+	localrule:True
+	shell:
+		"""
+		set -euo pipefail
+		awk '$4=="U" && $6=="unclassified" {print FILENAME "\t" $0}' {input.report} >> {output.unclassified}
 		"""
