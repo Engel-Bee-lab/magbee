@@ -28,10 +28,10 @@ rule kraken2_reads:
 	conda:
 		os.path.join(dir_env, "kraken2.yaml")
 	resources:
-		mem_mb=config['resources']['medium']['mem_mb'],
-		runtime=config['resources']['medium']['runtime']
+		mem_mb=config['resources']['small_moremem_job']['mem_mb'],
+		runtime=config['resources']['small_moremem_job']['runtime']
 	threads:
-		config['resources']['medium']['threads']
+		config['resources']['small_moremem_job']['threads']
 	shell:
 		"""
 		set -euo pipefail
