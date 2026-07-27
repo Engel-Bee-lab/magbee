@@ -28,8 +28,8 @@ rule kraken2_reads:
 	conda:
 		os.path.join(dir_env, "kraken2.yaml")
 	resources:
-		mem_mb = config['resources']['smalljob']['mem_mb'],
-		runtime = config['resources']['smalljob']['runtime']
+		mem_mb=config['resources']['smalljob']['mem_mb'],
+		runtime=config['resources']['smalljob']['runtime']
     threads:
 		config['resources']['smalljob']['threads']
 	shell:
