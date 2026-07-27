@@ -76,7 +76,8 @@ rule merged_bracken_output:
 		merged=os.path.join(dir_taxa, "merged_bracken.tsv"),
 	params:
 		outdir=dir_taxa,
-	conda=os.path.join(dir_env, "kraken2.yaml")
+	conda:
+		os.path.join(dir_env, "kraken2.yaml")
 	resources:
 		mem_mb=config['resources']['highmemjob']['mem_mb'],
 		runtime=config['resources']['highmemjob']['runtime']
