@@ -97,7 +97,7 @@ rule unclassified_kraken:
 	input:
 		report=os.path.join(dir_taxa, "{sample}", "{sample}.kraken2.report.txt"),
 	output:
-		unclassified=os.path.join(dir_reports, "all.kraken2.unclassified.txt"),
+		unclassified=os.path.join(dir_reports, "all_kraken2_unclassified.txt"),
 	conda:
 		os.path.join(dir_env, "kraken2.yaml")
 	localrule:True
