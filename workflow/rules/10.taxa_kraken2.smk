@@ -74,7 +74,6 @@ rule merged_bracken_output:
 		bracken=expand(os.path.join(dir_taxa, "{sample}", "{sample}.bracken.tsv"), sample=config["sample_names"].keys())
 	output:
 		merged=os.path.join(dir_reports, "taxa_all_bracken_species.tsv"),
-		mergedG=os.path.join(dir_reports, "taxa_all_bracken_genus.tsv"),
 	params:
 		outdir=dir_reports,
 		names=lambda wc: ",".join(config["sample_names"].keys())
@@ -89,7 +88,6 @@ rule merged_bracken_output:
 		"""
 		set -euo pipefail
 		combine_bracken_outputs.py --files {input.bracken} --names {params.names} -o {output.merged} 
-		combine_bracken_outputs.py --files {input.bracken} --names {params.names} --level G -o {output.mergedG}
 		touch {output.merged}
 		"""
 
