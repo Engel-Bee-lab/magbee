@@ -27,7 +27,7 @@ rule kraken2_reads:
 		outdir=lambda wc: os.path.join(dir_taxa, wc.sample),
 	resources:
 		mem_mb = config['resources']['smalljob']['mem_mb'],
-    	runtime = config['resources']['smalljob']['runtime']
+		runtime = config['resources']['smalljob']['runtime']
     threads:
         config['resources']['smalljob']['threads']
 	conda:
