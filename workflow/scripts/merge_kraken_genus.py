@@ -38,6 +38,14 @@ import pandas as pd
 
 KRAKEN_REPORT_COLS = ["percent", "clade_reads", "taxon_reads", "rank_code", "taxid", "name"]
 
+# standard NCBI taxonomy IDs for the top-level domains/superkingdoms in a Kraken2 report
+DOMAIN_TAXIDS = {
+    "bacteria": 2,
+    "archaea": 2157,
+    "eukaryota": 2759,
+    "viruses": 10239,
+}
+
 
 def sample_name_from_path(path: str, strip_suffixes) -> str:
     base = os.path.basename(path)
@@ -50,7 +58,7 @@ def sample_name_from_path(path: str, strip_suffixes) -> str:
     return base
 
 
-def load_one_kraken_report(path: str, sample: str, rank: str, rank_prefix: bool) -> pd.DataFrame:
+def load_one_kraken_report(path: str, sample: str, rank: str, rank_prefix: bool, domain_taxid: int | None) -> pd.DataFrame:
     df = pd.read_csv(
         path,
         sep="\t",
@@ -58,6 +66,16 @@ def load_one_kraken_report(path: str, sample: str, rank: str, rank_prefix: bool)
         names=KRAKEN_REPORT_COLS,
         dtype={"percent": float, "clade_reads": "Int64", "taxon_reads": "Int64", "rank_code": str, "taxid": "Int64"},
     )
+
+    # Kraken2 reports are a strict depth-first, pre-order walk of the taxonomy tree, so every
+    # row between one "D" (domain/superkingdom) line and the next belongs to that domain.
+    # Track that here (in file order -- do NOT sort/reorder df before this) so we can filter
+    # e.g. genus rows down to just the ones nested under Bacteria, not Eukaryota/Archaea/Viruses.
+    df["_domain_taxid"] = df["taxid"].where(df["rank_code"] == "D").ffill()
+
+    if domain_taxid is not None:
+        df = df[df["_domain_taxid"] == domain_taxid]
+
     if rank_prefix:
         df = df[df["rank_code"].str.startswith(rank, na=False)].copy()
     else:
@@ -106,6 +124,16 @@ def main():
         help="Match rank codes by prefix (e.g. 'G' also matches 'G1', 'G2' sub-genus rows) instead of exact match.",
     )
     ap.add_argument(
+        "--domain",
+        default="bacteria",
+        choices=["bacteria", "archaea", "eukaryota", "viruses", "all"],
+        help=(
+            "Restrict output to taxa nested under this domain (default: bacteria -- this is what "
+            "drops Eukaryota rows, e.g. residual host/NUMT/contaminant hits, and Archaea/Viruses). "
+            "Use 'all' to keep every domain, matching the old (pre-domain-filter) behavior."
+        ),
+    )
+    ap.add_argument(
         "--strip-suffix",
         action="append",
         default=None,
@@ -138,6 +166,8 @@ def main():
             sys.exit(f"No files matched {os.path.join(args.input_dir, args.pattern)!r}")
 
     print(f"Found {len(files)} Kraken2 report files.")
+    domain_taxid = None if args.domain == "all" else DOMAIN_TAXIDS[args.domain]
+    print(f"Domain filter: {args.domain}" + (f" (taxid {domain_taxid})" if domain_taxid else " (none)"))
 
     merged = None
     seen_samples = set()
@@ -147,7 +177,7 @@ def main():
             sys.exit(f"Duplicate sample name '{sample}' derived from {path} — adjust --strip-suffix.")
         seen_samples.add(sample)
 
-        df = load_one_kraken_report(path, sample, args.rank, args.rank_prefix)
+        df = load_one_kraken_report(path, sample, args.rank, args.rank_prefix, domain_taxid)
 
         if merged is None:
             merged = df
