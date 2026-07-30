@@ -60,54 +60,7 @@ rule merge_kraken_reports:
 	shell:
 		"""
 		set -euo pipefail
-		merge_kraken_genus.py --inputs {input.reports} --output {output.merged}
-		"""
-
-
-rule bracken_paired:
-	input:
-		report=os.path.join(dir_taxa, "{sample}", "{sample}.kraken2.report.txt"),
-	output:
-		bracken=os.path.join(dir_taxa, "{sample}", "{sample}.bracken.tsv"),
-		done=os.path.join(dir_taxa, "{sample}", "bracken.done"),
-	params:
-		db=kraken_db,
-		outdir=lambda wc: os.path.join(dir_taxa, "{sample}"),
-	conda:
-		os.path.join(dir_env, "kraken2.yaml")
-	resources:
-		mem_mb=config['resources']['highmemjob']['mem_mb'],
-		runtime=config['resources']['highmemjob']['runtime']
-	threads:
-		config['resources']['highmemjob']['threads']
-	shell:
-		"""
-		set -euo pipefail
-		bracken -d {params.db} -i {input.report} -o {output.bracken} -r 150 -l S
-
-		touch {output.done}
-		"""	
-
-rule merged_bracken_output:
-	input:
-		bracken=expand(os.path.join(dir_taxa, "{sample}", "{sample}.bracken.tsv"), sample=config["sample_names"].keys())
-	output:
-		merged=os.path.join(dir_reports, "taxa_all_bracken_species.tsv"),
-	params:
-		outdir=dir_reports,
-		names=lambda wc: ",".join(config["sample_names"].keys())
-	conda:
-		os.path.join(dir_env, "kraken2.yaml")
-	resources:
-		mem_mb=config['resources']['smalljob']['mem_mb'],
-		runtime=config['resources']['smalljob']['runtime']
-	threads:
-		config['resources']['smalljob']['threads']
-	shell:
-		"""
-		set -euo pipefail
-		combine_bracken_outputs.py --files {input.bracken} --names {params.names} -o {output.merged} 
-		touch {output.merged}
+		merge_kraken_genus.py --inputs {input.reports} --output {output.merged} --domain bacteria --rank G 
 		"""
 
 rule unclassified_kraken: 
