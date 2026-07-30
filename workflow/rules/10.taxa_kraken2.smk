@@ -45,6 +45,25 @@ rule kraken2_reads:
 		touch {output.done}
 		"""
 
+rule merge_kraken_reports:
+	input:
+		reports=expand(os.path.join(dir_taxa, "{sample}", "{sample}.kraken2.report.txt"), sample=config["sample_names"].keys())
+	output:
+		merged=os.path.join(dir_reports, "taxa_all_kraken2_genus.tsv"),
+	conda:
+		os.path.join(dir_env, "kraken2.yaml")
+	resources:
+		mem_mb=config['resources']['smalljob']['mem_mb'],
+		runtime=config['resources']['smalljob']['runtime']
+	threads:
+		config['resources']['smalljob']['threads']
+	shell:
+		"""
+		set -euo pipefail
+		merge_kraken_genus.py --inputs {input.reports} --output {output.merged}
+		"""
+
+
 rule bracken_paired:
 	input:
 		report=os.path.join(dir_taxa, "{sample}", "{sample}.kraken2.report.txt"),
@@ -106,3 +125,4 @@ rule unclassified_kraken:
 			awk '$4=="U" && $6=="unclassified" {{print FILENAME "\t" $0}}' $f >> {output.unclassified}
 		done
 		"""
+

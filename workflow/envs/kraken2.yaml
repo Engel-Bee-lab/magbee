@@ -5,3 +5,4 @@ channels:
 dependencies:
     - kraken2
     - bracken
+    - krakentools<=1.2.1
