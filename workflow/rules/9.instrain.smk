@@ -103,7 +103,7 @@ rule make_scaffold_to_bin_file:
 rule minimp2_magDB_index:
     input:
         mag_rep_database = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database.fa"),
-        validation_done = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database.validated"),
+        #validation_done = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database.validated"),
     output:
         index_done = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database_minimap2.mmi"),
     conda:
