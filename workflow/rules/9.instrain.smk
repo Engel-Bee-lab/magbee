@@ -155,7 +155,7 @@ rule instrain_profile_db_mode:
     input:
         bam = os.path.join(dir_species, "inStrain", "mapping", "{sample}", "{sample}_bowtie.bam"),
         mag_rep_database = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database.fa"),
-        validation_done = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database.validated"),
+        #validation_done = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database.validated"),
         scaffold_to_bin_file = os.path.join(dir_species, "inStrain", "prepare_mags", "scaffold_to_bin_file.tsv"),
     output:
         marker = os.path.join(dir_species, "inStrain", "instrain_profile_db_mode", "{sample}_profile_db_mode.done"),
