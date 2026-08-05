@@ -24,7 +24,8 @@ rule host_mapping:
             exit 0
         else
             minimap2 -ax sr -t {threads} {input.host} {input.r1} {input.r2} \
-                | samtools view -b -@ {threads} -o {output.all_bam} -
+                | samtools view -bh - \
+                | samtools sort -@ {threads} -> {output.all_bam} 
             samtools flagstat {output.all_bam} > {output.stats}
         fi
         """
