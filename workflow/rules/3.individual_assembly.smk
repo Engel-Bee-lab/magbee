@@ -50,5 +50,5 @@ rule quast_individual:
         config['resources']['smalljob']['threads']
     shell:
         """
-        quast {input.assembly} -o {params.outdir} --threads {threads}
+        quast.py {input.assembly} -o {params.outdir} --threads {threads}
         """
