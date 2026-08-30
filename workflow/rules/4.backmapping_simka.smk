@@ -27,10 +27,10 @@ rule assembly_index:
     conda:
         os.path.join(dir_env, "minimap2.yaml")
     threads:
-        config['resources']['smalljob']['threads']
+        config['resources']['small_longjob']['threads']
     resources:
-        mem_mb = config['resources']['smalljob']['mem_mb'],
-        runtime = config['resources']['smalljob']['runtime']
+        mem_mb = config['resources']['small_longjob']['mem_mb'],
+        runtime = config['resources']['small_longjob']['runtime']
     shell:
         """
         minimap2 -d {output.index} {input.assembly}
