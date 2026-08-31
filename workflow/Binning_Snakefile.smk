@@ -188,11 +188,11 @@ if config['args']['mode'] == 'individual':
         targets['binning'].append(os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt").format(sample=sample))
         targets['binning'].append(os.path.join(dir_binning, "all_vamb_bins", "done.txt"))
 
-        targets['binning_qual'].append(os.path.join(dir_binning, "das_tool", "dastool_DASTool_summary.tsv"))
-        targets['binning_qual'].append(os.path.join(dir_reports, "CheckM2_DASTool_quality_report.tsv"))
+        #targets['binning_qual'].append(os.path.join(dir_binning, "das_tool", "dastool_DASTool_summary.tsv"))
+        #targets['binning_qual'].append(os.path.join(dir_reports, "CheckM2_DASTool_quality_report.tsv"))
 
-        targets['binning_qual'].append(os.path.join(dir_reports, "bins.done"))
-        targets['binning_qual'].append(os.path.join(dir_reports, "quality_mags.done"))
+        #targets['binning_qual'].append(os.path.join(dir_reports, "bins.done"))
+        #targets['binning_qual'].append(os.path.join(dir_reports, "quality_mags.done"))
 
 elif config['args']['mode'] == 'concatenate':
     for sample in sample_names:
