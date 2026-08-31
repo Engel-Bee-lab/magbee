@@ -30,7 +30,7 @@ rule merge_stats:
     
 rule one_dir_contigs:
     input:
-        renamed_assembly = os.path.join(dir_assembly,"{sample}.megahit.renamed.contigs.fa")
+        assembly = os.path.join(dir_assembly,"{sample}.megahit.renamed.contigs.fa")
     output:
         contigs = os.path.join(dir_reports, "assembly", "{sample}.megahit.contigs.fa.gz")
     localrule: True
