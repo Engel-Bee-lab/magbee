@@ -2,5 +2,6 @@ name: megahit
 channels:
     - bioconda
 dependencies:
+    - python=3.11
     - megahit>=1.2.9
     - quast=5.2.0
