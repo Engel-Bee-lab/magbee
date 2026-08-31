@@ -23,7 +23,7 @@ rule assembly_index:
     input:
         assembly = os.path.join(dir_assembly, "{sample}.megahit.contigs.fa.gz")
     output:
-        index = os.path.join(dir_assembly, "{sample}.mmi")
+        index = os.path.join(dir_assembly, "{sample}.mmi") 
     conda:
         os.path.join(dir_env, "minimap2.yaml")
     threads:
