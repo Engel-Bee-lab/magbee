@@ -1,5 +1,0 @@
-name: comebin
-channels:
-    - bioconda
-dependencies:
-    - comebin>=1.0.4

@@ -1,5 +1,0 @@
-name: cbr
-channels:
-    - bioconda
-dependencies:
-    - cat <=6.0.1
