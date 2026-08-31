@@ -48,7 +48,7 @@ rule rename_assembly:
         config['resources']['smalljob']['threads']
     shell:
         """
-        seqkit replace -p ">" -r ">{wildcards.sample}_" {input.assembly} > {output.renamed_assembly}
+        seqkit replace -p "^" -r "{wildcards.sample}_" {input.assembly} > {output.renamed_assembly}
         """
 
 rule quast_individual:
