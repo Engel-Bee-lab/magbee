@@ -40,7 +40,7 @@ rule rename_assembly:
     output:
         renamed_assembly = os.path.join(dir_assembly,"{sample}.megahit.renamed.contigs.fa")
     conda:
-        os.path.join(dir_env, "fastp.yaml")
+        os.path.join(dir_env, "seqkit.yaml")
     resources:
         mem_mb =config['resources']['smalljob']['mem_mb'],
         runtime = config['resources']['smalljob']['runtime']
