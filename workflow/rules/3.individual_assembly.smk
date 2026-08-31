@@ -34,9 +34,25 @@ rule megahit_individual_assembly:
         fi
         """
 
-rule quast_individual:
+rule rename_assembly:
     input:
         assembly = os.path.join(dir_assembly,"{sample}.megahit.contigs.fa")
+    output:
+        renamed_assembly = os.path.join(dir_assembly,"{sample}.megahit.renamed.contigs.fa")
+    conda:
+        os.path.join(dir_env, "megahit.yaml")
+    resources:
+        mem_mb =config['resources']['smalljob']['mem_mb'],
+        runtime = config['resources']['smalljob']['runtime']
+    threads: 
+        config['resources']['smalljob']['threads']
+    shell:
+        """
+        """
+
+rule quast_individual:
+    input:
+        renamed_assembly = os.path.join(dir_assembly,"{sample}.megahit.renamed.contigs.fa")
     output:
         report = os.path.join(dir_assembly, "{sample}_quast_output", "report.txt")
     params:

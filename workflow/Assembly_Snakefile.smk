@@ -157,6 +157,7 @@ if config['args']['sequencing'] == 'paired':
     ## For individual assembly targets
     for sample in sample_names:
         targets['assemble'].append(os.path.join(dir_assembly,"{sample}.megahit.contigs.fa").format(sample=sample)),
+        targets['assemble'].append(os.path.join(dir_assembly,"{sample}.megahit.renamed.contigs.fa").format(sample=sample)),
         targets['assemble'].append(os.path.join(dir_assembly, "{sample}_quast_output", "report.txt").format(sample=sample)),
         targets['assemble'].append(os.path.join(dir_assembly, "{sample}_assembly_report.txt").format(sample=sample)),
         targets['assemble'].append(os.path.join(dir_reports, "Assembly_stats_all.csv")),
