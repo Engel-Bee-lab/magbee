@@ -52,7 +52,7 @@ rule rename_assembly:
 
 rule quast_individual:
     input:
-        renamed_assembly = os.path.join(dir_assembly,"{sample}.megahit.renamed.contigs.fa")
+        assembly = os.path.join(dir_assembly,"{sample}.megahit.renamed.contigs.fa")
     output:
         report = os.path.join(dir_assembly, "{sample}_quast_output", "report.txt")
     params:
