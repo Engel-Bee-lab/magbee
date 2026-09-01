@@ -1,8 +1,7 @@
 # magbee
 
-## Snakemake workflow to get MAGs from metagenomes
-Still under development! Stable release out as a version \
-Strain level resolution. 
+## Snakemake workflow to get MAGs from honey bee metagenomes
+Still under development! Stable release will be out as a version \
 
 Documentation: [Read the Docs]() - Working on this 
 
@@ -41,6 +40,7 @@ Output files: The user can define the output folder name, or defaults to `magbee
         2. `assembly`: Asembled contigs.fasta for each metagenome
 
     - Binning results:
+        1. dereplicated_
 
 ### Workflow 
 Magbee options:
@@ -102,7 +102,12 @@ This command maps the reads to the assembled contigs. There are two modes availa
 ```     
 
 **Binning module**
-This command runs Metabat2 and VAMB binning tools.
+This command generates the final set of bins. This is done following the below steps 
+- Metabat2 and VAMB binning tools
+- dasTools generates a final set of bins between the two tools
+- CheckM2 of dastool set for completeness and contamination 
+- dRep on the dasTools set generate a dereplicated set
+- gtdbtk to generate dRep set
 
 ```
     Usage: magbee binning [OPTIONS] [SNAKE_ARGS]...
@@ -111,8 +116,17 @@ This command runs Metabat2 and VAMB binning tools.
 
     Backmapping EXAMPLES 
     magbee binning --bam_folder <input directory with bamfiles> --contigs <input directory with contigs> --mode individual --output <output directory> -k
+    #output folder here, make sure to define it and add absolute path (dastool will error out if relative path is provided)
 ```
 Note: change --mode individual #for bees, or maybe low richness samples this works best
 
+**Species variation module**
+This command does ..
 
-**Binning module**
+
+**Species taxa module**
+This section annotates the reads to 
+
+
+**Steps still working on**
+The --mode concatenate option not tested from binning module

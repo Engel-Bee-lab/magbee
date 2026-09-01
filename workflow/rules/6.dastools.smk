@@ -45,7 +45,7 @@ rule run_DAS_tool_individual:
         """
         mkdir -p {params.outdir}/temp
         
-        zcat {input.contigs} >> {params.temp_contigs}
+        zcat {input.contigs} > {params.temp_contigs}
 
         cd {params.outdir}
         DAS_Tool -i {input.metabat2},{input.vamb} -c {params.temp_contigs} -o {params.basename} --threads {threads} \
