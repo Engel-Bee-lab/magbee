@@ -48,7 +48,6 @@ rule run_DAS_tool_individual:
         zcat {input.contigs} >> {params.temp_contigs}
 
         cd {params.outdir}
-        DAS_Tool -i {input.metabat2},{input.vamb} \
-            -c {params.temp_contigs} -o {params.basename} --threads {threads} \
+        DAS_Tool -i {input.metabat2},{input.vamb} -c {params.temp_contigs} -o {params.basename} --threads {threads} \
             --labels metabat2,vamb  --write_bin_evals --write_bins
         """
