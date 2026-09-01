@@ -40,7 +40,11 @@ rule run_DAS_tool_individual:
         os.path.join(dir_env, "dasttool.yaml")
     output:
         out=os.path.join(dir_binning, "das_tool", "dastool_DASTool_summary.tsv"),
-    threads: 4
+    resources:
+        mem_mb =config['resources']['medium']['mem_mb'],
+        runtime = config['resources']['medium']['runtime']
+    threads:
+        config['resources']['medium']['threads']
     shell:
         """
         mkdir -p {params.outdir}/temp

@@ -106,8 +106,6 @@ This command generates the final set of bins. This is done following the below s
 - Metabat2 and VAMB binning tools
 - dasTools generates a final set of bins between the two tools
 - CheckM2 of dastool set for completeness and contamination 
-- dRep on the dasTools set generate a dereplicated set
-- gtdbtk to generate dRep set
 
 ```
     Usage: magbee binning [OPTIONS] [SNAKE_ARGS]...
@@ -121,7 +119,9 @@ This command generates the final set of bins. This is done following the below s
 Note: change --mode individual #for bees, or maybe low richness samples this works best
 
 **Species variation module**
-This command does ..
+This command does 
+- dRep to dereplicate the set
+- gtdbtk to generate dRep set
 
 
 **Species taxa module**
