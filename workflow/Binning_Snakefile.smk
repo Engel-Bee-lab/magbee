@@ -160,9 +160,8 @@ dir_binning = os.path.join(dir_out, 'PROCESSING' ,'5_binning')
 
 """Rules"""
 include: os.path.join("rules", "5.metabat2.smk")
-#include: os.path.join("rules", "5.concoct.smk")
 include: os.path.join("rules", "5.vamb.smk")
-#include: os.path.join("rules", "6.dastools.smk")
+include: os.path.join("rules", "6.dastools.smk")
 #include: os.path.join("rules", "7.bins_quality_checkm2.smk")
 #include: os.path.join("rules", "Final_binning.smk")
 
@@ -186,7 +185,7 @@ if config['args']['mode'] == 'individual':
         targets['binning'].append(os.path.join(dir_binning, "{sample}_vamb_bins", "done.txt").format(sample=sample))
         targets['binning'].append(os.path.join(dir_binning, "all_vamb_bins", "done.txt"))
 
-        #targets['binning_qual'].append(os.path.join(dir_binning, "das_tool", "dastool_DASTool_summary.tsv"))
+        targets['binning_qual'].append(os.path.join(dir_binning, "das_tool", "dastool_DASTool_summary.tsv"))
         #targets['binning_qual'].append(os.path.join(dir_reports, "CheckM2_DASTool_quality_report.tsv"))
 
         #targets['binning_qual'].append(os.path.join(dir_reports, "bins.done"))
