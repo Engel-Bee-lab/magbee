@@ -30,7 +30,7 @@ rule run_DAS_tool_individual:
     input:
         metabat2= os.path.join(dir_binning, "das_tool", "scaffolds2bin", "metabat2_scaffolds2bin.tsv"),
         vamb= os.path.join(dir_binning, "das_tool", "scaffolds2bin", "vamb_scaffolds2bin.tsv"),
-        contigs= expand(os.path.join(dir_assembly,"{sample}.annotated.megahit.contigs.fa.gz"), sample=sample_names)
+        contigs= expand(os.path.join(dir_assembly,"{sample}.megahit.contigs.fa.gz"), sample=sample_names)
     params:
         basename= "dastool",
         temp_contigs = os.path.join(dir_binning, "das_tool", "temp", "combined.contigs.fa"),
