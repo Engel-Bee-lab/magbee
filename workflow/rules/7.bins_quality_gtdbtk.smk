@@ -29,7 +29,7 @@ rule gtdbtk_dastool_bins:
         gtdbtk classify --genome_dir "$BATCHDIR" --out_dir {params.outdir}/classify --cpus {threads} -x fa \
             --pplacer_cpus {threads} --align_dir {params.outdir}/align --debug
 
-        touch {output.bac_summary}
-        touch {output.ar_summary}
+        touch {output.gtdbtk_summary}
+        touch {output.gtdbtk_ar_sumamry}
         """
 
