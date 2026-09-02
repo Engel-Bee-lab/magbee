@@ -5,7 +5,7 @@ rule final_binning_stats:
     input:
         dastoolout=os.path.join(dir_binning, "das_tool", "dastool_DASTool_summary.tsv"),
         gtdbtk_summary = os.path.join(dir_binning, "gtdbtk_output_dastool", "classify", "gtdbtk.bac120.summary.tsv"),
-        gtdbtk_ar_sumamry = os.path.join(dir_binning, "gtdbtk_output_dastool", "classify", "gtdbtk.ar53.summary.tsv")
+        gtdbtk_ar_summary = os.path.join(dir_binning, "gtdbtk_output_dastool", "classify", "gtdbtk.ar53.summary.tsv")
     output:
         final_gtdbtk_bac = os.path.join(dir_reports, "gtdbtk_dastools_bac120_summary.tsv"),
         final_gtdbtk_arc = os.path.join(dir_reports, "gtdbtk_dastools_ar53_summary.tsv"),
