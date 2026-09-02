@@ -163,6 +163,7 @@ include: os.path.join("rules", "5.metabat2.smk")
 include: os.path.join("rules", "5.vamb.smk")
 include: os.path.join("rules", "6.dastools.smk")
 include: os.path.join("rules", "7.bins_quality_checkm2.smk")
+include: os.path.join("rules", "7.bins_quality_gtdbtk.smk")
 include: os.path.join("rules", "Final_binning.smk")
 
 """Mark target rules"""
