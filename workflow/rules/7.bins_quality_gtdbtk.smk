@@ -27,7 +27,7 @@ rule gtdbtk_dastool_bins:
 
         gtdbtk identify --genome_dir {params.bins} --cpus {threads} --out_dir {params.outdir}/identify -x fa
         gtdbtk align --identify_dir {params.outdir}/identify --out_dir {params.outdir}/align --cpus {threads}
-        gtdbtk classify --genome_dir "$BATCHDIR" --out_dir {params.outdir}/classify --cpus {threads} -x fa \
+        gtdbtk classify --genome_dir {params.bins} --out_dir {params.outdir}/classify --cpus {threads} -x fa \
             --pplacer_cpus {threads} --align_dir {params.outdir}/align --debug
 
         touch {output.gtdbtk_summary}
