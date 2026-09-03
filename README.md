@@ -3,7 +3,7 @@
 ## Snakemake workflow to get MAGs from honey bee metagenomes
 Still under development! Stable release will be out as a version \
 
-Documentation: [Read the Docs]() - Working on this 
+Documentation: [Read the Docs](https://magbee.readthedocs.io/en/latest/) - Working on this 
 
 ### Install 
 
