@@ -11,7 +11,7 @@ Documentation: [Read the Docs]() - Working on this
 Run the below commands
 
 ```
-git clone https://github.com/npbhavya/magbee.git
+git clone https://github.com/Engel-Bee-lab/magbee.git
 cd magbee
 mamba create -y -n magbee python=3.13
 conda activate magbee

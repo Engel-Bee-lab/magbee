@@ -1,0 +1,22 @@
+site_name: magbee
+site_url: "https://github.com/Engel-Bee-lab/magbee"
+site_author: "Bhavya Papudeshi"
+repo_url: "https://github.com/Engel-Bee-lab/magbee
+repo_name: 'GitHub'
+theme:
+    name: readthedocs
+    highlightjs: true
+    hljs_languages:
+        - yaml
+        - bash
+        - shell
+        - text
+nav:
+    - HOME:
+        - Introduction: index.md
+        - Citation: citation.md
+    - RUNNING: 
+        - Install: install.md
+        - Usage: usage.md
+    - ISSUES:
+        - Issues: issues.md
