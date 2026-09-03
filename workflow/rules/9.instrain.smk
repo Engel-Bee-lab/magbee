@@ -127,8 +127,8 @@ rule map_to_rep_MAGs_minimap2:
     conda:
         os.path.join(dir_env, "minimap2.yaml")
     output:
-        bam = os.path.join(dir_species, "inStrain", "mapping", "{sample}", "{sample}_bowtie.bam"),
-        flagstat = os.path.join(dir_species, "inStrain", "mapping", "{sample}", "{sample}_bowtie_flagstat.tsv"),
+        bam = os.path.join(dir_species, "inStrain", "mapping", "{sample}", "{sample}_minimap.bam"),
+        flagstat = os.path.join(dir_species, "inStrain", "mapping", "{sample}", "{sample}_minimap_flagstat.tsv"),
     params:
         outdir = os.path.join(dir_species, "inStrain", "mapping", "{sample}")
     resources:
@@ -153,7 +153,7 @@ rule map_to_rep_MAGs_minimap2:
 
 rule instrain_profile_db_mode:
     input:
-        bam = os.path.join(dir_species, "inStrain", "mapping", "{sample}", "{sample}_bowtie.bam"),
+        bam = os.path.join(dir_species, "inStrain", "mapping", "{sample}", "{sample}_minimap.bam"),
         mag_rep_database = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database.fa"),
         #validation_done = os.path.join(dir_species, "inStrain", "prepare_mags", "mag_rep_database.validated"),
         scaffold_to_bin_file = os.path.join(dir_species, "inStrain", "prepare_mags", "scaffold_to_bin_file.tsv"),
