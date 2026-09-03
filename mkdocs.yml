@@ -1,7 +1,7 @@
 site_name: magbee
 site_url: "https://github.com/Engel-Bee-lab/magbee"
 site_author: "Bhavya Papudeshi"
-repo_url: "https://github.com/Engel-Bee-lab/magbee
+repo_url: "https://github.com/Engel-Bee-lab/magbee"
 repo_name: 'GitHub'
 theme:
     name: readthedocs
