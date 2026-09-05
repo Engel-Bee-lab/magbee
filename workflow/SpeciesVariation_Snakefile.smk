@@ -117,7 +117,7 @@ bins_dir = config['args']['bins']
 """Rules"""
 include: os.path.join("rules", "8.drep.smk")
 include: os.path.join("rules", "9.instrain.smk")
-include: os.path.join("rules", "10.bakta.smk")
+#include: os.path.join("rules", "10.bakta.smk")
 
 """Mark target rules"""
 target_rules = []
@@ -132,12 +132,12 @@ Defining the targets dictionary
 """
 targets ={'derep':[], 'speciesVar':[]}
 targets['derep'].append(os.path.join(dir_species, "drep_dastools", "done.txt"))
-targets['speciesVar'].extend(
-    expand(
-        os.path.join(dir_species, "bakta", "{derep_genome}.done"),
-        derep_genome=get_derep_bin_names(),
-    )
-)
+#targets['speciesVar'].extend(
+#    expand(
+#        os.path.join(dir_species, "bakta", "{derep_genome}.done"),
+#        derep_genome=get_derep_bin_names(),
+#    )
+#)
 targets['speciesVar'].extend(
     expand(
         os.path.join(dir_species, "inStrain", "instrain_profile_db_mode", "{sample}_profile_db_mode.done"),
