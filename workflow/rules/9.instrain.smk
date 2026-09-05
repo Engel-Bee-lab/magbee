@@ -204,3 +204,31 @@ if sample_names:
                 -p {threads} -o {params.outdir} --database_mode || touch {output.compare_marker}.singleton
             touch {output.compare_marker}
             """
+
+    rule calc_relative_abundance:
+        input:
+            markers = expand(os.path.join(dir_species, "inStrain", "instrain_profile_db_mode", "{sample}_profile_db_mode.done"), sample=sample_names),
+        output:
+            merged = os.path.join(dir_species, "inStrain", "relative_abundance", "All_genome_info.tsv"),
+            long = os.path.join(dir_species, "inStrain", "relative_abundance", "rel_abundance_long.tsv"),
+            matrix = os.path.join(dir_species, "inStrain", "relative_abundance", "rel_abundance_matrix.tsv"),
+            prevalence = os.path.join(dir_species, "inStrain", "relative_abundance", "prevalence.tsv"),
+        params:
+            profile_glob = os.path.join(dir_species, "inStrain", "instrain_profile_db_mode", "*", "output", "*_genome_info.tsv"),
+            script = os.path.join(dir_scripts, "calc_relative_abundance.py"),  # point this at wherever you saved the script
+        conda:
+            os.path.join(dir_env, "instrain.yaml")  # already has pandas as an inStrain dependency
+        resources:
+            mem_mb = config['resources']['smalljob']['mem_mb'],
+            runtime = config['resources']['smalljob']['runtime']
+        threads:
+            config['resources']['smalljob']['threads']
+        shell:
+            """
+            set -euo pipefail
+            python {params.script} {output.merged} {output.long} \
+                --profile_glob "{params.profile_glob}" \
+                --matrix_out {output.matrix} --prevalence_out {output.prevalence}
+            """
+
+

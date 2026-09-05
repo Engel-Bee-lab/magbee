@@ -147,6 +147,11 @@ targets['speciesVar'].extend(
 if sample_names:
     targets['speciesVar'].append(os.path.join(dir_species, "inStrain", "instrain_compare", "all_compared.done"))
 
+targets['speciesVar'].append(os.path.join(dir_species, "inStrain", "relative_abundance", "All_genome_info.tsv")),
+targets['speciesVar'].append(os.path.join(dir_species, "inStrain", "relative_abundance", "rel_abundance_long.tsv")),
+targets['speciesVar'].append(os.path.join(dir_species, "inStrain", "relative_abundance", "rel_abundance_matrix.tsv")),
+targets['speciesVar'].append(os.path.join(dir_species, "inStrain", "relative_abundance", "prevalence.tsv"))
+
 @targetRule
 rule all:
     input: 
