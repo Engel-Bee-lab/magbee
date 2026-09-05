@@ -215,7 +215,7 @@ if sample_names:
             prevalence = os.path.join(dir_species, "inStrain", "relative_abundance", "prevalence.tsv"),
         params:
             profile_glob = os.path.join(dir_species, "inStrain", "instrain_profile_db_mode", "*", "output", "*_genome_info.tsv"),
-            script = os.path.join(dir_scripts, "calc_relative_abundance.py"),  # point this at wherever you saved the script
+            script = os.path.join(dir_script, "calc_relative_abundance.py"),  # point this at wherever you saved the script
         conda:
             os.path.join(dir_env, "instrain.yaml")  # already has pandas as an inStrain dependency
         resources:
