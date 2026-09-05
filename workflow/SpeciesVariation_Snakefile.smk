@@ -138,14 +138,14 @@ targets['derep'].append(os.path.join(dir_species, "drep_dastools", "done.txt"))
 #        derep_genome=get_derep_bin_names(),
 #    )
 #)
-#targets['speciesVar'].extend(
-#    expand(
-#        os.path.join(dir_species, "inStrain", "instrain_profile_db_mode", "{sample}_profile_db_mode.done"),
-#        sample=sample_names,
-#    )
-#)
-#if sample_names:
-#    targets['speciesVar'].append(os.path.join(dir_species, "inStrain", "instrain_compare", "all_compared.done"))
+targets['speciesVar'].extend(
+    expand(
+        os.path.join(dir_species, "inStrain", "instrain_profile_db_mode", "{sample}_profile_db_mode.done"),
+        sample=sample_names,
+    )
+)
+if sample_names:
+    targets['speciesVar'].append(os.path.join(dir_species, "inStrain", "instrain_compare", "all_compared.done"))
 
 targets['speciesVar'].append(os.path.join(dir_species, "inStrain", "relative_abundance", "All_genome_info.tsv")),
 targets['speciesVar'].append(os.path.join(dir_species, "inStrain", "relative_abundance", "rel_abundance_long.tsv")),
