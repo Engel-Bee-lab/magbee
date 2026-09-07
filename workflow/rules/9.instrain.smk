@@ -179,7 +179,7 @@ rule instrain_profile_db_mode:
 
 
 if sample_names:
-
+    
     rule instrain_compare:
         input:
             markers = expand(os.path.join(dir_species, "inStrain", "instrain_profile_db_mode", "{sample}_profile_db_mode.done"), sample=sample_names),
@@ -200,8 +200,25 @@ if sample_names:
             """
             set -euo pipefail
             mkdir -p {params.outdir}
-            inStrain compare -i {params.profiles} -s {input.scaffold_to_bin_file} \
-                -p {threads} -o {params.outdir} --database_mode || touch {output.compare_marker}.singleton
+
+            valid_profiles=()
+            for p in {params.profiles}; do
+                gi=$(ls "$p"/output/*_genome_info.tsv 2>/dev/null | head -n1 || true)
+                if [ -n "$gi" ] && [ -s "$gi" ]; then
+                    valid_profiles+=("$p")
+                else
+                    echo "Skipping $p -- no genome-level info (likely ~0x coverage of this species)"
+                fi
+            done
+            echo "${{#valid_profiles[@]}} of $(echo {params.profiles} | wc -w) profiles have genome-level info"
+
+            if [ ${{#valid_profiles[@]}} -lt 2 ]; then
+                echo "Fewer than 2 valid profiles -- nothing to compare, skipping."
+                touch {output.compare_marker}.singleton
+            else
+                inStrain compare -i "${{valid_profiles[@]}}" -s {input.scaffold_to_bin_file} \
+                    -p {threads} -o {params.outdir} --database_mode
+            fi
             touch {output.compare_marker}
             """
 
