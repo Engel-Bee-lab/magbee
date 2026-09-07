@@ -1,22 +1,27 @@
 #!/usr/bin/env python3
 """
 Calculate relative abundance from inStrain genome_info.tsv output, without
-qPCR normalization (Python port of the relevant chunk of Load_data.Rmd from
-Aiswarya-prasad/honeybee-cross-species-metagenomics).
+qPCR normalization.
 
-IMPORTANT (matches the paper's actual order of operations): rel_cov and the
-other per-sample metrics are computed on the UNFILTERED data first -- the
-denominator is the sum across every genome inStrain reported for that
-sample, regardless of breadth. The breadth > breadth_cutoff filter is only
-applied afterwards, as a "detected" flag, and when building the final
-sample x genome matrix. Filtering before computing rel_cov (as an earlier
-version of this script did) changes the denominator and does not match the
-paper's code.
+FILTER-FIRST ORDER OF OPERATIONS: rows with breadth <= breadth_cutoff are
+removed BEFORE rel_cov / percentage_expected_number_of_genomes /
+percentage_reads are computed. That means the denominator for each sample's
+relative-abundance metrics is the sum across only the genomes that passed
+the breadth cutoff in that sample -- not every genome inStrain reported.
+This is a deliberate choice: sub-cutoff breadth is treated as noise/
+unreliable signal that should not dilute the abundance estimate of the
+genomes that were confidently detected, rather than as real recruited
+coverage that belongs in the denominator.
 
-Two relative abundance metrics are computed, per sample:
+(Earlier versions of this script computed rel_cov on the unfiltered table
+and applied breadth_cutoff only as a post-hoc "detected" flag -- that is a
+different, also-defensible choice, but is NOT what this version does.)
+
+Two relative abundance metrics are computed, per sample, over the
+breadth-filtered rows only:
 
 1. Coverage-based relative abundance (rel_cov):
-       rel_cov = coverage / sum(coverage across ALL genomes in that sample)
+       rel_cov = coverage / sum(coverage across DETECTED genomes in that sample)
 
 2. Read-count-based relative abundance (percentage_expected_number_of_genomes):
        expected_number_of_genomes = filtered_read_pair_count * read_length * 2 / genome_length
@@ -27,10 +32,11 @@ Two relative abundance metrics are computed, per sample:
 
 Also reports the simpler read-share metric:
        percentage_reads = filtered_read_pair_count / sum(filtered_read_pair_count) * 100
+   (also computed over detected rows only)
 
-And a boolean "detected" flag (breadth > breadth_cutoff), matching the
-paper's detected-genome logic -- used to build the final matrix, but NOT
-used when computing the rel_cov/percentage columns above.
+A "detected" column is still included for compatibility with downstream
+scripts that check it -- since filtering already happened, it is True for
+every remaining row.
 
 Usage:
     # single pre-merged table (already has a 'sample' column):
@@ -60,14 +66,22 @@ Input:
     filtered_read_pair_count.
 
 Output:
-    rel_abundance_long.tsv - full (unfiltered) table with rel_cov,
-        percentage_reads, percentage_expected_number_of_genomes, and
-        detected columns added
+    rel_abundance_long.tsv - BREADTH-FILTERED table (only rows with
+        breadth > breadth_cutoff survive) with rel_cov, percentage_reads,
+        percentage_expected_number_of_genomes, and detected columns added.
+        Note: this is a smaller row count than the raw input -- samples
+        whose every genome fell below the cutoff will disappear from this
+        table entirely (they won't even appear with detected=False rows,
+        since those rows are dropped before this file is written). If you
+        need a denominator of "all samples that were attempted" downstream
+        (e.g. for prevalence), use --prevalence_out here (which captures
+        the pre-filter sample count) or supply your own full sample list,
+        not len(df['sample'].unique()) read back from this file.
     rel_abundance_matrix.tsv (optional, --matrix_out) - sample x genome
-        matrix of rel_cov, restricted to detected rows (breadth > cutoff),
-        NaN filled with 0
+        matrix of rel_cov, NaN filled with 0
     prevalence.tsv (optional, --prevalence_out) - per-genome prevalence,
-        i.e. fraction of samples where it was detected
+        i.e. fraction of samples (out of all samples that had ANY inStrain
+        output pre-filter) where the genome was detected
 """
 import argparse
 import glob
@@ -107,11 +121,11 @@ def main():
                           "profile output dir, e.g. 'instrain_profiles/*/output/*_genome_info.tsv' "
                           "-- if given, genome_info_tsv is treated as an output path for the merged table")
     ap.add_argument("--breadth_cutoff", type=float, default=0.5,
-                     help="minimum breadth for a genome to be 'detected' (default: 0.5, matches the paper)")
+                     help="minimum breadth for a genome to be kept (default: 0.5)")
     ap.add_argument("--read_length", type=float, default=150,
                      help="read length used for expected_number_of_genomes calc (default: 150)")
     ap.add_argument("--matrix_out", default=None,
-                     help="optional path to write a sample x genome rel_cov matrix (wide format, detected-only)")
+                     help="optional path to write a sample x genome rel_cov matrix (wide format)")
     ap.add_argument("--prevalence_out", default=None,
                      help="optional path to write per-genome prevalence (fraction of samples detected in)")
     args = ap.parse_args()
@@ -134,8 +148,20 @@ def main():
         sys.exit(f"ERROR: no coverage column found (looked for 'coverage' / 'coverage_median'). "
                   f"Available: {list(df.columns)}")
 
-    # --- compute on the FULL, unfiltered table first (matches Load_data.Rmd order) ---
+    # capture the pre-filter sample count -- this is "how many samples had ANY inStrain
+    # output at all", needed as the correct prevalence denominator even after filtering
+    n_samples_prefilter = df["sample"].nunique()
+    n_rows_prefilter = len(df)
+
+    # --- FILTER FIRST: drop sub-cutoff-breadth rows before computing anything ---
     df["coverage"] = df[cov_col]
+    df = df[df["breadth"] > args.breadth_cutoff].copy()
+    print(f"breadth filter: {n_rows_prefilter} rows -> {len(df)} rows "
+          f"({n_rows_prefilter - len(df)} removed, breadth <= {args.breadth_cutoff})")
+    print(f"{df['sample'].nunique()}/{n_samples_prefilter} samples retain at least one genome "
+          f"above the breadth cutoff")
+
+    # --- now compute relative abundance metrics on the FILTERED table ---
     df["rel_cov"] = df.groupby("sample")["coverage"].transform(lambda x: x / x.sum())
 
     df["expected_number_of_genomes"] = (
@@ -146,16 +172,15 @@ def main():
     df["percentage_reads"] = df.groupby("sample")["filtered_read_pair_count"] \
         .transform(lambda x: x / x.sum() * 100)
 
-    # "detected" flag -- applied AFTER the above, never before
-    df["detected"] = df["breadth"] > args.breadth_cutoff
-    print(f"{df['detected'].sum()}/{len(df)} rows flagged detected (breadth > {args.breadth_cutoff})")
+    # kept for downstream compatibility -- trivially True since filtering already happened
+    df["detected"] = True
 
     df.to_csv(args.output_tsv, sep="\t", index=False)
     print(f"Wrote {len(df)} rows to {args.output_tsv}")
 
     if args.matrix_out:
         matrix = (
-            df[df["detected"]][["sample", "genome", "rel_cov"]]
+            df[["sample", "genome", "rel_cov"]]
             .drop_duplicates()
             .pivot(index="sample", columns="genome", values="rel_cov")
             .fillna(0)
@@ -164,12 +189,12 @@ def main():
         print(f"Wrote sample x genome rel_cov matrix ({matrix.shape[0]}x{matrix.shape[1]}) to {args.matrix_out}")
 
     if args.prevalence_out:
-        n_samples = df["sample"].nunique()
         prevalence = (
-            df[df["detected"]].groupby("genome")["sample"].nunique() / n_samples
+            df.groupby("genome")["sample"].nunique() / n_samples_prefilter
         ).sort_values(ascending=False)
         prevalence.to_csv(args.prevalence_out, sep="\t", header=["prevalence"])
-        print(f"Wrote per-genome prevalence ({len(prevalence)} genomes, {n_samples} samples) to {args.prevalence_out}")
+        print(f"Wrote per-genome prevalence ({len(prevalence)} genomes, "
+              f"denominator = {n_samples_prefilter} samples with any output) to {args.prevalence_out}")
 
 
 if __name__ == "__main__":
