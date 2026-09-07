@@ -13,10 +13,6 @@ unreliable signal that should not dilute the abundance estimate of the
 genomes that were confidently detected, rather than as real recruited
 coverage that belongs in the denominator.
 
-(Earlier versions of this script computed rel_cov on the unfiltered table
-and applied breadth_cutoff only as a post-hoc "detected" flag -- that is a
-different, also-defensible choice, but is NOT what this version does.)
-
 Two relative abundance metrics are computed, per sample, over the
 breadth-filtered rows only:
 
