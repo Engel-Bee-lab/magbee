@@ -192,10 +192,10 @@ if sample_names:
         conda:
             os.path.join(dir_env, "instrain.yaml")
         resources:
-            mem_mb = config['resources']['small_moremem_job']['mem_mb'],
-            runtime = config['resources']['small_moremem_job']['runtime']
+            mem_mb = config['resources']['extra_highmemjob']['mem_mb'],
+            runtime = config['resources']['extra_highmemjob']['runtime']
         threads:
-            config['resources']['small_moremem_job']['threads']
+            config['resources']['extra_highmemjob']['threads']
         shell:
             """
             set -euo pipefail
@@ -236,10 +236,10 @@ if sample_names:
         conda:
             os.path.join(dir_env, "instrain.yaml")  # already has pandas as an inStrain dependency
         resources:
-            mem_mb = config['resources']['extra_highmemjob']['mem_mb'],
-            runtime = config['resources']['extra_highmemjob']['runtime']
+            mem_mb = config['resources']['small_moremem_job']['mem_mb'],
+            runtime = config['resources']['small_moremem_job']['runtime']
         threads:
-            config['resources']['extra_highmemjob']['threads']
+            config['resources']['small_moremem_job']['threads']
         shell:
             """
             set -euo pipefail
