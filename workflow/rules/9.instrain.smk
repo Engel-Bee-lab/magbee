@@ -187,7 +187,7 @@ if sample_names:
         output:
             compare_marker = touch(os.path.join(dir_species, "inStrain", "instrain_compare", "all_compared.done")),
         params:
-            outdir = os.path.join(dir_species, "inStrain", "instrain_compare", "MAGs_rep_db"),
+            outdir = os.path.join(dir_species, "inStrain", "instrain_compare"),
             profiles = [os.path.join(dir_species, "inStrain", "instrain_profile_db_mode", sample) for sample in sample_names],
         conda:
             os.path.join(dir_env, "instrain.yaml")
