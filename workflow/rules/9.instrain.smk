@@ -201,6 +201,18 @@ if sample_names:
             set -euo pipefail
             mkdir -p {params.outdir}
 
+            PYBIN="$(dirname "$(command -v inStrain)")/python"
+            for attempt in 1 2 3 4 5; do
+                "$PYBIN" -c "import multiprocessing.queues, encodings" 2>/dev/null && break
+                echo "Interpreter sanity check failed (attempt $attempt/5), waiting 15s and retrying..."
+                sleep 15
+                if [ "$attempt" -eq 5 ]; then
+                    echo "Interpreter still broken after 5 attempts — failing for real."
+                    exit 1
+                fi
+            done
+
+
             valid_profiles=()
             for p in {params.profiles}; do
                 gi=$(ls "$p"/output/*_genome_info.tsv 2>/dev/null | head -n1 || true)
