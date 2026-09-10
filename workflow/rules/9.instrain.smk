@@ -210,7 +210,7 @@ if sample_names:
                     echo "Skipping $p -- no genome-level info (likely ~0x coverage of this species)"
                 fi
             done
-            echo "${{#valid_profiles[@]}} of $(echo {params.profiles} | wc -w) profiles have genome-level info"
+            #echo "${{#valid_profiles[@]}} of $(echo {params.profiles} | wc -w) profiles have genome-level info"
 
             if [ ${{#valid_profiles[@]}} -lt 2 ]; then
                 echo "Fewer than 2 valid profiles -- nothing to compare, skipping."
