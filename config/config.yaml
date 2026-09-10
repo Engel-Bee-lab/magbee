@@ -13,8 +13,8 @@ resources:
     runtime: 480
   extra_highmemjob:
     threads: 8
-    mem_mb: 900000
-    runtime: 480
+    mem_mb: 500000
+    runtime: 1440
   assemblyjob:
     threads: 16
     mem_mb: 250000
